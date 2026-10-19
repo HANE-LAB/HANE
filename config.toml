@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────
+#  HANE · 配置文件
+#  改完保存，再运行一次 update 即可生效
+# ─────────────────────────────────────────────
+
+[target]
+uid  = 2094031249          # 火羽ひのめ 的 B 站 UID（space.bilibili.com/2094031249）
+name = "火羽ひのめ"
+
+[bilibili]
+# Cookie（SESSDATA）和各种 API key 不要填在这个文件里——它会跟着代码一起上传到 GitHub。
+# 请填在 config.local.toml（复制 config.local.example.toml 改名即可），那个文件只留在你自己电脑上。
+# GitHub Actions 只构建已提交的归档，不采集、不翻译，也不需要登录态或 API Key。
+sessdata = ""
+buvid3   = ""
+
+fetcher = "auto"           # auto | library | raw   （auto：先用 bilibili-api 库，失败自动切自带的请求器）
+page_sleep = [1.5, 3.5]    # 每抓一页（12 条）后随机等待的秒数，别调太小
+refresh_days = 30          # 日常增量更新时，最近 N 天的动态会重新抓一遍，用来刷新点赞/评论/转发数
+full_refresh_days = 7      # 历史抓完后，每 7 天重新遍历一次；未完成时自动续传
+
+[archive]
+download_images = true    # 图片原文件保存在 data/media；暂不下载视频原文件
+
+[translate]
+# 翻译后端：
+#   hymt      默认：Hy-MT2，免费免注册，CPU 离线直译；先运行 setup-translation 下载约 1.13 GB 模型
+#   auto      优先已有优质缓存，否则 hymt → google；不会自动使用付费 API
+#   google    谷歌翻译免费接口，不用注册，国内需要能访问谷歌
+#   ollama    本地大模型（推荐 qwen2.5:7b），完全免费、离线、翻译更自然，还能顺便打标签/判断情绪
+#   deepl     DeepL 免费 API（需注册拿 key，每月 50 万字符免费）
+#   claude    Anthropic Claude API（付费，质量最好）
+#   none      不翻译
+backend = "hymt"
+translate_forward_origin = true   # 转发的动态，被转发的原文要不要也翻
+
+[translate.ollama]
+host  = "http://localhost:11434"
+model = "qwen2.5:7b"
+
+[translate.deepl]
+api_key = ""                      # 填在 config.local.toml，或用环境变量 DEEPL_API_KEY
+
+[translate.claude]
+api_key = ""                      # 填在 config.local.toml，或用环境变量 ANTHROPIC_API_KEY
+model   = "claude-haiku-5-5"
+
+[analysis]
+# 当翻译后端是 ollama 或 claude 时，顺便让模型给每条动态打标签、判断情绪、写一句话摘要。
+# auto = 有大模型就做；off = 只用免费的规则分析
+llm = "auto"
+
+[output]
+edition = "release"              # release → site/；dev → site-dev/（仅本地诊断，不发布）
+open_browser = true               # 跑完自动用浏览器打开页面
+
+[live]
+enabled = true                    # update 同步 nailv 使用的免费 Danmakus 直播场次统计

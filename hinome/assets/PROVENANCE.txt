@@ -1,0 +1,30 @@
+火羽ひのめ主题肖像 v1
+来源：2021-02-01 首次动态 https://www.bilibili.com/opus/486735286313184793
+原图：https://i0.hdslb.com/bfs/album/8ebdac7dd487cc56a73fdac3074bb5bff6feda25.png
+制作：2026-10-14，按用户要求用 Codex 内置 imagegen 去除白底，保留角色原有表情、发型、服装与红金配饰。
+透明 PNG；不是官方新立绘/新皮肤。装饰动画由 CSS 实现。原图权利属于原权利人。
+hinome-portrait-v1.webp：同一透明图等比缩为 840 × 691 像素（WebP quality 88，约 135 KB），页面优先加载；浏览器不支持 WebP 时回退 PNG。
+
+Kobuta 网页小猪 v3
+用户指定形象：https://i0.hdslb.com/bfs/new_dyn/4484ac9f4269797f1afe1c2ea17ae8481207727411.jpg
+动作来源：欧寄爱上传的火羽直播切片《你们老说这是熊干嘛 怎么看都是小猪嘛》
+https://www.bilibili.com/video/BV14Rp864Ef7/ （2026-10-10；使用开头约 1.43 秒的小猪画面，无声音、字幕、人物立绘和弹幕）
+形象核对：片中火羽展示猪套装四视图；与所给图片的米金色身体、绿领巾、深色蹄子和卷尾一致。
+历史旁证：火羽 2022-05-11 原动态 https://www.bilibili.com/opus/658975818632921089
+其中游戏截图：https://i0.hdslb.com/bfs/album/4f2069a0fdd0a25e02f37906a6d6b216ba8f9e6b.png
+FFXIV 装备：ポーキーヘッド / ポーキースーツ（Swine Head / Swine Body）
+https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/f8437f4f9ff/
+https://jp.finalfantasyxiv.com/lodestone/playguide/db/item/dfda345373d/
+
+v2 制作（2026-10-15）：原视频 1920 × 1080，取开头 43 帧（30 fps），裁切 crop=360:420:940:350，视频色键去除粉白背景，透明边缘执行三次 3×3 erosion 后缩小为每格 180 × 210 像素。
+v3 制作（2026-10-15）：按帧相似度确认一个完整步态周期是 22 帧（第 i 帧与第 i+22 帧几乎相同），取 v2 的第 13–34 帧（0 起算 12–33）；第 22 帧接回第 1 帧时与普通相邻帧一样连贯，不再有 43 帧循环在结尾的跳帧。每格统一裁为 144 × 200 像素（v2 格内偏移 16, 6），清除边缘残留的粉白色键像素，排成 1 行 22 列。
+kobuta-v3.webp（quality 88，约 79 KB）与 kobuta-v3.png（PNG 兼容版，约 350 KB）内容相同；不支持 image-set/WebP 的浏览器回退 PNG。原素材面朝左；向右跑时水平镜像。
+网页按跑过的距离推进帧（实测着地脚每帧后移约 16.4 源像素），脚步与移动速度一致，不会原地打滑。跑圈、转身、拖动与抛出、扬尘、爱心、汗滴、星星、速度线和落地挤压都是网站交互与 CSS/JS 效果，不来自原视频。
+这是录播提取版，不是直播工程原始透明文件或可交互的 3D 模型。
+台词（2026-10-15）：「火羽こぶたこぶたこぶたこぶた」由用户指定，是火羽下播时的口号。本机环境无法访问 B 站和 YouTube 回放，未能对照原声核对节奏；「火羽」作弱起、四个「こぶた」各占一拍（每拍 0.3 秒）是网页的设计。
+画面中的原模型、直播与切片权利归各自权利人；FINAL FANTASY XIV © SQUARE ENIX CO., LTD. All Rights Reserved.
+来源说明只留维护资料，正式页面不展示制作信息。
+
+网站图标（2026-10-17）
+favicon.svg：墨黑圆角底上的朱红鸟居，用网站配色（--ink、--hiiro）直接写成 SVG 路径，不来自任何图片。
+apple-touch-icon.png：同一图形由浏览器渲染为 180 × 180 像素 PNG，供手机加到主屏幕时使用。

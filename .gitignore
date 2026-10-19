@@ -1,0 +1,28 @@
+# 本机环境
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# 只留在本机的密钥和个人设置
+config.local.toml
+CLAUDE.local.md
+
+# 生成物：网页由 GitHub Actions 或 python lab.py process 重新生成
+site/
+site-dev/
+data/posts.json
+data/*.tmp
+data/*.broken
+data/cron.log
+
+# 仅本机运行的诊断日志
+logs/
+data/runs.jsonl
+
+# 开发用的沙盒（dev/demo.py、dev/shots.py 的输出）
+dev/.sandbox/
+.models/
+backups/
+data/.lock
+data/**/*.tmp

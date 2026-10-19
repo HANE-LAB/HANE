@@ -1,0 +1,94 @@
+name: 发布 HANE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ["data/**", "hinome/**", "dev/test*.py", "dev/test*.cjs", "config.toml", "requirements*.txt", "constraints.txt", ".github/workflows/**"]
+  # 拉取请求只跑离线回归和正式版构建，不上传、不发布；网站只从 main 发布
+  pull_request:
+    paths: ["data/**", "hinome/**", "dev/test*.py", "dev/test*.cjs", "config.toml", "requirements*.txt", "constraints.txt", ".github/workflows/**"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  # 拉取请求的检查各自排队，不会挡住或取消 Pages 发布
+  group: ${{ github.event_name == 'pull_request' && format('check-{0}', github.ref) || 'pages' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            constraints.txt
+      - name: 安装依赖并检查
+        run: |
+          pip install -r requirements.txt
+          python dev/test_units.py
+          python dev/test_archive.py
+          python dev/test_translation.py
+          python dev/test_live.py
+          node dev/test_render.cjs
+          node dev/test_live.cjs
+      - name: 从已提交的归档构建正式版
+        # 退出码 2 = 部分完成（例如个别动态还没有译文缓存）：页面已生成，照常发布；1 才是失败
+        run: python lab.py process --no-open --backend none --edition release || test $? -eq 2
+      - name: 不发布 data.json
+        # 页面已经内嵌（压缩编码的）数据，用不到它；它只留给本机的测试和工具
+        run: rm -f site/data.json
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+      - name: 检查站点体积
+        run: test "$(du -sb site | cut -f1)" -lt 1000000000
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: site
+      - name: 打包离线版
+        if: github.event_name != 'pull_request'
+        run: cd site && zip -qr ../HANE-offline.zip .
+      - uses: actions/upload-artifact@v4
+        if: github.event_name != 'pull_request'
+        with:
+          name: offline
+          path: HANE-offline.zip
+          retention-days: 1
+  offline:
+    # 离线版挂在 Release「offline」上，下载地址固定：.../releases/download/offline/HANE-offline.zip
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: offline
+      - name: 更新 Release 里的离线包
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          gh release view offline >/dev/null 2>&1 || gh release create offline --title "离线版（随网站自动更新）" --notes "下载 HANE-offline.zip，解压后双击 index.html 即可离线浏览，不需要安装任何东西。网站每次更新时这里的文件会自动替换。"
+          gh release upload offline HANE-offline.zip --clobber
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

@@ -1,0 +1,14 @@
+# ─────────────────────────────────────────────
+#  只留在本机的设置：复制这个文件，改名为 config.local.toml，再填
+#  config.local.toml 已被 .gitignore 忽略，不会上传到 GitHub；里面的值会覆盖 config.toml
+# ─────────────────────────────────────────────
+
+[bilibili]
+sessdata = ""      # 浏览器登录 B 站后 Cookie 里的 SESSDATA（获取方法见 README「填 Cookie」）
+buvid3   = ""
+
+[translate.deepl]
+api_key = ""
+
+[translate.claude]
+api_key = ""

@@ -1,0 +1,6 @@
+# 多台本机更新数据时按内容合并（见 hinome/merge.py；publish 自动注册驱动）
+data/**/*.json  merge=hinome-data
+data/**/*.jsonl merge=hinome-data
+
+# Windows 批处理必须是 CRLF 换行
+*.bat text eol=crlf
