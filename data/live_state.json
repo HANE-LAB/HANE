@@ -3,11 +3,11 @@
  "uid": 2094031249,
  "source": "https://stats.nailv.live/streamer/2094031249",
  "api": "https://api.ukamnads.icu/api/v2/channel",
- "last_attempt": 1792408044,
- "last_success": 1792408044,
+ "last_attempt": 1792408362,
+ "last_success": 1792408362,
  "last_result": {
   "status": "ok",
-  "ts": 1792408044
+  "ts": 1792408362
  },
  "source_count": 1080,
  "channel": {

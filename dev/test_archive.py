@@ -224,6 +224,16 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(Counted.asked, 0, "no extra follower request while throttled")
         self.assertEqual(load_json(F.STATE_FILE, {})["last_result"]["status"], "failed")
 
+    def test_library_http_412_is_normalized_as_rate_limit(self):
+        class NetworkError(Exception):
+            status = 412
+        client = F.LibraryClient.__new__(F.LibraryClient)
+        client._sync = unittest.mock.Mock(side_effect=NetworkError("HTTP 412"))
+        with self.assertRaises(F.BiliError) as error:
+            client._call(None)
+        self.assertEqual(error.exception.code, -412)
+        self.assertIn(error.exception.code, F.THROTTLED)
+
     def test_wrong_author_rejected(self):
         wrong = item(1)
         wrong["modules"]["module_author"]["mid"] = 123

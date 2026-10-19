@@ -57,6 +57,8 @@ class LibraryClient:
         try:
             return self._sync(coro)
         except Exception as e:  # ResponseCodeException 带 .code/.msg
+            if getattr(e, "status", None) == 412:
+                raise BiliError(-412, "HTTP 412") from None
             code = getattr(e, "code", None)
             if isinstance(code, int):
                 raise BiliError(code, getattr(e, "msg", "")) from None
