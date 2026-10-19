@@ -23,7 +23,7 @@
 
 ## GitHub Actions
 
-HANE-LAB 的每日任务会准备固定版本的 Hy-MT CPU 模型并运行补译，不需要翻译 API key。
+每日登录采集在受控本机使用 Hy-MT 补译。HANE-LAB 保留手动游客采集工作流，也会准备固定版本的 Hy-MT CPU 模型并运行补译，不需要翻译 API key。
 模型和运行包用 Actions 缓存加速，每次先校验；译文和校订保存在归档 `data/` 中，随采集结果提交。
 网站与离线包构建仍使用 `--backend none`，只消费已经保存的译文。调度与失败恢复见[部署说明](DEPLOY.md#每日自动采集)。
 
@@ -34,4 +34,4 @@ HANE-LAB 的每日任务会准备固定版本的 Hy-MT CPU 模型并运行补译
 ```
 
 它用虚构日文检查新增、缓存复用和原文变更，输出实际耗时；不读取或修改真实归档。
-云端手动运行每日任务并勾选 `verify_translation` 可执行同一检查，在 Actions 摘要中查看耗时。
+云端运行「手动游客采集」并勾选 `verify_translation` 可执行同一检查，在 Actions 摘要中查看耗时。

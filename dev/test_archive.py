@@ -216,13 +216,41 @@ class ArchiveTests(unittest.TestCase):
                 Counted.asked += 1
                 return 1
 
-        client = Counted([F.BiliError(-412, "HTTP 412")])
-        with patch.object(F, "make_client", return_value=(client, [Spare])), self.assertRaises(F.BiliError):
-            F.crawl(self.cfg)
-        self.assertEqual(len(client.calls), 1, "one blocked request, no retries")
-        self.assertEqual(built, [], "no switch to another client")
-        self.assertEqual(Counted.asked, 0, "no extra follower request while throttled")
-        self.assertEqual(load_json(F.STATE_FILE, {})["last_result"]["status"], "failed")
+        for code in F.THROTTLED:
+            with self.subTest(code=code):
+                client = Counted([F.BiliError(code)])
+                with patch.object(F, "make_client", return_value=(client, [Spare])), self.assertRaises(F.BiliError):
+                    F.crawl(self.cfg)
+                self.assertEqual(len(client.calls), 1, "one blocked request, no retries")
+                self.assertEqual(built, [], "no switch to another client")
+                self.assertEqual(Counted.asked, 0, "no extra follower request while blocked")
+                self.assertEqual(load_json(F.STATE_FILE, {})["last_result"]["status"], "failed")
+
+    def test_blocked_initialization_does_not_switch_clients(self):
+        for code in F.THROTTLED:
+            with self.subTest(code=code):
+                blocked = F.BiliError(code)
+                with patch.object(F, "LibraryClient", side_effect=blocked), patch.object(F, "RawClient") as spare:
+                    with self.assertRaises(F.BiliError) as raised:
+                        F.make_client("auto", 2094031249, "", "")
+                    self.assertIs(raised.exception, blocked)
+                    spare.assert_not_called()
+
+    def test_raw_blocked_fingerprint_does_not_request_nav(self):
+        for code in F.THROTTLED:
+            with self.subTest(code=code):
+                blocked = F.BiliError(code)
+                with patch.object(F.RawClient, "_get", side_effect=blocked) as get:
+                    with self.assertRaises(F.BiliError) as raised:
+                        F.RawClient(2094031249)
+                    self.assertIs(raised.exception, blocked)
+                    get.assert_called_once_with("https://api.bilibili.com/x/frontend/finger/spi")
+
+    def test_raw_nonblocked_fingerprint_failure_still_allows_nav(self):
+        with patch.object(F.RawClient, "_get", side_effect=[RuntimeError("temporary failure"), {}]) as get:
+            F.RawClient(2094031249)
+        self.assertEqual(get.call_count, 2)
+        self.assertTrue(get.call_args.args[0].endswith("/nav"))
 
     def test_library_http_412_is_normalized_as_rate_limit(self):
         class NetworkError(Exception):

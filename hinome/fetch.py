@@ -23,7 +23,7 @@ UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
 
 HINTS = {
     -352: "触发风控校验。可在本机 config.local.toml 填 sessdata（不要发送到聊天），或稍后再试。",
-    -412: "请求被拦截（太频繁）。等 10~30 分钟再跑，或把 page_sleep 调大。",
+    -412: "请求被 B 站拦截，可能与出口网络、游客身份或频率有关；本次停止，不保证延时即可恢复。",
     -799: "请求过于频繁，稍后再试。",
     -509: "请求过于频繁，稍后再试。",
     -404: "接口不存在，需要检查接口变化；存档与断点会保留。",
@@ -31,8 +31,8 @@ HINTS = {
 }
 
 
-# Rate limits: retrying or switching clients would only add requests; stop and resume on the next run.
-THROTTLED = (-412, -799, -509)
+# 风控与限流都停止本次采集，初始化、翻页和粉丝数请求共用此规则。
+THROTTLED = (-352, -412, -799, -509)
 
 
 class BiliError(Exception):
@@ -113,7 +113,9 @@ class RawClient:
             try:
                 spi = self._get("https://api.bilibili.com/x/frontend/finger/spi")
                 b3, b4 = spi.get("b_3", ""), spi.get("b_4", "")
-            except Exception as e:  # 拿不到也继续
+            except Exception as e:
+                if isinstance(e, BiliError) and e.code in THROTTLED:
+                    raise
                 warn(f"获取 buvid 失败（{e}），继续尝试")
         for k, v in (("buvid3", b3), ("buvid4", b4), ("SESSDATA", sessdata)):
             if v:
@@ -168,6 +170,8 @@ def make_client(kind: str, uid: int, sessdata: str, buvid3: str):
             last = "未安装 bilibili-api-python"
             warn("未安装 bilibili-api-python，改用自带请求器（pip install bilibili-api-python 可装上）")
         except Exception as e:
+            if isinstance(e, BiliError) and e.code in THROTTLED:
+                raise
             last = e
             warn(f"{cls.name} 初始化失败：{e}")
     raise RuntimeError(f"所有抓取方式都失败了：{last}")

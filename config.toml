@@ -10,7 +10,7 @@ name = "火羽ひのめ"
 [bilibili]
 # Cookie（SESSDATA）和各种 API key 不要填在这个文件里——它会跟着代码一起上传到 GitHub。
 # 请填在 config.local.toml（复制 config.local.example.toml 改名即可），那个文件只留在你自己电脑上。
-# HANE-LAB 的每日 Actions 使用游客采集和 Hy-MT 补译，不需要登录态或 API Key。
+# 日常登录采集在受控本机运行；HANE-LAB Actions 不配置登录态，手动游客采集可能受限。
 sessdata = ""
 buvid3   = ""
 

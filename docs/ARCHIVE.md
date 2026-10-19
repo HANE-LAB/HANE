@@ -4,13 +4,14 @@
 
 ## 登录态
 
-游客模式可能只返回部分内容。需要登录态时，将 `config.local.example.toml` 复制为 `config.local.toml`：
+游客模式可能只返回部分内容，也可能返回空列表或被拦截，不能保证每天都能取得新动态。需要登录态时，将 `config.local.example.toml` 复制为 `config.local.toml`：
 
 1. 在 Chrome / Edge 登录 B 站，按 F12 打开 **Application（应用程序）**。
 2. 在 **Storage → Cookies → B 站网址** 找到 `SESSDATA`，复制其 Value。
 3. 填入本地配置的 `[bilibili] sessdata`；可选填入同一浏览器的 `buvid3`。
 
 登录凭证只留本机，不能放在 `config.toml`、公开仓库、截图或聊天中。Cookie 失效后重新填写；遇到风控应稍后重试，不要提高请求频率。
+HTTP 412 不等于一定请求过快；初始化与翻页中的风控、限流都立即停止，保留断点。排查结果见[部署与恢复](DEPLOY.md#http-412-与游客可见性)。
 
 ## 增量、断点与历史版本
 

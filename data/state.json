@@ -1,23 +1,18 @@
 {
- "last_full_crawl": 1792410364,
- "last_crawl": 1792410365,
+ "last_full_crawl": 1792413932,
+ "last_crawl": 1792413932,
  "fetcher": "library",
  "uid": 2094031249,
  "schema_version": 4,
- "last_attempt": 1792410483,
+ "last_attempt": 1792413346,
  "last_result": {
-  "status": "failed",
-  "ts": 1792410485,
-  "error": "B站返回 -412 HTTP 412"
+  "status": "ok",
+  "ts": 1792413932,
+  "pages": 181,
+  "total": 2163
  },
- "history_complete": false,
- "last_success": 1792410365,
- "access": "guest",
- "checkpoint": {
-  "started_at": 1792410483,
-  "offset": "",
-  "seen": [],
-  "visited": [],
-  "pages": 0
- }
+ "history_complete": true,
+ "last_success": 1792413932,
+ "access": "authenticated",
+ "last_complete_full": 1792413932
 }
