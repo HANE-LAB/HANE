@@ -4,7 +4,7 @@ import json
 import sys
 import tempfile
 import unittest
-from contextlib import ExitStack
+from contextlib import ExitStack, nullcontext
 from pathlib import Path
 from unittest.mock import patch
 
@@ -12,6 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from hinome import archive as A, fetch as F, translate as T, merge as M, live as V, analyze
 from hinome import util as U
 from hinome.util import load_config, load_json, save_json
+VERIFY_LOGIN = F.verify_login
 
 
 def item(i, text="hello", likes=1):
@@ -57,7 +58,9 @@ class ArchiveTests(unittest.TestCase):
                     self.stack.enter_context(patch.object(mod, key, self.root / key.lower()))
         self.stack.enter_context(patch.object(F.time, "sleep"))
         self.stack.enter_context(patch.object(F, "jitter_sleep"))
-        self.cfg = load_config()
+        self.cfg = copy.deepcopy(U.DEFAULTS)
+        self.cfg["bilibili"]["sessdata"] = "fixture-login"
+        self.stack.enter_context(patch.object(F, "verify_login"))
         self.stack.enter_context(patch.object(T, "TR_REVIEW_FILE", self.root / "reviews.json"))
 
     def crawl(self, pages, **kwargs):
@@ -233,6 +236,52 @@ class ArchiveTests(unittest.TestCase):
         new = {"schema_version": 3, "last_attempt": 2, "checkpoint": {"offset": "next"}, "history_complete": False}
         self.assertEqual(M.merge_state(old, new), new)
         self.assertEqual(M.merge_state(new, old), new)
+
+    def test_guest_cannot_erase_authenticated_content_or_mark_missing(self):
+        with patch.object(F, "now", return_value=1700000000):
+            self.crawl([page([item(1, "完整正文", 10), item(2)])])
+        self.cfg["bilibili"]["sessdata"] = ""
+        for stamp in (1800000000, 1900000000):
+            with patch.object(F, "now", return_value=stamp):
+                self.crawl([page([item(1, "请登录查看", 20)])], full=True)
+        raw = load_json(F.RAW_FILE, {})
+        self.assertEqual(raw["1"]["item"]["modules"]["module_dynamic"]["desc"]["text"], "完整正文")
+        self.assertEqual(raw["1"]["item"]["modules"]["module_stat"]["like"]["count"], 20)
+        self.assertEqual(raw["1"]["content_seen"], 1700000000)
+        self.assertNotIn("missing_full_runs", raw["2"])
+        self.assertNotIn("gone", raw["2"])
+        self.cfg["bilibili"]["sessdata"] = "fixture-login"
+        with patch.object(F, "now", return_value=2000000000):
+            self.crawl([page([item(1, "登录后取得的新正文", 30), item(2)])], full=True)
+        self.assertEqual(load_json(F.RAW_FILE, {})["1"]["item"]["modules"]["module_dynamic"]["desc"]["text"], "登录后取得的新正文")
+
+    def test_access_switch_restarts_instead_of_resuming_guest_checkpoint(self):
+        self.cfg["bilibili"]["sessdata"] = ""
+        self.crawl([page([item(1)], True, "guest-next")], max_pages=1)
+        self.cfg["bilibili"]["sessdata"] = "fixture-login"
+        _, client = self.crawl([page([item(1), item(2)])])
+        self.assertEqual(client.calls, ["", ""])
+        self.assertEqual(load_json(F.STATE_FILE, {})["access"], "authenticated")
+
+    def test_merge_prefers_full_body_but_newer_guest_statistics_in_both_orders(self):
+        old = {"1": {"item": item(1, "full", 10), "last_seen": 10, "first_seen": 5}}
+        guest = {"1": {"item": item(1, "limited", 20), "last_seen": 20, "first_seen": 20,
+                       "content_access": "guest", "content_seen": 20}}
+        for a, b in ((old, guest), (guest, old)):
+            merged = M.merge_raw(a, b)["1"]
+            self.assertEqual(merged["item"]["modules"]["module_dynamic"]["desc"]["text"], "full")
+            self.assertEqual(merged["item"]["modules"]["module_stat"]["like"]["count"], 20)
+            self.assertEqual(merged["first_seen"], 5)
+            self.assertEqual(merged["content_seen"], 10)
+        guest["1"]["item"]["modules"]["module_stat"] = {}
+        self.assertEqual(M.merge_raw(old, guest)["1"]["item"]["modules"]["module_stat"]["like"]["count"], 10)
+
+    def test_login_validation_rejects_expired_cookie_without_echoing_it(self):
+        response = unittest.mock.Mock()
+        response.json.return_value = {"code": -101, "data": {"isLogin": False}}
+        with patch("requests.get", return_value=response), self.assertRaisesRegex(RuntimeError, "登录态已失效") as error:
+            VERIFY_LOGIN(self.cfg)
+        self.assertNotIn("fixture-login", str(error.exception))
 
     def test_edited_source_invalidates_llm_translation_and_analysis(self):
         post = {"id": "1", "text": "今日は配信します", "type": "text"}
@@ -413,6 +462,20 @@ class ArchiveTests(unittest.TestCase):
 
 
 class CliTests(unittest.TestCase):
+    def test_guest_option_never_passes_configured_credentials_to_collector(self):
+        from hinome import cli as C
+        for command in ("update", "publish", "fetch"):
+            cfg = copy.deepcopy(U.DEFAULTS)
+            cfg["bilibili"].update(sessdata="private-cookie", buvid3="private-device")
+            def collect(args, actual):
+                self.assertEqual(actual["bilibili"]["sessdata"], "")
+                self.assertEqual(actual["bilibili"]["buvid3"], "")
+                return 0
+            with patch.object(C, "load_config", return_value=cfg), \
+                    patch.object(C, "data_lock", return_value=nullcontext()), \
+                    patch.object(C, "cmd_" + command, side_effect=collect):
+                self.assertEqual(C.main([command, "--guest"]), 0)
+
     def test_publish_stops_after_pulling_new_code(self):
         import argparse
         import shutil

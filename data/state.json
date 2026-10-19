@@ -1,17 +1,18 @@
 {
- "last_full_crawl": 1792172412,
- "last_crawl": 1792190478,
+ "last_full_crawl": 1792407934,
+ "last_crawl": 1792407934,
  "fetcher": "library",
  "uid": 2094031249,
  "schema_version": 4,
- "last_attempt": 1792190469,
+ "last_attempt": 1792407340,
  "last_result": {
   "status": "ok",
-  "ts": 1792190478,
-  "pages": 3,
-  "total": 2161
+  "ts": 1792407934,
+  "pages": 181,
+  "total": 2163
  },
  "history_complete": true,
- "last_complete_full": 1792172412,
- "last_success": 1792190478
+ "last_success": 1792407934,
+ "access": "authenticated",
+ "last_complete_full": 1792407934
 }

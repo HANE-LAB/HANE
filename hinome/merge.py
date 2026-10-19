@@ -11,6 +11,7 @@ python lab.py publish 和 GitHub Actions 会自动注册这个驱动；手动注
 """
 from __future__ import annotations
 
+import copy
 import json
 import sys
 from pathlib import Path
@@ -26,6 +27,18 @@ def merge_raw(a: dict, b: dict) -> dict:
         fresh_a = max(ra.get("last_seen") or 0, ra.get("gone") or 0)
         fresh_b = max(rb.get("last_seen") or 0, rb.get("gone") or 0)
         win = dict(rb if fresh_b > fresh_a else ra)
+        if "content_access" in ra or "content_access" in rb:
+            # 游客能刷新互动数，但不能用受限正文覆盖登录取得的内容；旧归档按完整内容保留。
+            trusted = [r for r in (ra, rb) if r.get("content_access", "authenticated") == "authenticated"]
+            content = max(trusted or [ra, rb], key=lambda r: r.get("content_seen", r.get("last_seen", 0)))
+            observed = win["item"]
+            win["item"] = copy.deepcopy(content["item"])
+            stats = observed.get("modules", {}).get("module_stat")
+            if stats is not None:
+                modules = win["item"].setdefault("modules", {})
+                modules["module_stat"] = merge_deep(stats, modules.get("module_stat", {}))
+            win["content_access"] = content.get("content_access", "authenticated")
+            win["content_seen"] = content.get("content_seen", content.get("last_seen", 0))
         firsts = [x for x in (ra.get("first_seen"), rb.get("first_seen")) if x]
         if firsts:
             win["first_seen"] = min(firsts)

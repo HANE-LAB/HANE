@@ -172,6 +172,22 @@ def make_client(kind: str, uid: int, sessdata: str, buvid3: str):
 
 
 # ── 主流程 ───────────────────────────────────────────────────
+def verify_login(cfg):
+    """验证配置中的登录态，不把 Cookie 或响应正文写入日志。"""
+    import requests
+    try:
+        response = requests.get("https://api.bilibili.com/x/web-interface/nav",
+                                cookies={"SESSDATA": cfg["bilibili"]["sessdata"]},
+                                headers={"User-Agent": UA}, timeout=20, allow_redirects=False)
+        response.raise_for_status()
+        body = response.json()
+        valid = body.get("code") == 0 and (body.get("data") or {}).get("isLogin") is True
+    except Exception:
+        raise RuntimeError("无法验证 B 站登录态，保留归档；检查网络后重试") from None
+    if not valid:
+        raise RuntimeError("B 站登录态已失效，请更新本机 config.local.toml 后重试")
+
+
 def _pub_ts(item: dict) -> int:
     try:
         return int(item["modules"]["module_author"]["pub_ts"])
@@ -233,9 +249,13 @@ def read_page(client, spares, cfg, offset):
 def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
     """Checkpoint every page. Only a confirmed end completes a historical traversal."""
     from .archive import observe, snapshot
+    from .merge import merge_raw
     if max_pages is not None and max_pages < 1:
         raise ValueError("max_pages 必须大于 0")
     bc = cfg["bilibili"]
+    access = "authenticated" if bc.get("sessdata") else "guest"
+    if access == "authenticated":
+        verify_login(cfg)
     uid = int(cfg["target"]["uid"])
     store: dict = load_json(RAW_FILE, {})
     state: dict = load_json(STATE_FILE, {})
@@ -245,6 +265,14 @@ def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
         state.pop("last_complete_full", None)
     if state.get("uid", uid) != uid:
         raise ValueError("data/ 属于其他 UID，请使用独立目录，不能混合归档")
+    if state.get("access") != access:
+        # 不同可见范围的分页与缺失次数不能接在一起。
+        state.pop("checkpoint", None)
+        state.pop("last_complete_full", None)
+        state["history_complete"] = False
+        for rec in store.values():
+            for key in ("missing_since", "missing_full_runs", "last_missing_scan"):
+                rec.pop(key, None)
     t_run = now()
     checkpoint = state.get("checkpoint") if not full else None
     full = bool(full or checkpoint or not state.get("history_complete") or
@@ -252,7 +280,7 @@ def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
     if full:
         checkpoint = checkpoint or {"started_at": t_run, "offset": "", "seen": [], "visited": [], "pages": 0}
         state["checkpoint"] = checkpoint
-    state.update(uid=uid, schema_version=4, last_attempt=t_run,
+    state.update(uid=uid, schema_version=4, access=access, last_attempt=t_run,
                  last_result={"status": "running", "ts": t_run})
     save_json(STATE_FILE, state, pretty=True)
     for rec in store.values():
@@ -268,6 +296,18 @@ def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
     pages = new_count = gone = 0
     complete = throttled = False
     client = None
+
+    def remember(it):
+        iid, ts = str(it["id_str"]), now()
+        incoming = {"item": it, "first_seen": ts, "last_seen": ts,
+                    "content_access": access, "content_seen": ts}
+        rec = merge_raw({iid: store[iid]} if iid in store else {}, {iid: incoming})[iid]
+        for key in ("gone", "missing_since", "missing_full_runs", "last_missing_scan"):
+            rec.pop(key, None)
+        store[iid] = rec
+        observe(rec["item"], ts)
+        seen.add(iid)
+
     try:
         client, spares = make_client(bc.get("fetcher", "auto"), uid, bc.get("sessdata", ""), bc.get("buvid3", ""))
         log(f"抓取方式：{client.name}" + (f" · 从已保存的第 {checkpoint['pages']} 页继续" if full and offset else ""))
@@ -276,14 +316,9 @@ def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
             head, client = read_page(client, spares, cfg, "")
             for it in head["items"]:
                 iid = str(it["id_str"])
-                observe(it, now())
-                seen.add(iid)
                 if iid not in store:
                     new_count += 1
-                    store[iid] = {"first_seen": t_run}
-                store[iid].update(item=it, last_seen=now())
-                for key in ("gone", "missing_since", "missing_full_runs", "last_missing_scan"):
-                    store[iid].pop(key, None)
+                remember(it)
             checkpoint["seen"] = sorted(seen)
             save_json(RAW_FILE, store)
             save_json(STATE_FILE, state, pretty=True)
@@ -299,15 +334,9 @@ def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
             stop = False
             for it in items:
                 iid = str(it["id_str"])
-                observe(it, now())
-                seen.add(iid)
                 if iid not in store:
-                    store[iid] = {"first_seen": t_run}
                     new_count += 1
-                rec = store[iid]
-                rec.update(item=it, last_seen=now())
-                for key in ("gone", "missing_since", "missing_full_runs", "last_missing_scan"):
-                    rec.pop(key, None)
+                remember(it)
                 if not full and iid in known and not _is_pinned(it) and _pub_ts(it) < cutoff:
                     stop = True
             save_json(RAW_FILE, store)
@@ -331,7 +360,7 @@ def crawl(cfg: dict, full: bool = False, max_pages: int | None = None) -> dict:
             # pinned posts reached no point in the timeline at all, so it counts nothing.
             reached = min((_pub_ts(store[i]["item"]) for i in seen if i in store and not _is_pinned(store[i]["item"])), default=None)
             for iid, rec in store.items():
-                if reached is not None and iid not in seen and rec.get("last_missing_scan") != checkpoint["started_at"] \
+                if access == "authenticated" and reached is not None and iid not in seen and rec.get("last_missing_scan") != checkpoint["started_at"] \
                         and _pub_ts(rec.get("item") or {}) >= reached:
                     rec.setdefault("missing_since", t_run)
                     rec["missing_full_runs"] = rec.get("missing_full_runs", 0) + 1

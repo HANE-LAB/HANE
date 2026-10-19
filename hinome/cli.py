@@ -348,7 +348,8 @@ def main(argv=None):
         sp.add_argument("--no-open", action="store_true", help="跑完不自动打开浏览器")
         sp.add_argument("-v", "--verbose", action="store_true")
         if fetch:
-            sp.add_argument("--full", action="store_true", help="全量重抓（刷新所有互动数，标记已删除动态）")
+            sp.add_argument("--full", action="store_true", help="全量复核（登录态下核对不可见动态）")
+            sp.add_argument("--guest", action="store_true", help="强制游客采集，不使用本机或环境中的登录态")
             sp.add_argument("--max-pages", type=int, default=None, help="最多抓几页（调试用）")
 
     common(sub.add_parser("update", help="整条链更新（日常用这个）"), fetch=True)
@@ -356,6 +357,7 @@ def main(argv=None):
     common(sub.add_parser("publish", help="同步 GitHub → update → 推送数据（网站放在 GitHub Pages 时用）"), fetch=True)
     sp = sub.add_parser("fetch", help="只抓取")
     sp.add_argument("--full", action="store_true")
+    sp.add_argument("--guest", action="store_true")
     sp.add_argument("--max-pages", type=int, default=None)
     sub.add_parser("doctor", help="环境体检")
     sp = sub.add_parser("open", help="打开页面")
@@ -370,6 +372,8 @@ def main(argv=None):
     if not args.cmd:
         args = p.parse_args(["update"] + (argv or sys.argv[1:]))
     cfg = load_config()
+    if getattr(args, "guest", False):
+        cfg["bilibili"].update(sessdata="", buvid3="")
     if getattr(args, "edition", None):
         cfg["output"]["edition"] = args.edition
     print(f"HANE v{__version__} · {cfg['target']['name']} · UID {cfg['target']['uid']}")

@@ -1,0 +1,53 @@
+name: 每日更新归档
+
+on:
+  schedule:
+    # UTC 00:23 = 日本时间 09:23，避开整点。
+    - cron: '23 0 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: daily-archive
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    if: github.repository == 'HANE-LAB/HANE' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: |
+            requirements*.txt
+            constraints.txt
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+      - name: 游客采集并保存归档
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          python lab.py publish --guest --no-open --backend none --edition release || test $? -eq 2
+      - name: 构建网站与离线包
+        # GITHUB_TOKEN 的 push 不会触发另一个工作流，显式触发已有的回归与部署。
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run update-and-deploy.yml --ref main
+      - name: 失败时保留尚未上传的归档
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-recovery-${{ github.run_id }}
+          path: data/
+          retention-days: 30
