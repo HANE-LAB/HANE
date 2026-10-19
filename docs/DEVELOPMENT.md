@@ -74,6 +74,9 @@ node dev/test_live.cjs
 
 Windows 上使用 `-X utf8`，或先设置 `PYTHONUTF8=1`。`test_render.cjs` 会从模板抽取函数单独运行；新增函数依赖时要同步更新测试替身。
 
+`dev/check_translation_runtime.py` 是显式运行的真实 Hy-MT 检查，需要先准备模型，使用隔离的虚构样例。
+它不属于六组离线回归，不会在普通 PR 或网站构建中下载模型；运行方法见[翻译](TRANSLATION.md#github-actions)。
+
 ## 前端修改注意事项
 
 - 主脚本是模块脚本，正式版使用顶层 `await` 解压嵌入数据；保持 `<script type="module">`，不要加入依赖全局函数的内联 `on*=` 事件。

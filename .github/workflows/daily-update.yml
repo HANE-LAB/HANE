@@ -5,6 +5,11 @@ on:
     # UTC 00:23 = 日本时间 09:23，避开整点。
     - cron: '23 0 * * *'
   workflow_dispatch:
+    inputs:
+      verify_translation:
+        description: '用隔离样例实测 Hy-MT 翻译、缓存和原文变更耗时'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -33,11 +38,35 @@ jobs:
             constraints.txt
       - name: 安装依赖
         run: pip install -r requirements.txt
+      - name: 恢复 Hy-MT 模型与运行包
+        id: hymt-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: |
+            .models/hy-mt/*.gguf
+            .models/hy-mt/*.tar.gz
+            .models/hy-mt/*-LICENSE.txt
+          key: ${{ runner.os }}-${{ runner.arch }}-hymt-${{ hashFiles('hinome/local_mt.py') }}
+      - name: 准备并校验 Hy-MT
+        run: time python lab.py setup-translation
+      - name: 保存已校验的模型缓存
+        if: steps.hymt-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        with:
+          path: |
+            .models/hy-mt/*.gguf
+            .models/hy-mt/*.tar.gz
+            .models/hy-mt/*-LICENSE.txt
+          key: ${{ steps.hymt-cache.outputs.cache-primary-key }}
+      - name: 实测 Hy-MT 增量翻译
+        if: inputs.verify_translation
+        timeout-minutes: 10
+        run: python dev/check_translation_runtime.py
       - name: 游客采集并保存归档
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          python lab.py publish --guest --no-open --backend none --edition release || test $? -eq 2
+          python lab.py publish --guest --no-open --backend hymt --edition release || test $? -eq 2
       - name: 构建网站与离线包
         # GITHUB_TOKEN 的 push 不会触发另一个工作流，显式触发已有的回归与部署。
         env:

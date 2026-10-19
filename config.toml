@@ -10,7 +10,7 @@ name = "火羽ひのめ"
 [bilibili]
 # Cookie（SESSDATA）和各种 API key 不要填在这个文件里——它会跟着代码一起上传到 GitHub。
 # 请填在 config.local.toml（复制 config.local.example.toml 改名即可），那个文件只留在你自己电脑上。
-# GitHub Actions 只构建已提交的归档，不采集、不翻译，也不需要登录态或 API Key。
+# HANE-LAB 的每日 Actions 使用游客采集和 Hy-MT 补译，不需要登录态或 API Key。
 sessdata = ""
 buvid3   = ""
 
@@ -24,7 +24,7 @@ download_images = true    # 图片原文件保存在 data/media；暂不下载�
 
 [translate]
 # 翻译后端：
-#   hymt      默认：Hy-MT2，免费免注册，CPU 离线直译；先运行 setup-translation 下载约 1.13 GB 模型
+#   hymt      默认：Hy-MT2，保留匹配的旧译文，仅补缺译；先 setup-translation 下载约 1.13 GB CPU 模型
 #   auto      优先已有优质缓存，否则 hymt → google；不会自动使用付费 API
 #   google    谷歌翻译免费接口，不用注册，国内需要能访问谷歌
 #   ollama    本地大模型（推荐 qwen2.5:7b），完全免费、离线、翻译更自然，还能顺便打标签/判断情绪

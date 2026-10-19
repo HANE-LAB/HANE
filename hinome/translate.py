@@ -399,13 +399,18 @@ def _translate_posts(posts: list, cfg: dict, backend_name: str | None = None, ll
 
     cache = load_json(TR_CACHE_FILE, {})
     all_notes = llm_cache if llm_cache is not None else load_json(LLM_CACHE_FILE, {})
-    if (backend_name or cfg["translate"].get("backend", "auto")) in ("auto", "none"):
+    selected = backend_name or cfg["translate"].get("backend", "auto")
+    preserve_cached = selected in ("hymt", "hymt2")
+    if selected in ("auto", "none") or preserve_cached:
         for r in todo:
             _apply_from_any_cache(r, with_orig, all_notes, cache)
         stats["cached"] = sum(bool(r.get("tr")) for r in todo)
-        if stats["cached"] == len(todo) and ((backend_name or cfg["translate"].get("backend")) == "none" or not any(r.get("tr") in ("argos", "hymt") for r in todo)):
+        if stats["cached"] == len(todo) and (preserve_cached or selected == "none" or not any(r.get("tr") in ("argos", "hymt") for r in todo)):
             stats["backend"] = "cache"
             return stats
+        if preserve_cached:
+            # 日常补译保留所有匹配的旧译文，不因选择 HY-MT 就升级其他后端的缓存。
+            todo = [r for r in todo if not r.get("tr")]
     b = pick_backend(cfg, backend_name)
     if b is None:
         warn("没有可用的翻译后端，本次跳过翻译（页面会显示原文）")
@@ -468,12 +473,23 @@ def _translate_posts(posts: list, cfg: dict, backend_name: str | None = None, ll
         log(f"{len(kept)} 条已有比 {b.name} 更好的译文，保留不重翻")
         todo = [r for r in todo if r["id"] not in kept]
 
+    cached_fields = {}
+    if preserve_cached:
+        for r in todo:
+            for key, txt in _fields(r, with_orig):
+                for _, entries in sorted(cache.items(), key=lambda kv: -QUALITY.get(kv[0], 0)):
+                    if _covered(txt, entries):
+                        cached_fields[r["id"], key] = assemble(txt, entries)
+                        break
+
     # 机器翻译：收集所有待翻片段 → 去重 → 分批 → 回填
     segs = []
     for r in todo:
-        for _, txt in _fields(r, with_orig):
+        for key, txt in _fields(r, with_orig):
+            if (r["id"], key) in cached_fields:
+                continue
             if b.unit == "document":
-                if txt not in bc:
+                if not bc.get(txt):
                     segs.append(txt)
             elif b.unit == "line":
                 segs += [ln for ln in txt.split("\n") if ln.strip() and ln not in bc and needs_translation(ln)]
@@ -523,9 +539,11 @@ def _translate_posts(posts: list, cfg: dict, backend_name: str | None = None, ll
         b.close()
 
     for r in todo:
-        complete = all(_covered(txt, bc) for _, txt in _fields(r, with_orig))
+        complete = all((r["id"], key) in cached_fields or _covered(txt, bc) for key, txt in _fields(r, with_orig))
         for key, txt in _fields(r, with_orig):
-            if _covered(txt, bc):
+            if (r["id"], key) in cached_fields:
+                r[key] = cached_fields[r["id"], key]
+            elif _covered(txt, bc):
                 r[key] = assemble(txt, bc)
         if complete:
             r["tr"] = b.name
@@ -602,13 +620,15 @@ def _apply_from_any_cache(r, with_orig, notes=None, cache=None):
         r["tr"] = llm.get("backend", "llm")
         return
     cache = cache if cache is not None else load_json(TR_CACHE_FILE, {})
-    for name, bc in sorted(cache.items(), key=lambda kv: -QUALITY.get(kv[0], 0)):
-        fields = _fields(r, with_orig)
-        if fields and all(_covered(t, bc) for _, t in fields):
-            for key, t in fields:
+    fields, used = _fields(r, with_orig), []
+    for key, t in fields:
+        for name, bc in sorted(cache.items(), key=lambda kv: -QUALITY.get(kv[0], 0)):
+            if _covered(t, bc):
                 r[key] = assemble(t, bc)
-            r["tr"] = name
-            return
+                used.append(name)
+                break
+    if fields and len(used) == len(fields):
+        r["tr"] = used[0] if len(set(used)) == 1 else "cache"
 
 
 def qa_flags(r: dict) -> list:

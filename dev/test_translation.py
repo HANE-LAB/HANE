@@ -9,7 +9,7 @@ from unittest.mock import Mock, patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from hinome import local_mt as L, translate as T, merge as M
-from hinome.util import DEFAULTS, save_json
+from hinome.util import DEFAULTS, load_json, save_json
 
 
 class TranslationTests(unittest.TestCase):
@@ -51,6 +51,65 @@ class TranslationTests(unittest.TestCase):
         text = '今日は配信する\n返事を待ってください'
         self.assertEqual(T.assemble(text, {text: '今天直播\n请等我回复'}), '今天直播\n请等我回复')
         self.assertTrue(T._covered(text, {text: '今天直播\n请等我回复'}))
+
+    def test_hymt_only_translates_new_or_changed_source(self):
+        old = {'google': {'おはようございます': '早上好'}, 'hymt2': {'今日は休み': '今天休息'}}
+        save_json(T.TR_CACHE_FILE, old)
+        posts = [{'id': '1', 'text': 'おはようございます'}, {'id': '2', 'text': '今日は休み'},
+                 {'id': '3', 'text': '明日は配信する'}]
+        backend = T.HYMT({})
+        backend.translate_batch = Mock(side_effect=lambda texts: ['新增译文：' + text for text in texts])
+        with patch.object(T, 'pick_backend', return_value=backend):
+            stats = T.translate_posts(copy.deepcopy(posts), self.cfg, 'hymt')
+        backend.translate_batch.assert_called_once_with(['明日は配信する'])
+        self.assertEqual((stats['cached'], stats['segments'], stats['failed']), (2, 1, 0))
+        cache = load_json(T.TR_CACHE_FILE, {})
+        for name, entries in old.items():
+            self.assertLessEqual(entries.items(), cache[name].items())
+        with patch.object(T, 'pick_backend', side_effect=AssertionError('cached run must not probe model')):
+            rebuilt = copy.deepcopy(posts)
+            T.translate_posts(rebuilt, self.cfg, 'hymt')
+        self.assertEqual(rebuilt[0]['zh'], '早上好')
+        self.assertEqual(rebuilt[1]['zh'], '今天休息')
+        posts[2]['text'] = '明日は休み'
+        backend.translate_batch.reset_mock()
+        with patch.object(T, 'pick_backend', return_value=backend):
+            T.translate_posts(copy.deepcopy(posts), self.cfg, 'hymt')
+        backend.translate_batch.assert_called_once_with(['明日は休み'])
+        self.assertLessEqual(cache['hymt2'].items(), load_json(T.TR_CACHE_FILE, {})['hymt2'].items())
+
+    def test_hymt_failure_preserves_cache_and_retries_missing_text(self):
+        old = {'hymt2': {'今日は休み': '今天休息', '明日は配信する': ''}}
+        save_json(T.TR_CACHE_FILE, old)
+        posts = [{'id': '1', 'text': '今日は休み'}, {'id': '2', 'text': '明日は配信する'}]
+        backend = T.HYMT({})
+        backend.translate_batch = Mock(side_effect=[[''], ['明天直播']])
+        with patch.object(T, 'pick_backend', return_value=backend):
+            stats = T.translate_posts(copy.deepcopy(posts), self.cfg, 'hymt')
+            self.assertEqual(stats['failed'], 1)
+            self.assertEqual(load_json(T.TR_CACHE_FILE, {}), old)
+            stats = T.translate_posts(posts, self.cfg, 'hymt')
+        self.assertEqual(stats['failed'], 0)
+        self.assertEqual(posts[0]['zh'], '今天休息')
+        self.assertEqual(posts[1]['zh'], '明天直播')
+        self.assertEqual(backend.translate_batch.call_args_list[0].args, (['明日は配信する'],))
+        self.assertEqual(backend.translate_batch.call_args_list[1].args, (['明日は配信する'],))
+
+    def test_hymt_missing_title_keeps_cached_body_from_other_backend(self):
+        save_json(T.TR_CACHE_FILE, {'google': {'今日は休み': '今天休息'}})
+        post = {'id': '1', 'text': '今日は休み', 'title': 'お知らせ'}
+        backend = T.HYMT({})
+        backend.translate_batch = Mock(return_value=['通知'])
+        with patch.object(T, 'pick_backend', return_value=backend):
+            T.translate_posts([post], self.cfg, 'hymt')
+        backend.translate_batch.assert_called_once_with(['お知らせ'])
+        self.assertEqual((post['zh'], post['title_zh']), ('今天休息', '通知'))
+        self.assertEqual(load_json(T.TR_CACHE_FILE, {})['google'], {'今日は休み': '今天休息'})
+        for mode in ('none', 'hymt'):
+            rebuilt = {'id': '1', 'text': '今日は休み', 'title': 'お知らせ'}
+            with patch.object(T, 'pick_backend', side_effect=AssertionError('mixed cache must rebuild offline')):
+                stats = T.translate_posts([rebuilt], self.cfg, mode)
+            self.assertEqual((rebuilt['zh'], rebuilt['title_zh'], stats['failed']), ('今天休息', '通知', 0))
 
     def test_chunking_never_loses_text_or_splits_url(self):
         text = 'こんにちは。\n' * 8 + 'https://example.org/very-long-link\n' + 'こんにちは。' * 20
