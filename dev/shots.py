@@ -192,7 +192,22 @@ async def shoot() -> int:
             await rm.wait_for_timeout(500)
             if await cursor.get_attribute("style") != paused:
                 problems.append("暂停后时间轴仍在前进")
+            await rm.locator('#playback-settings > summary').click()
+            await rm.locator('#btn-speed').click()
+            if await rm.locator('#btn-speed').inner_text() != '速度 2×':
+                problems.append("播放设置：速度切换没有生效")
             await rm.locator('#render-quality').select_option('lite')
+            if await rm.locator('#render-status').inner_text() != '流畅特效':
+                problems.append("播放设置：画质切换没有生效")
+            await rm.locator('#render-quality').press('Escape')
+            if await rm.locator('#playback-settings').evaluate('(el) => el.open') or not await rm.locator('#playback-settings > summary').evaluate('(el) => el === document.activeElement'):
+                problems.append("播放设置：Escape 没有收起并归还焦点")
+            await rm.locator('#playback-settings > summary').click()
+            month = await rm.locator('#dial-month').inner_text()
+            await rm.locator('#dial-next').click()
+            await rm.wait_for_timeout(100)
+            if await rm.locator('#playback-settings').evaluate('(el) => el.open') or await rm.locator('#dial-month').inner_text() == month:
+                problems.append("月份导航：没有切月或没有收起播放设置")
             await play.click()
             if await play.evaluate('(el) => el.getBoundingClientRect().height') < 48:
                 problems.append("播放按钮高度不足 48px")

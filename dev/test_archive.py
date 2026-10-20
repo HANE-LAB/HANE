@@ -424,7 +424,7 @@ class ArchiveTests(unittest.TestCase):
         from hinome import build as B
         for key in ("SITE", "HISTORY_FILE", "RUNLOG_FILE", "STATE_FILE", "MEDIA", "MEDIA_FILE"):
             self.stack.enter_context(patch.object(B, key, self.root / key.lower()))
-        save_json(B.STATE_FILE, {"last_result": {"status": "failed", "error": "PRIVATE_TEST_DIAGNOSTIC"}})
+        save_json(B.STATE_FILE, {"last_result": {"status": "failed", "error": "PRIVATE_TEST_DIAGNOSTIC"}, "last_success": 123})
         post = {"id": "1", "ts": 1, "text": "普通原文 <!--DEV-->保留用户原文<!--/DEV-->"}
         self.cfg["output"]["edition"] = "release"
         release = B.build_site([post], {}, self.cfg, [], demo=True)
@@ -439,6 +439,7 @@ class ArchiveTests(unittest.TestCase):
         self.assertEqual(data["posts"][0]["text"], post["text"])
         self.assertNotIn("runs", data)
         self.assertNotIn("last_fetch", data["meta"])
+        self.assertEqual(data["meta"]["last_success"], 123, "the header shows when the data was last fetched")
         for text in ('id="archive-status"', 'data-v="pipeline"', 'id="shrine-story"', 'PRIVATE_TEST_DIAGNOSTIC', 'DYNAMIC LAB'):
             self.assertNotIn(text, html)
         self.cfg["output"]["edition"] = "dev"

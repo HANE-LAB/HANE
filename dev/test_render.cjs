@@ -2,6 +2,7 @@
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
+const tr = (s, ...v) => typeof s === 'string' ? s : s.reduce((out, part, i) => out + (i ? v[i - 1] : '') + part, '');
 const source = fs.readFileSync(require('node:path').join(__dirname, '../hinome/template.html'), 'utf8');
 const functions = ['loop', 'pickVis'].map(name => {
   const match = source.match(new RegExp(`function ${name}\\([^]*?\\n}`));
@@ -118,41 +119,31 @@ console.log('PASS metric values, tied ranks, fixed square-root scale and stable 
 // The OS motion preference must not silently change this project's requested autoplay default.
 assert.match(source, /speed: 1, playing: true/);
 assert.ok(!source.includes('一诺千金') && !source.includes('灯火长明'), 'remove editorial slogans, keep the name');
-const portraitClasses = new Set(), portraitStage = {}, portraitImage = {style: {}, getAttribute: () => 'existing.png'};
-const portraitEl = {style: {setProperty(k, v) { this[k] = v; }}, hidden: false, querySelector: selector => selector === "img" ? portraitImage : portraitStage, classList: {
+// The looks are already in place; the stage measures as the picture plus padding and her name.
+const portraitClasses = new Set(), portraitImage = {style: {}, children: [{}]};
+const portraitStage = {get offsetHeight() { return parseFloat(portraitImage.style.width) * .823 + 8; }};
+const portraitEl = {style: {setProperty(k, v) { this[k] = v; }}, hidden: false, querySelector: () => portraitStage, classList: {
   toggle(name, enabled) { enabled ? portraitClasses.add(name) : portraitClasses.delete(name); },
   remove(name) { portraitClasses.delete(name); }, add(name) { portraitClasses.add(name); }
 }};
 const portraitR = {W: 1224, H: 540, cx: 140, Ri: 289, portrait: false, playing: true, lowq: false, holds: new Set()};
-const portraitContext = vm.createContext({R: portraitR, META: {uid: 2094031249}, POSTS: [{}], state: {view: 'ring'},
-  document: {hidden: false}, $: selector => selector === '#hinome-shrine' ? portraitEl : {},
+const portraitContext = vm.createContext({R: portraitR, META: {uid: 2094031249}, HAS_PORTRAIT: true, POSTS: [{}], state: {view: 'ring'},
+  document: {hidden: false}, $: selector => selector === '#hinome-shrine' ? portraitEl : selector === '#portrait-looks' ? portraitImage : {},
   clamp: (v, a, b) => Math.max(a, Math.min(b, v)), performance: {now: () => 100},
   requestAnimationFrame: () => 1, cancelAnimationFrame() {}, loop() {}});
 vm.runInContext(extract('fitShrine'), portraitContext);
-vm.runInContext(source.match(/function ringStart\(\) \{[^\n]+/)[0] + '\n' + source.match(/function ringStop\(\) \{[^\n]+/)[0], portraitContext);
 portraitContext.fitShrine();
 const desktopWidth = parseFloat(portraitEl.style.width);
 assert.ok(desktopWidth >= 300 && desktopWidth <= 340, 'desktop portrait is about twice its former visible width');
 assert.ok(portraitR.shrineRight < portraitR.cx + portraitR.Ri, 'keep the portrait inside the dial');
-{ const top = parseFloat(portraitEl.style.top), portraitHeight = parseFloat(portraitImage.style.width) * .823 + 8;
+{ const top = parseFloat(portraitEl.style.top), portraitHeight = portraitStage.offsetHeight;
   assert.ok(top >= 16 && top + portraitHeight + 70 + 148 <= portraitR.H - 16, 'portrait, ledger and letter all fit inside the dial');
   assert.ok(Math.abs(portraitR.letterTip[1] - (top + portraitHeight + 70 + 74)) < 1e-9, 'the thread leaves the middle of the letter, below the ledger');
   portraitR.visH = 480; portraitContext.fitShrine();   // a 900 px window shows 480 px of the dial before scrolling
-  const seenTop = parseFloat(portraitEl.style.top), seenHeight = parseFloat(portraitImage.style.width) * .823 + 8 + 70 + 148;
+  const seenTop = parseFloat(portraitEl.style.top), seenHeight = portraitStage.offsetHeight + 70 + 148;
   assert.ok(seenTop >= 16 && seenTop + seenHeight <= 480 - 14, 'portrait, ledger and letter are all visible without scrolling');
   assert.ok(parseFloat(portraitImage.style.width) >= 230, 'the portrait shrinks only a little');
   delete portraitR.visH; portraitContext.fitShrine(); }
-portraitR.lowq = true; portraitContext.fitShrine();
-assert.ok(portraitClasses.has('shrine-lite')); assert.ok(!portraitClasses.has('shrine-still'), 'low quality still animates the portrait');
-portraitContext.ringStop(); assert.ok(portraitClasses.has('shrine-still'));
-portraitContext.ringStart(); assert.ok(!portraitClasses.has('shrine-still'), 'resume also works at low quality');
-portraitContext.ringStop(); portraitR.playing = false; portraitContext.ringStart();
-assert.ok(portraitClasses.has('shrine-still'), 'manual pause is preserved');
-portraitR.playing = true; portraitR.holds.add('drawer'); portraitContext.fitShrine();
-assert.ok(portraitClasses.has('shrine-still'), 'a held dial keeps the tassels still'); portraitR.holds.clear();
-portraitR.playing = true; portraitContext.document.hidden = true; portraitContext.fitShrine();
-assert.ok(portraitClasses.has('shrine-still'), 'background pages stop decorative motion');
-portraitContext.document.hidden = false;
 for (const width of [281, 351, 430]) {
   Object.assign(portraitR, {W: width, H: 700, portrait: true}); portraitContext.fitShrine();
   const w = parseFloat(portraitEl.style.width), left = parseFloat(portraitEl.style.left), top = parseFloat(portraitEl.style.top);
@@ -165,16 +156,16 @@ for (const width of [281, 351, 430]) {
   assert.ok(portraitR.letterTip[0] - ledgerRight >= 60, 'the thread to the beam starts well to the right of the ledger');
   assert.ok(ledgerBottom <= 176, 'the ledger stays above the dial band');
 }
-portraitContext.META.demo = true; portraitContext.fitShrine(); assert.equal(portraitStage.hidden, true); assert.equal(portraitEl.hidden, false);
-console.log('PASS default autoplay, responsive portrait sizing, reduced quality animation and pause/resume lifecycle');
+portraitContext.HAS_PORTRAIT = false; portraitContext.fitShrine(); assert.equal(portraitStage.hidden, true); assert.equal(portraitEl.hidden, false);
+console.log('PASS default autoplay and responsive portrait sizing');
 
 // Manual seeking remains useful while paused; rapid updates must not keep restarting the paper flip.
 const letterNodes = Object.fromEntries(['#now', '#now-when', '#now-type', '#now-txt', '#letter-stamp'].map(k => [k, {dataset: {}, textContent: ''}]));
 let letterTime = 0;
-const letterContext = vm.createContext({R: {playing: false, drag: false}, document: {hidden: false},
+const letterContext = vm.createContext({tr, state: {lang: 'zh'}, R: {playing: false, drag: false}, document: {hidden: false},
   $: k => letterNodes[k], performance: {now: () => letterTime}, fdate: t => String(t), tzName: () => 'JST',
   fnum: n => n == null ? '—' : String(n), isLiveNotice: p => p.type === 'live'});
-vm.runInContext(extract('setNow'), letterContext);
+vm.runInContext([/const postText = [^\n]+/, /const STAMP_JA = [^\n]+/, /const letterStamp = [^\n]+/].map(re => source.match(re)[0]).join('\n') + '\n' + extract('setNow'), letterContext);
 letterContext.setNow({id: 'a', ts: 1, text: '<img onerror=bad()>', stats: {like: 0}});
 assert.equal(letterNodes['#now-txt'].textContent, '<img onerror=bad()>', 'content stays text, never HTML');
 assert.equal(letterNodes['#now'].dataset.turn, undefined);
@@ -250,6 +241,17 @@ const glides = []; months.seekTo = (b, dur) => glides.push([b, dur]); months.wra
 months.R.raf = 1; months.R.b = .4; months.dialMonth(1); assert.deepEqual(glides.pop(), [1.5, 520], 'playing: the month buttons glide');
 months.R.seek = {from: .4, delta: 1.1}; months.dialMonth(1); assert.deepEqual(glides.pop(), [2.5, 520], 'a second press counts from where the glide is going');
 months.R.raf = 0; months.R.seek = null; assert.equal(months.moved.length, 0);
+
+// The toolbar follows the dial's month, including months without posts and the gap between loops.
+const scrubEls = new Map();
+const scrubEl = key => { if (!scrubEls.has(key)) scrubEls.set(key, {style: {}, setAttribute() {}}); return scrubEls.get(key); };
+const scrub = vm.createContext({tr, $: scrubEl, cFx: scrubEl('canvas'), p2: n => String(n).padStart(2, '0'), scrubX: b => b / 4,
+  R: {b: 0, bmax: 4, thv: .4, scrubWidth: 400, months: [{s: 0, e: 1, y: 2025, m: 12}, {s: 1, e: 2, y: 2026, m: 1, posts: []}]}});
+vm.runInContext(extract('updateScrub'), scrub);
+for (const [b, label] of [[0, '2025年12月'], [1, '2026年01月'], [1.5, '2026年01月'], [2, '2026年01月'], [2.5, '2026年01月']]) {
+  scrub.R.b = b; scrub.updateScrub(); assert.equal(scrubEl('#dial-month').textContent, label);
+}
+scrub.R.months = []; scrub.updateScrub(); assert.equal(scrubEl('#dial-month').textContent, '—');
 
 // One time-zone switch invalidates every view that groups or prints times.
 const zoneCalls = {saved: 0, header: 0};
@@ -469,7 +471,7 @@ console.log('PASS holds: an open post or resting pointer pauses for a while, clo
   const day = Date.UTC(2023, 4, 20) / 1000 - 9 * 3600;   // 2023-05-20 00:00 JST
   const S = (d, hh, mm, dur) => ({start: day + d * 86400 + hh * 3600 + mm * 60, duration: dur});
   const sessions = [S(-2, 23, 0, 3600), S(-1, 23, 5, 3600), S(0, 23, 2, 6720), S(1, 0, 40, 1800), S(3, 23, 0, 3600)];
-  const ledger = vm.createContext({state: {tz: 9}, SESSIONS: sessions, POSTS: [{ts: day - 100 * 86400}], $: k => ui[k],
+  const ledger = vm.createContext({tr, state: {tz: 9}, SESSIONS: sessions, POSTS: [{ts: day - 100 * 86400}], $: k => ui[k],
     h: (tag, attrs, ...kids) => ({tag, text: (attrs || {}).text || kids.flat().map(k => typeof k === 'string' ? k : k ? k.text : '').join(''), cls: (attrs || {}).class})});
   const line = re => source.match(re)[0];
   vm.runInContext([line(/function tp\(ts, tz\) \{[^\n]+/), line(/const p2 = [^\n]+/), line(/const fday = [^\n]+/), line(/const monthKey = [^\n]+/),
@@ -504,3 +506,127 @@ console.log('PASS ledger: archive-only month and night, 6:00 night boundary, hon
   assert.match(source, /const years = liveYears\(earliest, latest\);\r?\n  if \(!years\.includes\(LV\.year\)\) LV\.year = String\(tp\(latest\)\.y\);/);
 }
 console.log('PASS LIVE years cover the posts, so a ledger month opens as itself');
+
+// Months without a single archived stream are named as runs next to the totals; the chosen time zone decides the month.
+{
+  const line = re => source.match(re)[0];
+  const ctx = vm.createContext({tr, state: {tz: 9}});
+  vm.runInContext([line(/function tp\(ts, tz\) \{[^\n]+/), line(/const p2 = [^\n]+/), line(/const monthKey = [^\n]+/), extract('liveGaps'),
+    line(/const gapText = [^\n]+/)].join('\n') + '\nthis.liveGaps = liveGaps; this.text = gapText;', ctx);
+  const plain = v => JSON.parse(JSON.stringify(v));   // arrays made inside the context have another prototype
+  ctx.gaps = (...a) => plain(ctx.liveGaps(...a));
+  const utc = (y, m, d, h = 12, mi = 0) => Date.UTC(y, m - 1, d, h, mi) / 1000;
+  const starts = [utc(2021, 10, 5), utc(2023, 8, 31, 15, 30), utc(2025, 7, 26)];   // the second is 00:30 on 1 September in Japan
+  assert.deepEqual(ctx.gaps(starts, utc(2021, 2, 1)), [['2021-02', '2021-09'], ['2021-11', '2023-08'], ['2023-10', '2025-06']]);
+  ctx.state.tz = 8;
+  assert.deepEqual(ctx.gaps(starts, utc(2021, 2, 1)), [['2021-02', '2021-09'], ['2021-11', '2023-07'], ['2023-09', '2025-06']]);
+  assert.deepEqual(ctx.gaps([utc(2026, 9, 1), utc(2026, 10, 1)], utc(2026, 9, 2)), [], 'consecutive months leave no gap');
+  assert.deepEqual(ctx.gaps([], utc(2021, 2, 1)), [], 'no archive gives no gaps and no endless loop');
+  assert.equal(ctx.text([['2024-01', '2024-01'], ['2023-09', '2025-06']]), '2024-01、2023-09 至 2025-06');
+}
+console.log('PASS LIVE gaps: month runs without streams, time-zone aware, named as ranges');
+
+// The portrait follows her outfit reveals (streams from 22:00 JST on 14 February 2022 and 2023).
+{
+  const jaStart = source.indexOf('const JA = {'), ctx = vm.createContext({});
+  vm.runInContext(source.slice(jaStart, source.indexOf('\n};', jaStart) + 3).replace('const JA', 'this.JA') + '\n' +
+    source.match(/const LOOKS = \[[^]*?\];/)[0] + '\n' + source.match(/const lookAt = [^\n]+/)[0] + '\nthis.LOOKS = LOOKS; this.lookAt = lookAt;', ctx);
+  const jst = (y, m, d, h, mi = 0) => Date.UTC(y, m - 1, d, h - 9, mi) / 1000;
+  assert.equal(ctx.lookAt(jst(2021, 2, 1, 16)), 0);
+  assert.equal(ctx.lookAt(jst(2022, 2, 14, 21, 59)), 0, 'the first outfit until the reveal stream starts');
+  assert.equal(ctx.lookAt(jst(2022, 2, 14, 22)), 1);
+  assert.equal(ctx.lookAt(jst(2023, 2, 14, 21, 59)), 1);
+  assert.equal(ctx.lookAt(jst(2026, 10, 15, 1)), 2);
+  for (const look of ctx.LOOKS) {
+    assert.ok(fs.existsSync(require('node:path').join(__dirname, '../hinome', look.src)), look.src);
+    for (const word of [look.outfit, look.hair]) assert.ok(Object.hasOwn(ctx.JA, word), `Japanese caption for ${word}`);
+  }
+}
+console.log('PASS portrait looks switch at the outfit reveals; captions and images exist');
+
+// 奉纳提灯: the playhead month's likes light a square-root share of the lantern rows behind her portrait.
+{
+  const line = re => source.match(re)[0], plain = v => JSON.parse(JSON.stringify(v));
+  const ctx = vm.createContext({});
+  vm.runInContext([line(/function rng\(seed\) \{[^\n]+/), line(/const lanternShare = [^\n]+/), line(/const LANTERN_PAD = [^\n]+/),
+    source.match(/const LANTERN_ROWS = \[[^]*?\];/)[0], extract('layoutLanterns')].join('\n') + '\nthis.share = lanternShare; this.PAD = LANTERN_PAD;', ctx);
+  assert.equal(ctx.share(0, 0), 0); assert.equal(ctx.share(25, 100), 0.5); assert.equal(ctx.share(100, 100), 1); assert.equal(ctx.share(150, 100), 1);
+  const [px, py] = ctx.PAD;
+  for (const [w, h, label] of [[320, 263, 'desktop'], [100, 82, 'phone']]) {   // her picture's box: 840 x 691
+    const L = ctx.layoutLanterns(w, h), hung = L.filter(l => !l.bokeh), named = hung.filter(l => l.w >= 20);
+    assert.deepEqual(plain(ctx.layoutLanterns(w, h)), plain(L), 'the same rows every time');
+    assert.ok(L.length >= 50 && L.length <= 80, `${label}: ${L.length} lanterns`);
+    assert.ok(hung.every(l => l.x - l.w / 2 >= -px * w && l.x + l.w / 2 <= (1 + px) * w && l.y >= -py * h && l.y + l.w * 1.62 <= h),
+      `${label}: every lantern hangs inside the backdrop`);
+    assert.ok(L.every((l, i) => !i || L[i - 1].s <= l.s), `${label}: painted far to near`);
+    assert.ok(hung.filter(l => l.x < 0.3 * w || l.x > 0.7 * w).length >= 12, `${label}: the rows come out beside her, where the cutout is clear`);
+    assert.ok(hung.some(l => l.y > 0.45 * h && (l.x < 0.2 * w || l.x > 0.8 * w)), `${label}: a lower pair of rows fills her sides`);
+    assert.ok(hung.some(l => l.white) && hung.some(l => !l.white), `${label}: red lanterns and red-and-white ones`);
+    assert.ok(label === 'desktop' ? named.length >= 2 : !named.length, `${label}: only lanterns big enough to read carry 火羽 / 奉納`);
+    const lit = L.filter(l => l.rank < 0.15).length / L.length;
+    assert.ok(lit > 0.05 && lit < 0.3, `${label}: a quiet month lights only a scattered few`);
+  }
+  const drawRing = extract('drawRing');
+  assert.ok(drawRing.indexOf('drawLanterns(') < drawRing.indexOf('drawImage(R.tex'), 'the lanterns hang under the ring');
+  assert.match(extract('drawLanterns'), /if \(!HAS_PORTRAIT\) return;/, 'no portrait, no lanterns');
+}
+console.log('PASS lanterns: square-root share of the busiest month lights the rows behind her portrait');
+
+// Locale changes affect authored UI only; archived text, time zones and playback stay intact.
+{
+  const localeSource = source.slice(source.indexOf('const state ='), source.indexOf('// Capture static HTML'));
+  const makeLocale = saved => {
+    const writes = [];
+    const ctx = vm.createContext({localStorage: {getItem() { if (saved instanceof Error) throw saved; return saved; }, setItem(k, v) { writes.push([k, v]); }}});
+    vm.runInContext(localeSource, ctx);
+    return {ctx, writes};
+  };
+  for (const saved of [null, '{broken', '{"lang":"en"}', new Error('storage blocked')]) {
+    const {ctx} = makeLocale(saved);
+    assert.equal(vm.runInContext('state.lang', ctx), 'zh');
+    assert.equal(ctx.tr('动态环'), '动态环');
+  }
+  const {ctx, writes} = makeLocale('{"lang":"ja","tz":8}');
+  assert.equal(ctx.tr('动态环'), '投稿リング');
+  assert.equal(vm.runInContext('state.tz', ctx), 8);
+  assert.equal(ctx.tr([' · 搜索「', '」'], '<b>{1}</b>'), ' · 検索「<b>{1}</b>」', 'substitutions remain literal data');
+  assert.equal(ctx.tr('unknown text'), 'unknown text');
+  assert.equal(ctx.tr('__proto__'), '__proto__');
+  for (const [key, value] of Object.entries(vm.runInContext('JA', ctx))) {
+    const slots = s => [...s.matchAll(/\{\d+\}/g)].map(m => m[0]).sort().join();
+    assert.equal(slots(value), slots(key), `translation must preserve values: ${key}`);
+  }
+  // A Chinese label edited without its Japanese entry would silently stay Chinese in the Japanese UI.
+  const JA = vm.runInContext('JA', ctx);
+  const keys = [...source.matchAll(/\btr\("((?:[^"\\]|\\.)*)"\)/g)].map(m => JSON.parse(`"${m[1]}"`))
+    .concat([...source.matchAll(/\btr`((?:[^`\\]|\\.)*)`/g)].map(m => { let i = 0; return m[1].replace(/\$\{(?:[^{}]|\{[^{}]*\})*\}/g, () => `{${i++}}`); }));
+  assert.ok(keys.length > 100, 'the scan finds the tr() literals');
+  assert.deepEqual(keys.filter(k => /[一-鿿]/.test(k) && !Object.hasOwn(JA, k)), [], 'every Chinese tr() literal has a Japanese entry');
+  const line = re => source.match(re)[0];
+  vm.runInContext([line(/const TYPES = [^\n]+/), line(/const tkey = [^\n]+/), line(/const foreign = [^\n]+/),
+    line(/const postText = [^\n]+/), line(/const snippet = [^\n]+/)].join('\n') + '\nthis.body = postText; this.preview = snippet;', ctx);
+  const post = {text: '今日も配信！', title: '原題', zh: '今天也开播！', title_zh: '译题', lang: 'ja'};
+  assert.equal(ctx.body(post), post.text); assert.equal(ctx.preview(post), '原題 今日も配信！');
+  assert.equal(ctx.body({text: '直播', lang: 'zh'}), '直播', 'Chinese originals are not UI labels');
+  assert.equal(ctx.body({title: 'Original', lang: 'en'}), 'Original', 'no translated-title fallback in Japanese');
+  vm.runInContext([line(/const isLiveNotice = [^\n]+/), line(/const STAMP_JA = [^\n]+/), line(/const letterStamp = [^\n]+/)].join('\n') + '\nthis.stamp = letterStamp;', ctx);
+  const tags = [...fs.readFileSync(require('node:path').join(__dirname, '../hinome/translate.py'), 'utf8').match(/LLM_TAGS = \[([^\]]*)\]/)[1].matchAll(/"([^"]+)"/g)].map(m => m[1]);
+  for (const tag of tags) assert.match(ctx.stamp({tags: [tag]}), /^[^぀-ヿ]{1,2}$/, `the Japanese letter stamp is never half a kana word: ${tag}`);
+  assert.equal(ctx.stamp({tags: ['活动/企划']}), '催事'); assert.equal(ctx.stamp({tags: ['直播预告']}), '予告');
+  const calls = [];
+  Object.assign(ctx, {ST: {}, built: {}, LEDGER: {key: 'cached'}, R: {b: 1.8, speed: 2, playing: false, tex: {}},
+    document: {activeElement: null}, drawer: {hidden: true},
+    applyLanguage() { calls.push('apply'); }, renderHeader() {}, renderKey() {}, renderBeamGuide() {}, syncPlayback() {}, syncQuality() {}, setSpeed() {},
+    showView(view) { calls.push(view); }});
+  vm.runInContext('state.view = "archive";\n' + extract('setLanguage'), ctx);
+  ctx.setLanguage('en'); ctx.setLanguage('ja'); assert.equal(writes.length, 0, 'ignore unsupported and unchanged language');
+  ctx.setLanguage('zh');
+  assert.equal(ctx.body(post), post.zh); assert.equal(ctx.preview(post), '译题 今天也开播！');
+  assert.equal(ctx.stamp({tags: ['活动/企划']}), '活动', 'Chinese stamps are unchanged');
+  assert.equal(JSON.parse(writes[0][1]).tz, 8); assert.equal(JSON.parse(writes[0][1]).lang, 'zh');
+  assert.equal(ctx.R.b, 1.8); assert.equal(ctx.R.playing, false); assert.equal(ctx.R.speed, 2);
+  assert.equal(ctx.ST.kw, 'zh'); assert.equal(ctx.LEDGER.key, ''); assert.deepEqual(calls, ['apply', 'archive']);
+  ctx.localStorage.setItem = () => { throw new Error('storage blocked'); };
+  assert.doesNotThrow(() => ctx.setLanguage('ja'), 'switching works even when preferences cannot be saved');
+}
+console.log('PASS Chinese/Japanese defaults, persistence, literal originals, translation values and live switching');

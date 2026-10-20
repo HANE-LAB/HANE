@@ -25,7 +25,7 @@
   --line-2: #3d342c;
   --paper: #eee7da;
   --paper-2: #b1a796;
-  --paper-3: #867c70;
+  --paper-3: #9a8f82;
   --hi: #fffaf0;
   --hiiro: #d8412c;
   --hiiro-2: #ec6a4f;
@@ -38,7 +38,7 @@
   --f-ja: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans CJK JP", "Meiryo", system-ui, sans-serif;
   --f-serif: "Noto Serif SC", "Songti SC", "STSong", "SimSun", "Shippori Mincho", serif;
   --f-mincho: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif CJK JP", "Noto Serif SC", "Songti SC", serif;
-  --s-0: 10px; --s-1: 11px; --s-2: 13px; --s-3: 15px; --s-4: 19px; --s-5: 30px;
+  --s-0: 11px; --s-1: 12px; --s-2: 13px; --s-3: 15px; --s-4: 19px; --s-5: 30px;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -55,60 +55,68 @@ button, input, select { font: inherit; color: inherit; }
 .demo b { color: var(--hiiro-2); font: 700 var(--s-1)/1 var(--f-mono); letter-spacing: .08em; margin-right: 6px; }
 
 /* ── header ── */
-.hd { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 3fr); align-items: start; gap: 12px; padding: 4px 0 10px; }
+.hd { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 3fr) auto; align-items: start; gap: 12px; padding: 4px 0 10px; }
 .brand { display: flex; gap: 14px; align-items: center; min-width: 0; }
 .seal { flex: none; width: 46px; height: 46px; background: var(--hiiro); color: #fff7ee; display: flex; align-items: center; justify-content: center; writing-mode: vertical-rl; text-orientation: upright; font: 700 16px/1 var(--f-mincho); letter-spacing: .08em; border-radius: 4px; box-shadow: inset 0 0 0 2px rgba(255,240,225,.22), 0 0 0 1px rgba(216,65,44,.4); transform: rotate(-2deg); }
 .bt { min-width: 0; display: grid; gap: 2px; }
 .bt .lab { font: 600 var(--s-0)/1.3 var(--f-mono); letter-spacing: .14em; color: var(--paper-2); }
 .bt .lab em { font-style: normal; color: var(--hiiro-2); }
 .bt h1 { margin: 0; font: 700 var(--s-5)/1.08 var(--f-mincho); letter-spacing: .04em; color: var(--hi); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.bt .sub { font: 400 var(--s-0)/1.4 var(--f-mono); letter-spacing: .05em; color: var(--paper-3); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bt .sub { display: flex; flex-wrap: wrap; gap: 2px 12px; font: 400 var(--s-0)/1.4 var(--f-mono); letter-spacing: .05em; color: var(--paper-3); }
+.bt .sub > span { white-space: nowrap; }
+.bt .archive-range { font-size: var(--s-1); color: var(--paper-2); }
+.language-switch { display: flex; align-self: start; gap: 2px; }
+.language-switch button { min-height: 44px; padding: 6px 10px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--paper-3); cursor: pointer; font-size: 12px; white-space: nowrap; }
+.language-switch button[aria-pressed="true"] { border-bottom-color: var(--hiiro); color: var(--hi); }
+.language-switch button:hover { color: var(--hi); background: var(--ink-3); }
+.ja .post { grid-template-columns: 9.5em minmax(0, 1fr) 9em; }
 .ro { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-self: center; }
 .ro > div { padding: 2px 10px 0; display: grid; gap: 4px; min-width: 0; border-left: 1px solid var(--line); }
 .ro .v { font: 500 var(--s-4)/1.05 var(--f-mono); font-variant-numeric: tabular-nums; color: var(--paper); white-space: nowrap; }
 .ro .v.acc { color: var(--hiiro-2); }
 .ro .zh { font-size: var(--s-1); color: var(--paper-3); margin-left: 4px; letter-spacing: 0; text-transform: none; }
-.tabs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; margin-bottom: 8px; }
-.tab { background: none; border: 0; padding: 6px 0 8px; text-align: left; cursor: pointer; color: var(--paper-3); border-bottom: 2px solid var(--line-2); display: flex; gap: 8px; align-items: baseline; }
-.tab span { font: 600 var(--s-1)/1 var(--f-mono); letter-spacing: .1em; }
-.tab small { font-size: var(--s-1); }
+.tabs { display: flex; gap: 28px; border-bottom: 1px solid var(--line); }
+.tab { background: none; border: 0; min-height: 44px; padding: 10px 3px; margin-bottom: -1px; text-align: left; cursor: pointer; color: var(--paper-2); border-bottom: 2px solid transparent; display: flex; gap: 8px; align-items: baseline; }
+.tab span { font: 500 var(--s-0)/1 var(--f-mono); letter-spacing: .08em; color: var(--paper-3); }
+.tab small { order: -1; font-size: 14px; font-weight: 600; }
 .tab:hover { color: var(--paper-2); border-bottom-color: var(--paper-3); }
 .tab[aria-selected="true"] { color: var(--hi); border-bottom-color: var(--hiiro); }
 
 /* ── ring view ── */
-.ring-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 16px 0; }
-.ring-controls .caption { display: grid; gap: 5px; }
-.ring-controls .caption b { font-size: 18px; color: var(--paper); }
-.ring-controls .caption small { font-size: 13px; color: var(--paper-2); }
-.playback { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; width: min(100%, 680px); }
-.playback .control { min-width: 0; min-height: 48px; padding: 10px 12px; border: 1px solid #79634e; border-radius: 6px; background: #241c16; color: #fff5e6; font: 600 16px/1.4 var(--f-sans); cursor: pointer; }
-.playback .control:hover { background: #39281d; border-color: #e3b286; }
-.playback .control:focus-visible { outline: 3px solid #ffd2a1; outline-offset: 3px; }
-.playback #btn-play { background: #ab3524; border-color: #ed8260; }
+.ring-controls { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 20px; padding: 12px 0 8px; }
+.playback { display: flex; align-items: center; gap: 8px; }
+.ring-controls .control { min-width: 0; min-height: 44px; padding: 8px 12px; border: 1px solid transparent; border-radius: 4px; background: none; color: var(--paper); font: 500 14px/1.4 var(--f-sans); cursor: pointer; }
+.ring-controls .control:hover { background: var(--ink-3); border-color: var(--line-2); }
+.ring-controls .control:focus-visible { outline: 2px solid #ffd2a1; outline-offset: 2px; }
+.playback #btn-play { min-height: 48px; min-width: 76px; background: #ab3524; border-color: #d46145; color: var(--hi); }
 .playback #btn-play:hover { background: #c7462e; }
+.month-nav { display: flex; align-items: center; gap: 4px; }
+.month-nav .control { min-width: 44px; font-size: 22px; line-height: 1; }
+#dial-month { min-width: 8em; text-align: center; font-size: 13px; color: var(--paper-2); }
+.playback-settings { position: relative; z-index: 6; }
+.playback-settings summary { display: flex; align-items: center; gap: 8px; list-style: none; }
+.playback-settings summary::-webkit-details-marker { display: none; }
+.playback-settings summary::after { content: "⌄"; color: var(--paper-3); }
+.playback-settings[open] summary::after { content: "⌃"; }
+.settings-panel { position: absolute; right: 0; top: calc(100% + 6px); width: 224px; padding: 12px; display: grid; gap: 12px; background: var(--ink-2); border: 1px solid var(--line-2); border-radius: 6px; box-shadow: 0 8px 24px #0008; }
+.settings-panel label { display: grid; gap: 6px; font-size: 12px; color: var(--paper-2); }
+.settings-panel .control { border-color: var(--line-2); background: var(--ink-3); text-align: left; }
+.settings-panel small { color: var(--paper-3); }
 .scrub { position: relative; height: 34px; margin-bottom: 6px; cursor: ew-resize; touch-action: none; user-select: none; }
 .scrub svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .scrub .win { position: absolute; top: 0; bottom: 12px; background: rgba(238,231,218,.07); border-left: 1px solid rgba(238,231,218,.35); border-right: 1px solid rgba(238,231,218,.35); pointer-events: none; }
 .scrub .cur { position: absolute; top: -2px; bottom: 10px; width: 2px; margin-left: -1px; background: var(--hiiro); pointer-events: none; box-shadow: 0 0 8px rgba(216,65,44,.8); }
 .viz { position: relative; width: 100%; height: 640px; overflow: hidden; background: var(--ink); border-top: 1px solid var(--line); }
 .viz canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-/* A fixed portrait, a wardrobe-inspired cord, and a letter tied to the selected post. */
+/* Her portrait in front of the lanterns (drawn on the dial), and a letter tied to the selected post. */
 .release .ro { grid-template-columns:repeat(2,minmax(0,1fr)); justify-self:end; width:min(100%,330px); }
-.release .tabs { grid-template-columns:repeat(4,minmax(0,1fr)); }
 .hinome-shrine { position:absolute; z-index:2; pointer-events:none; width:310px; text-align:center; isolation:isolate; }
 .portrait-stage { position:relative; padding-bottom:6px; }
-.portrait-stage::before { content:""; position:absolute; inset:10% 4% 2%; z-index:-1; border-radius:50% 50% 44% 44%; background:radial-gradient(ellipse at 50% 50%,#873d242f,transparent 72%); border:1px solid #b4834330; }
-.hinome-shrine .portrait { display:block; height:auto; margin:0 auto; mask-image:linear-gradient(#000 79%,transparent 98%); }
+.portrait-stage::before { content:""; position:absolute; inset:10% 4% 2%; z-index:-1; border-radius:50% 50% 44% 44%; background:radial-gradient(ellipse at 50% 50%,#873d242f,transparent 72%); }
+.portrait-looks { position:relative; margin:0 auto; aspect-ratio:840/691; }
+.portrait-looks img { position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity .9s ease; mask-image:linear-gradient(#000 79%,transparent 98%); }
+.portrait-looks img.on { opacity:1; }
 .shrine-name { display:block; margin-top:-7%; color:#efd6ab; font:500 clamp(13px,1.1vw,17px)/1.5 var(--f-ja); letter-spacing:.18em; }
-.portrait-cords { position:absolute; inset:0; width:100%; height:100%; overflow:visible; fill:none; stroke-linecap:round; stroke-linejoin:round; }
-.cord-base { stroke:#9e3023; stroke-width:4; }
-.cord-gold { stroke:#e7b66c; stroke-width:1; }
-.cord-knot { fill:#281611; stroke:#dc9c59; stroke-width:1.6; }
-.tassel { transform-box:fill-box; transform-origin:50% 0%; animation:tassel-sway 4.8s ease-in-out infinite; }
-.tassel.right { animation-delay:-2.4s; }
-@keyframes tassel-sway { 0%,100% { transform:rotate(-5deg); } 50% { transform:rotate(5deg); } }
-.hinome-shrine.shrine-still .tassel { animation-play-state:paused; }
-.hinome-shrine.shrine-lite .tassel { animation-duration:7s; }
 .now.letter { position:relative; inset:auto; display:block; width:100%; height:148px; padding:0; border:0; background:none; color:#382a20; cursor:pointer; pointer-events:auto; text-align:left; perspective:800px; font-family:var(--f-sans); }
 .letter::before,.letter::after { content:""; position:absolute; inset:4px 3px -4px; background:#a88b61; border:1px solid #50392b; transform:rotate(-2deg); }
 .letter::after { inset:2px -2px -2px 4px; background:#c9ad80; transform:rotate(1deg); }
@@ -131,7 +139,6 @@ button, input, select { font: inherit; color: inherit; }
 @keyframes letter-stamp { from { transform:rotate(-18deg) scale(1.2); opacity:0; } to { transform:rotate(-7deg) scale(1); opacity:1; } }
 .hinome-shrine.portrait-layout { display:flex; align-items:flex-end; gap:6px; }
 .portrait-layout .portrait-stage { flex:none; padding-bottom:0; }
-.portrait-layout .portrait-cords { width:136%; left:50%; transform:translateX(-50%); }
 .portrait-layout .portrait-stage::before { width:136%; left:50%; right:auto; transform:translateX(-50%); }
 .portrait-layout .shrine-name { font-size:10px; margin-top:-4px; letter-spacing:.1em; }
 .portrait-layout .now.letter { flex:1 1 0; min-width:0; width:auto; height:108px; }
@@ -140,7 +147,7 @@ button, input, select { font: inherit; color: inherit; }
 .portrait-layout .letter-stamp { width:28px; height:23px; font-size:10px; }
 .portrait-layout .letter .txt { font-size:12px; line-height:1.5; -webkit-line-clamp:2; margin:6px 0; }
 .portrait-layout .letter .when { font-size:10px; }
-.portrait-layout .letter .typ { font-size:9px; }
+.portrait-layout .letter .typ { font-size:10px; }
 /* 帳: the playhead's month and night as the live archive records them; it replaced a row of @-mention bells. */
 .ledger { position:relative; display:flex; flex-direction:column; justify-content:center; gap:1px; width:100%; height:62px; margin:0 0 8px; padding:3px 12px; border:0; border-block:1px solid #b4834340; background:linear-gradient(90deg,#0d0b0a00,#0d0b0ad0 16%,#0d0b0ad0 84%,#0d0b0a00); color:var(--paper-2); font:12px/1.45 var(--f-sans); text-align:center; white-space:nowrap; cursor:pointer; pointer-events:auto; }
 .ledger > span { overflow:hidden; text-overflow:ellipsis; }
@@ -153,12 +160,13 @@ button, input, select { font: inherit; color: inherit; }
 .ledger:focus-visible { outline:2px solid #f3ba77; outline-offset:3px; }
 .portrait-layout .ledger { position:absolute; left:0; top:calc(100% + 6px); width:var(--ledger-w,230px); height:50px; margin:0; padding:2px 8px 2px 14px; border-bottom:0; font-size:10.5px; line-height:1.4; background:linear-gradient(90deg,#0d0b0a00,#0d0b0ad8 12%,#0d0b0ad8 78%,#0d0b0a00); text-align:left; }
 .portrait-layout .ledger-head { font-size:11px; }
-.portrait-layout .ledger-head small { font-size:9.5px; }
+.portrait-layout .ledger-head small { font-size:10px; }
 .portrait-layout .ledger-dur, .portrait-layout .ledger-since { display:none; }
 @keyframes letter-fade-a { from { opacity:.55; } to { opacity:1; } }
 @keyframes letter-fade-b { from { opacity:.55; } to { opacity:1; } }
 @media(prefers-reduced-motion:reduce) {
-  .tassel,.letter[data-turn] .letter-stamp { animation:none !important; }
+  .letter[data-turn] .letter-stamp { animation:none !important; }
+  .portrait-looks img { transition:none; }
   .letter[data-turn="0"] .letter-sheet { animation:letter-fade-a .25s ease-out; }
   .letter[data-turn="1"] .letter-sheet { animation:letter-fade-b .25s ease-out; }
 }
@@ -168,8 +176,9 @@ button, input, select { font: inherit; color: inherit; }
 #c-fx { cursor: grab; touch-action: pan-y; }
 #c-fx:focus-visible { outline: 2px solid #ffd2a1; outline-offset: -3px; }
 #c-gpu { pointer-events: none; }
-.dial-help { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 4px 0 12px; font-size: 14px; color: var(--paper-2); }
-.dial-help button { min-height: 44px; padding: 8px 14px; font: 600 15px var(--f-sans); color: var(--paper); border: 1px solid var(--line-2); background: #241c16; cursor: pointer; }
+.reading-guide { margin-top: 8px; border-top: 1px solid var(--line); color: var(--paper-2); }
+.reading-guide > summary { min-height: 44px; padding: 12px 0; cursor: pointer; font-size: 13px; }
+.dial-help { font-size: 12px; line-height: 1.8; color: var(--paper-2); }
 .beam-guide { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 22px; padding: 10px 0 14px; font-size: 14px; color: var(--paper-2); }
 .beam-guide label { display: flex; align-items: center; gap: 8px; }
 .beam-guide select { min-height: 44px; max-width: 100%; padding: 8px; font: 600 15px var(--f-sans); color: var(--paper); background: #241c16; border: 1px solid var(--line-2); }
@@ -177,7 +186,7 @@ button, input, select { font: inherit; color: inherit; }
 .beam-scale span { display: grid; gap: 5px; width: 90px; font-size: 12px; }
 .beam-scale i { display: block; height: 3px; background: #f6bd73; box-shadow: 0 0 6px #d48b4f55; }
 .beam-guide details { flex-basis: 100%; font-size: 13px; line-height: 1.7; }
-.beam-guide summary { cursor: pointer; color: #e1bb8c; }
+.beam-guide summary { cursor: pointer; min-height: 44px; padding-block: 10px; color: #e1bb8c; }
 .ib { background: none; border: 1px solid var(--line-2); color: var(--paper-2); padding: 2px 7px; cursor: pointer; font: 500 var(--s-0)/1.4 var(--f-mono); letter-spacing: .06em; }
 .ib:hover { color: var(--hi); border-color: var(--paper-3); }
 .ib[aria-pressed="true"] { color: var(--hi); border-color: var(--paper-2); }
@@ -375,7 +384,12 @@ a.out:hover { color: var(--hi); }
 .nodata code { font-family: var(--f-mono); color: var(--paper); }
 
 @media (max-width: 980px) {
-  .hd { grid-template-columns: minmax(0, 1fr); }
+  .hd { grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; }
+  .brand { grid-column: 1 / -1; }
+  .language-switch { grid-column: 2; grid-row: 2; }
+  .ro { grid-column: 1 / -1; grid-row: 3; }
+  .release .ro { grid-column: 1; grid-row: 2; width: 100%; justify-self: start; }
+  .ja .post { grid-template-columns: 8em minmax(0, 1fr); }
   .ro > div:first-child { border-left: 0; padding-left: 0; }
   .chain { grid-template-columns: 1fr; }
   .stg + .stg { border-left: 0; border-top: 1px solid var(--line-2); }
@@ -386,12 +400,20 @@ a.out:hover { color: var(--hi); }
   :root { --s-5: 24px; }
   .ro { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 8px; }
   .ro > div:nth-child(4) { border-left: 0; padding-left: 0; }
-  .tab small { display: none; }
+  .tabs { gap: 0; }
+  .tab { flex: 1; justify-content: center; }
+  .tab span { display: none; }
+  .tab small { font-size: 13px; white-space: nowrap; }
+  .release .ro { width: auto; justify-self: start; }
+  .release .ro > div { display: grid; gap: 1px; padding-inline: 6px; }
+  .release .ro .lbl { font-size: 0; }
+  .release .ro .zh { margin-left: 0; }
+  .release .ro .v { font-size: 16px; }
   .sec { grid-template-columns: 1fr; }
   .sec > .kj { grid-row: auto; writing-mode: horizontal-tb; font-size: 18px; letter-spacing: .15em; }
   .sec > :not(.kj) { grid-column: 1; }
   .sec > .kj + * { margin-top: 6px; }
-  .post { grid-template-columns: 1fr; }
+  .post, .ja .post { grid-template-columns: 1fr; }
   .post > div + div { border-left: 0; border-top: 1px dashed var(--line); }
   .kv { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .kv > div:nth-child(3) { border-left: 0; }
@@ -399,15 +421,11 @@ a.out:hover { color: var(--hi); }
   .vkey { display: none; }
   .key-list { display: grid; gap: 6px; padding: 12px 0 2px; font: 400 var(--s-0)/1.6 var(--f-mono); color: var(--paper-3); }   /* the legend, under the dial */
   .key-list b { color: var(--hiiro-2); font: 700 12px/1 var(--f-mincho); margin-right: 6px; }
-  .playback { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .ring-controls { display: grid; grid-template-columns: 1fr auto; gap: 4px 8px; padding-top: 8px; }
+  .month-nav { grid-row: 2; grid-column: 1 / -1; justify-content: center; }
+  .playback-settings { grid-row: 1; grid-column: 2; }
   .kuji { width: 200px; }
-  /* Phones: the dial follows the timeline straight away, so it is on the first screen; reading aids come after it. */
-  #v-ring { display: flex; flex-direction: column; }
-  #v-ring > .viz { order: 1; }
-  #v-ring > .dial-help, #v-ring > .key-list { order: 2; }
-  #v-ring > .dial-help { padding-top: 12px; }
-  #v-ring > .beam-guide { order: 3; }
-  #v-ring > .story-note { order: 4; }
+
 }
 @media (max-width: 380px) {
   .ro { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -450,7 +468,7 @@ body { padding-bottom:120px; }
 /* Recording mode (?film): only the dial, edge to edge, for screen capture. No page around it, no controls, no cursor. */
 .film body { padding:0; overflow:hidden; }
 .film #app { padding:0; }
-.film #demo, .film .hd, .film #archive-status, .film .tabs, .film .ring-controls, .film .scrub, .film .dial-help, .film .key-list, .film .beam-guide, .film .story-note { display:none !important; }
+.film #demo, .film .hd, .film #archive-status, .film .tabs, .film .ring-controls, .film .scrub, .film .reading-guide, .film .story-note { display:none !important; }
 .film .viz { height:100vh !important; border-top:0; }
 .film:not(.film-key) .vkey, .film.film-nopig .kobuta-layer { display:none !important; }
 .film, .film * { cursor:none !important; }
@@ -468,46 +486,47 @@ body { padding-bottom:120px; }
       </div>
     </div>
     <div class="ro" id="readout"></div>
+    <div class="language-switch" role="group" aria-label="界面语言">
+      <button type="button" data-language="zh" lang="zh-CN" aria-pressed="true">中文</button>
+      <button type="button" data-language="ja" lang="ja" aria-pressed="false">日本語</button>
+    </div>
   </header>
 <!--DEV-->  <div id="archive-status" role="status" class="note" style="padding:8px 16px;border-bottom:1px solid var(--line);overflow-wrap:anywhere"></div><!--/DEV-->
   <nav class="tabs" role="tablist" aria-label="视图">
     <button class="tab" role="tab" data-v="ring" aria-selected="true"><span>RING</span><small>动态环</small></button>
+    <button class="tab" role="tab" data-v="archive" aria-selected="false"><span>ARCHIVE</span><small>动态归档</small></button>
     <button class="tab" role="tab" data-v="live" aria-selected="false"><span>LIVE</span><small>直播</small></button>
     <button class="tab" role="tab" data-v="stats" aria-selected="false"><span>STATS</span><small>统计</small></button>
-    <button class="tab" role="tab" data-v="archive" aria-selected="false"><span>ARCHIVE</span><small>全文</small></button>
 <!--DEV-->    <button class="tab" role="tab" data-v="pipeline" aria-selected="false"><span>PIPELINE</span><small>数据链</small></button><!--/DEV-->
   </nav>
 
   <section id="v-ring" class="view">
     <div class="ring-controls">
-      <div class="caption"><b>动态回放</b><small id="render-status">自动调节特效 · 拖动时间轴浏览</small></div>
       <div class="playback" role="group" aria-label="动态环播放控制">
         <button class="control" id="btn-play" type="button" aria-pressed="true">暂停</button>
-        <button class="control" id="btn-speed" type="button" aria-label="播放速度：1 倍，点击切换" aria-pressed="false">速度 1×</button>
         <button class="control" id="btn-latest" type="button">回到最新</button>
-        <select class="control" id="render-quality" aria-label="特效画质"><option value="auto">特效：自动</option><option value="rich">画质优先</option><option value="lite">流畅优先</option><option value="compat">兼容模式</option></select>
       </div>
+      <div class="month-nav" role="group" aria-label="按月份浏览">
+        <button class="control" id="dial-prev" type="button" aria-label="上个月" title="上个月">‹</button>
+        <span class="num" id="dial-month" aria-label="当前月份">—</span>
+        <button class="control" id="dial-next" type="button" aria-label="下个月" title="下个月">›</button>
+      </div>
+      <details class="playback-settings" id="playback-settings">
+        <summary class="control">播放设置</summary>
+        <div class="settings-panel">
+          <button class="control" id="btn-speed" type="button" aria-label="播放速度：1 倍，点击切换" aria-pressed="false">速度 1×</button>
+          <label>特效画质<select class="control" id="render-quality"><option value="auto">自动调节</option><option value="rich">画质优先</option><option value="lite">流畅优先</option><option value="compat">兼容模式</option></select></label>
+          <small id="render-status">自动调节特效</small>
+        </div>
+      </details>
     </div>
     <div class="scrub" id="scrub" role="slider" tabindex="0" aria-label="时间轴：拖动转到任意月份" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
       <svg id="scrub-svg" aria-hidden="true"></svg><div class="win" id="scrub-win"></div><div class="cur" id="scrub-cur"></div>
     </div>
-    <div class="dial-help" id="dial-help"><button id="dial-prev" type="button">← 上个月</button><button id="dial-next" type="button">下个月 →</button><span>拖动轮盘即可拨转 · 暂停时也能拨 · 选中轮盘后滚轮 / 方向键微调</span></div>
-    <div class="key-list" id="key-list"></div>
-    <div class="beam-guide">
-      <label>光束长度<select id="beam-metric" aria-label="光束长度指标"><option value="score">综合互动</option><option value="comment">评论数</option><option value="like">点赞数</option><option value="forward">转发数</option></select></label>
-      <div class="beam-scale" id="beam-scale" aria-label="光束长度示例"></div>
-      <details><summary>一束光 = 一条动态 · 金色为所选指标前 10% · 读图说明</summary><div id="beam-explain"></div><div>每座鸟居是一个月：鸟居脚下列着那个月的动态，门洞里的点阵按日期和每四小时一格标出发帖时刻（朱红点是开播卡片或预约），匾上的朱印是当月条数；发得越多，那个月和它的鸟居就越宽。播放头所在的鸟居会亮起来。鸟居分三种：那个月动态的综合互动分中位数排在所有月份前 15% 的，笠木两端插着两枚火羽；后 35% 的是不上漆的素木鸟居；其余是朱漆鸟居；没有动态的月份是素木。鸟居内侧的注连绳是她每天的「今天也开播」编成的：发了开播预告的那天，绳子是完整的稻草色，没发就缺一截。御守一般一年一换，所以每年开头挂一枚写着「皆勤」的御守，旁边写着年份和「发预告的天数/这一年的天数」（第一年从首条动态算起，今年算到最新一条），例如 359/366 天就是那一年只有 7 天没发预告。绘马是参拜的人写下心愿、挂在神社里的木牌，这里对应粉丝写下的评论：那个月的动态收到的评论越多，绳下挂的绘马越多（按最多的那个月开平方，最多 15 块），点开就是那个月评论最多的一条。信笺上的日期与原文对应所选光束，短红线标出它的位置。人物下方的「帳」只读直播档案：那个月的场次与时长、当晚开播时刻与连播天数（一晚算到次日 6:00）；点它看「直播」页的同一个月。内圈的线香烟从当前可见的动态升起，互动越高的动态冒烟越多、越亮；平时滑过的白羽有多少，跟着播放头那个月的直播总时长走（只读直播档案，按全档最长的月份、平方根刻度），没有档案的月份只有烟；燃羽或有签的动态经过播放头时，会飞起一束亮羽。</div></details>
-    </div>
     <div class="viz" id="viz">
       <div class="hinome-shrine" id="hinome-shrine" aria-label="火羽的动态信笺">
         <div class="portrait-stage">
-          <img class="portrait" alt="火羽ひのめ微笑的虚拟形象" width="1383" height="1137">
-          <svg class="portrait-cords" viewBox="0 0 360 310" aria-hidden="true">
-            <defs><path id="hane-cord" d="M22 126 C4 62 50 24 101 32 M259 32 C310 24 356 62 338 126 M22 126 C12 192 27 232 44 244 M338 126 C348 192 333 232 316 244"/><path id="hane-knot" d="M0 0 C-43 -34 -37 25 0 0 C34 -39 40 25 0 0 C-27 32 26 35 0 0 C-25 -36 24 -35 0 0"/></defs>
-            <use href="#hane-cord" class="cord-base"/><use href="#hane-cord" class="cord-gold"/>
-            <g transform="translate(23 128)"><use href="#hane-knot" class="cord-knot"/><circle r="4" fill="#c95732"/><g class="tassel"><path d="M-4 14 L-6 60 M4 14 L9 63" class="cord-base"/><path d="M-5 16 L-5 59 M4 16 L8 62" class="cord-gold"/><path d="M-8 56 L-8 72 M-5 56 L-4 75 M-2 56 L0 72 M6 60 L5 75 M9 60 L11 77 M12 60 L15 73" stroke="#c85a3e" stroke-width="2"/></g></g>
-            <g transform="translate(337 128)"><use href="#hane-knot" class="cord-knot"/><circle r="4" fill="#c95732"/><g class="tassel right"><path d="M-4 14 L-9 63 M4 14 L6 60" class="cord-base"/><path d="M-4 16 L-8 62 M5 16 L5 59" class="cord-gold"/><path d="M-12 60 L-15 73 M-9 60 L-11 77 M-6 60 L-5 75 M2 56 L0 72 M5 56 L4 75 M8 56 L8 72" stroke="#c85a3e" stroke-width="2"/></g></g>
-          </svg>
+          <div class="portrait-looks" id="portrait-looks"></div>
           <span class="shrine-name" lang="ja">火羽ひのめ</span>
         </div>
         <button class="ledger" id="ledger" type="button" title="在「直播」页查看这个月的直播档案"><span class="ledger-head" id="ledger-head">—</span><span id="ledger-live"></span><span id="ledger-night"></span></button>
@@ -519,13 +538,23 @@ body { padding-bottom:120px; }
           </span>
         </button>
       </div>
-      <canvas id="c-ring" aria-label="动态转盘：每座鸟居是一个月，每束光是一条动态；长度按所选互动指标统一缩放，内圈的线香烟从动态升起，白羽的多少是当月直播时长"></canvas>
+      <canvas id="c-ring" aria-label="动态转盘：每座鸟居是一个月，每束光是一条动态；长度按所选互动指标统一缩放，内圈的线香烟从动态升起，白羽的多少是当月直播时长，人物身后的提灯随当月动态的赞点亮"></canvas>
       <canvas id="c-smoke" aria-hidden="true"></canvas>
       <canvas id="c-fx" tabindex="0" role="slider" aria-label="拨转动态轮盘" aria-describedby="dial-help" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></canvas>
       <div id="kuji-layer"></div>
       <div class="vkey" id="vkey"></div>
     </div>
-<!--DEV-->    <details class="story-note" id="shrine-story" hidden><summary>人物图片来源</summary><p>人物来自火羽ひのめ <a href="https://www.bilibili.com/opus/486735286313184793" target="_blank" rel="noopener">2021 年 2 月 1 日首次动态</a>的归档配图，经 AI 去除背景。红金结饰参考人物发饰；信笺随选中动态翻页，短红线指向对应光束。人物是静态配图，不是官方 Live2D 模型或新皮肤。</p></details><!--/DEV-->
+    <details class="reading-guide">
+      <summary>如何读图 · 光束与神社元素</summary>
+      <p class="dial-help" id="dial-help">点击或拖动时间轴定位，月份两侧的箭头逐月切换。轮盘可拖动，暂停时也能拨；选中轮盘后可用滚轮、方向键、Home / End 或空格操作。</p>
+      <div class="beam-guide">
+        <label>光束长度<select id="beam-metric" aria-label="光束长度指标"><option value="score">综合互动</option><option value="comment">评论数</option><option value="like">点赞数</option><option value="forward">转发数</option></select></label>
+        <div class="beam-scale" id="beam-scale" aria-label="光束长度示例"></div>
+        <details><summary>一束光 = 一条动态 · 金色为所选指标前 10% · 读图说明</summary><div id="beam-explain"></div><div>每座鸟居是一个月：鸟居脚下列着那个月的动态，门洞里的点阵按日期和每四小时一格标出发帖时刻（朱红点是开播卡片或预约），匾上的朱印是当月条数；发得越多，那个月和它的鸟居就越宽。播放头所在的鸟居会亮起来。鸟居分三种：那个月动态的综合互动分中位数排在所有月份前 15% 的，笠木两端插着两枚火羽；后 35% 的是不上漆的素木鸟居；其余是朱漆鸟居；没有动态的月份是素木。鸟居内侧的注连绳是她每天的「今天也开播」编成的：发了开播预告的那天，绳子是完整的稻草色，没发就缺一截。御守一般一年一换，所以每年开头挂一枚写着「皆勤」的御守，旁边写着年份和「发预告的天数/这一年的天数」（第一年从首条动态算起，今年算到最新一条），例如 359/366 天就是那一年只有 7 天没发预告。绘马是参拜的人写下心愿、挂在神社里的木牌，这里对应粉丝写下的评论：那个月的动态收到的评论越多，绳下挂的绘马越多（按最多的那个月开平方，最多 15 块），点开就是那个月评论最多的一条。信笺上的日期与原文对应所选光束，短红线标出它的位置。人物下方的「帳」只读直播档案：那个月的场次与时长、当晚开播时刻与连播天数（一晚算到次日 6:00）；点它看「直播」页的同一个月。内圈的线香烟从当前可见的动态升起，互动越高的动态冒烟越多、越亮；平时滑过的白羽有多少，跟着播放头那个月的直播总时长走（只读直播档案，按全档最长的月份、平方根刻度），没有档案的月份只有烟；燃羽或有签的动态经过播放头时，会飞起一束亮羽。</div><div id="lantern-note">提灯是参拜的人献给神社的。人物身后挂着几列远近不同的祭典提灯，近处的写着「火羽」和「奉納」：播放头所在那个月的动态收到的赞越多，亮起的提灯越多；按全档赞最多的那个月、平方根刻度换算。一个账号只能点一次赞，所以赞最接近「来了多少人」；但这是累计到最近一次采集的数字，2026 年 10 月以后很多人回去给旧动态点赞，冷清的年份会比当时亮一些。</div></details>
+      </div>
+      <div class="key-list" id="key-list"></div>
+    </details>
+<!--DEV-->    <details class="story-note" id="shrine-story" hidden><summary>人物图片来源</summary><p>人物随播放头的日期换成她当时的形象，三张都取自火羽ひのめ的归档动态：初始衣装来自 <a href="https://www.bilibili.com/opus/622586081134879512" target="_blank" rel="noopener">2022 年 2 月 2 日动态</a>的配图，长发与短发来自她投稿视频 <a href="https://www.bilibili.com/video/BV1Ya411n75w" target="_blank" rel="noopener">BV1Ya411n75w</a>、<a href="https://www.bilibili.com/video/BV1pP411x7uM" target="_blank" rel="noopener">BV1pP411x7uM</a> 的封面。换装日期以 2022 年和 2023 年 2 月 14 日的新衣装发表直播为准。背景由本机抠图工具去除。人物身后的提灯随当月动态的赞点亮；信笺随选中动态翻页，短红线指向对应光束。人物是静态配图，不是官方 Live2D 模型或新皮肤。</p></details><!--/DEV-->
   </section>
   <section id="v-live" class="view" hidden><div class="page" id="live"></div></section>
   <section id="v-stats" class="view" hidden><div class="page" id="stats"></div></section>
@@ -585,12 +614,457 @@ const TAU = Math.PI * 2;
 const wrapA = a => ((a % TAU) + TAU) % TAU;
 const dWrap = a => wrapA(a + Math.PI) - Math.PI;
 
+const state = { tz: 9, view: "ring", lang: "zh" };
+try { const saved = JSON.parse(localStorage.getItem("hinome-lab") || "{}");
+  if (saved.tz === 8 || saved.tz === 9) state.tz = saved.tz;
+  if (saved.lang === "zh" || saved.lang === "ja") state.lang = saved.lang;
+} catch (e) {}
+const remember = () => { try { localStorage.setItem("hinome-lab", JSON.stringify({ tz: state.tz, lang: state.lang })); } catch (e) {} };
+
+const JA = {
+  "这个页面还没有装进数据。在项目文件夹里运行 ": "このページにはデータがありません。プロジェクトで ",
+  "，会生成带数据的版本。": " を実行すると、データ入りのページが生成されます。",
+  "图文": "画像付き投稿",
+  "开播卡片": "配信開始のお知らせ",
+  "视频": "動画",
+  "文字": "テキスト",
+  "转发": "シェア",
+  "专栏": "記事",
+  "其他": "その他",
+  "开播": "配信",
+  "互动分": "反応スコア",
+  "评论": "コメント",
+  "点赞": "いいね",
+  "全历史综合互动分（赞 + 3×评论 + 5×转发）：前 3% 大吉，前 10% 中吉，前 20% 小吉；不是运势预测": "全期間の反応スコア（いいね + 3×コメント + 5×シェア）：上位3%は大吉、10%は中吉、20%は小吉。運勢の予測ではありません",
+  "北京": "北京",
+  "亿": "億",
+  "日常记录": "日々の記録",
+  " · 开发版": " · 開発版",
+  "示例数据 · 仅用于界面检查": "サンプルデータ · 表示確認用",
+  "已遍历接口可见历史": "APIで取得できる履歴を走査済み",
+  "历史归档尚未完成": "過去のアーカイブは未完了",
+  "失败": "失敗",
+  "未完成": "未完了",
+  "进行中": "処理中",
+  " · 历史快照从首次采集开始积累": " · 履歴の保存は本プロジェクトの初回取得以降",
+  "暂无动态": "投稿はまだありません",
+  "动态": "投稿",
+  "直播记录": "配信記録",
+  "已译": "翻訳済み",
+  "缘": "縁",
+  "待复核": "要確認",
+  "直播预告": "配信予告",
+  "打开查看这一天的记录。": "この日の記録を開く。",
+  "日常": "日常",
+  "预告": "予告",
+  "自首条动态": "初投稿から",
+  "本月直播 ": "今月の配信 ",
+  " 场 · ": " 回 · ",
+  "本月没有直播档案": "今月の配信記録はありません",
+  "当晚 ": "この夜 ",
+  " 起": " から",
+  " 开播": " 開始",
+  " · 连播第 ": " · 連続配信 ",
+  " 天": " 日目",
+  "当晚没有直播记录": "この夜の配信記録はありません",
+  "每年一枚，挂在这一年开头 · 点击转到这一年": "毎年ひとつ、年の初めに掛けます · クリックでその年へ",
+  "  综合": "  総合",
+  "未记录": "記録なし",
+  "（长度封顶）": "（長さは上限）",
+  "点击转到这个月，并列出全部动态": "この月へ移動し、すべての投稿を表示",
+  "暂停": "一時停止",
+  "播放": "再生",
+  "流畅特效": "軽量エフェクト",
+  "完整特效": "フルエフェクト",
+  "速度 ": "速度 ",
+  "综合互动分 = 点赞 + 3×评论 + 5×转发，这是本站的加权方式。": "反応スコア = いいね + 3×コメント + 5×シェア。本サイト独自の重み付けです。",
+  "金色光束为所选指标前 10%，燃烧羽毛为前 3%；大吉/中吉/小吉始终按综合互动分的前 3%/10%/20% 标注，同分同档。这些是最近采集的累计数，不能当成发布当天的数据。": "金色は選択指標の上位10%、燃える羽は上位3%。大吉・中吉・小吉は常に反応スコアの上位3%・10%・20%を示し、同点は同じ区分です。数値は直近の取得時点の累計で、投稿当日の値ではありません。",
+  "每座鸟居是一个月，越宽发得越多 · 匾上朱印是当月条数 · 紙垂标出新的一年": "鳥居ひとつが1か月。幅が広いほど投稿数が多く、額の朱印は件数、紙垂は年の区切りです",
+  "鸟居是信众供奉的：动态最受欢迎的月份（月中位互动前 15%）门顶插一对火羽 · 最安静的（后 35%）是素木鸟居": "月間の反応スコア中央値が上位15%の月には一対の火羽、下位35%には素木の鳥居を飾ります",
+  "注连绳每天编一段：那天发了「今天也开播」就编上，没发就缺一截": "注連縄を1日ずつ編みます。「今日も配信」の予告があった日は編み、なかった日は隙間を残します",
+  "御守一年一换：每年一枚皆勤御守，写着年份和「发预告的天数/这一年的天数」": "御守は毎年交換。皆勤御守には年と「予告のあった日数／記録期間の日数」を記します",
+  "绘马是参拜的人写下的话：那个月的动态评论越多，绳下挂的绘马越多 · 点开看评论最多的一条": "絵馬はファンの言葉。月のコメントが多いほど増え、クリックで最もコメントの多い投稿を開きます",
+  "人物下方是那个月和当晚的直播档案：场次、时长、开播与连播天数": "人物の下の帳には、その月とその夜の配信回数・時間・開始時刻・連続配信日数を記します",
+  "烟": "煙",
+  "线香是参拜的供奉：烟从当前可见的动态升起，互动越高越浓": "線香の煙は表示中の投稿から立ち上り、反応が多いほど濃くなります",
+  "白羽多少＝当月直播时长 · 燃羽或有签的动态经过时飞起亮羽": "白い羽の量＝月の配信時間。燃える羽やおみくじ対象の投稿が通ると明るい羽が舞います",
+  "← 返回": "← 戻る",
+  "关闭": "閉じる",
+  "关闭 ✕": "閉じる ✕",
+  "（无文字）": "（本文なし）",
+  "动态配图": "投稿の画像",
+  "置顶": "固定",
+  "充电专属": "支援者限定",
+  "已删除或不可见": "削除済み・閲覧不可",
+  "已删除": "削除済み",
+  "标题 · 原文": "タイトル · 原文",
+  "标题 · 中文": "タイトル · 中国語",
+  "原文 · ": "原文 · ",
+  "中文": "中国語",
+  "译文 · 中文": "中国語訳",
+  "AI 对照原文校订": "AIによる原文照合・校訂",
+  "（还没翻译）": "（未翻訳）",
+  "大模型解读": "AIによる解釈",
+  "情绪：": "感情：",
+  "播放 ": "再生 ",
+  "弹幕 ": "弾幕 ",
+  "打开视频": "動画を開く",
+  "直播": "配信",
+  "直播预约": "配信予約",
+  "转发自 @": "シェア元 @",
+  "（原动态无文字或已删除）": "（元の投稿は本文なし、または削除済み）",
+  "观察到的版本 · ": "保存した版 · ",
+  "当时转发的原文": "当時シェアした原文",
+  "赞": "いいね",
+  "标签来自大模型": "AIによるタグ",
+  "标签来自规则": "ルールによるタグ",
+  "待复核：": "要確認：",
+  "在 B 站打开这条动态 ↗": "Bilibiliで投稿を開く ↗",
+  "直播时长": "配信時間",
+  "记录营收": "記録上の収益",
+  "弹幕数": "弾幕数",
+  "时": "時間",
+  " 万元": " 万元",
+  "灯": "灯",
+  "还没有可展示的直播归档，不能据此判断她没有直播。": "表示できる配信アーカイブがありません。配信がなかったという意味ではありません。",
+  "在本机运行 python lab.py live --no-open 同步公开记录；以后 update 会一起更新。来源异常时保留旧归档。": "ローカルで python lab.py live --no-open を実行して公開記録を同期できます。以降は update でも更新します。取得エラー時は既存のアーカイブを保持します。",
+  "暂时没有收录直播记录。": "配信記録はまだ収録されていません。",
+  "LIVE · 直播档案": "LIVE · 配信アーカイブ",
+  "日本时间": "日本時間",
+  "北京时间": "北京時間",
+  "归档 ": "収録 ",
+  " 场记录不完整": " 回は不完全な記録",
+  "{0} 无记录": "{0} 記録なし",
+  "。{0} 没有收录任何场次，不在以上总数里": "。{0} の配信は一件も収録されておらず、上記の合計に含まれません",
+  "数据更新于 {0} {1}": "データ更新 {0} {1}",
+  " · 查看口径与来源": " · 集計方法と出典",
+  "来源：": "出典：",
+  " · 房间 ": " · ルーム ",
+  "。最近成功同步：": "。最終同期：",
+  "未知": "不明",
+  "全部已归档场次：时长 ": "収録済みの全配信：時間 ",
+  " · 记录营收 ": " · 記録上の収益 ",
+  "。这不是完整生涯统计，也未独立核验来源的起止时间或金额。": "。活動全期間を網羅する統計ではなく、出典の開始・終了時刻や金額を独自に検証したものでもありません。",
+  "记录范围 ": "記録範囲 ",
+  " 至 ": " ～ ",
+  "。缺少记录不代表没有开播；完整标记只描述已收录的单场，不能证明整个历史完整。": "。記録がないことは未配信を意味しません。「完全」は収録した個別の配信に対する出典の判定で、全履歴の網羅性を保証しません。",
+  " 有 ": " ",
+  " 场本次来源未再返回，本站保留旧档。": " 回は今回の出典に含まれず、保存済みの記録を維持しています。",
+  "营收为来源记录金额（元），不是主播到手收入。观看人次、互动人数、付费人数均沿用来源口径；跨场不能当成独立人数相加。最高高能人数不等于同时在线人数，旧记录中的 0 按未提供显示。其他零值仅表示来源返回零，旧记录也可能未采集该项；单场标为完整仍可能有缺失字段。": "収益は出典の記録額（人民元）で、配信者の手取りではありません。延べ視聴数・反応人数・支払人数は出典の定義に従い、配信をまたいで実人数として合算できません。最高高能人数は同時視聴者数ではなく、過去記録の0は未提供として扱います。他の0も出典の返却値にすぎず、未収集の可能性があります。「完全」な配信にも欠損項目はあり得ます。",
+  "按开播日期归属月份；跨午夜的时间带分到相应日期。* 表示指标存在缺值，仅累加已有值。": "月は配信開始日で分類し、日付をまたぐ時間帯は各日に分割します。* は欠損がある項目で、取得済みの値だけを合計します。",
+  "页面从静态归档读取，快照从本项目首次采集开始积累。": "静的アーカイブを参照します。スナップショットは本プロジェクトの初回取得以降のものです。",
+  "最近一次直播同步未成功；当前展示最后保存的记录，可能尚未更新。": "直近の配信同期に失敗したため、最後に保存した記録を表示しています。最新ではない可能性があります。",
+  "本月收录场次": "今月の収録回数",
+  " · 按开播日期": " · 配信開始日で集計",
+  "本月直播时长": "今月の配信時間",
+  "起止时间差 · 已知场次": "開始・終了時刻の差 · 取得済み配信",
+  "本月记录营收": "今月の記録収益",
+  "来源统计 · 元": "出典の集計 · 人民元",
+  "本月弹幕数": "今月の弾幕数",
+  "来源统计 · 条": "出典の集計 · 件",
+  " 场，": " 回、",
+  "无记录": "記録なし",
+  " 月": " 月",
+  "尚未到来": "未到来",
+  " 场": " 回",
+  "截至同步日": "同期日時点",
+  "不能推断停播": "休止とは限りません",
+  "迹": "跡",
+  " · 每个月的直播": " · 月別の配信",
+  "点击月份查看时段和场次。横条使用同一年、同一指标的线性刻度；切换指标后重新定标。": "月を選ぶと時間帯と配信一覧を表示します。棒は同じ年・同じ指標の線形目盛りで、指標を変えると再計算します。",
+  "结束时间未提供": "終了時刻は未提供",
+  " 日": " 日",
+  " · 灯亮起的时刻": " · 灯りがともる時刻",
+  "一条金色时间带是一场直播，位置表示开播时刻，长度只表示持续时间。斜纹表示来源标为不完整。未知结束时间只画起点；短场次也可从下方列表打开。": "金色の帯ひとつが1回の配信。位置は開始時刻、長さは継続時間を示します。斜線は出典で不完全とされた記録です。終了時刻が不明な場合は開始点のみを表示します。短い配信は下の一覧からも開けます。",
+  "记录不完整": "不完全な記録",
+  "来源标为完整": "出典では完全",
+  "完整性未知": "完全性は不明",
+  "记录营收 · 元": "記録上の収益 · 人民元",
+  "场": "回",
+  "逐场查看 · ": "配信ごとに見る · ",
+  "点开查看起止、营收、弹幕、观看与互动数据，以及时间相近的动态。": "開始・終了時刻、収益、弾幕、視聴・反応データと、近い時刻の投稿を確認できます。",
+  "这个月没有开播记录。相邻月份跨入本月的时间带仍会显示；空白不能证明停播。": "この月に開始した配信の記録はありません。前月から続く配信の時間帯は表示します。空白は休止を意味しません。",
+  "直播档案 · ": "配信アーカイブ · ",
+  "记录营收（元）": "記録上の収益（人民元）",
+  "观看人次（源站口径）": "延べ視聴数（出典の定義）",
+  "点赞数": "いいね数",
+  "互动人数": "反応人数",
+  "付费人数": "支払人数",
+  "最高高能人数": "最高高能人数",
+  "起止时间 · ": "開始・終了 · ",
+  "未提供有效结束时间": "有効な終了時刻なし",
+  "营收不是主播到手收入；最高高能人数不是同时在线人数。— 表示未提供或无法确认；0 仅表示来源返回零，旧记录也可能未采集该项，不能保证真实为零。": "収益は配信者の手取りではなく、最高高能人数は同時視聴者数ではありません。— は未提供または確認不能。0は出典の返却値で、過去には未収集だった可能性があり、実際に0だったとは限りません。",
+  "查看 nailv 原始场次 ↗": "nailvの元記録を見る ↗",
+  "归档记录": "アーカイブ情報",
+  "首次收录 ": "初回収録 ",
+  " · 最近确认 ": " · 最終確認 ",
+  " · 本次来源未再返回，旧档已保留。": " · 今回の出典にはなく、保存済みの記録を保持。",
+  "附近的动态 · 开播前后 6 小时": "近くの投稿 · 配信開始の前後6時間",
+  "只按发布时间邻近列出，尚不能确认这些动态描述的就是本场直播。": "投稿時刻の近さで並べています。この配信についての投稿とは限りません。",
+  "没有找到这个时间范围内的动态。": "この時間範囲の投稿はありません。",
+  "SCOPE · 范围": "SCOPE · 対象",
+  "全部": "すべて",
+  "这个范围里没有动态。": "この範囲に投稿はありません。",
+  "合计": "合計",
+  "周": "",
+  "什么时候发动态": "投稿する時間帯",
+  "最常出现在 ": "最も多い時間帯：",
+  "开播通知最常在 ": "配信開始のお知らせが最も多い時刻：",
+  "越亮发得越多 · 红框是最常发动态的时段 · 红色刻度是开播卡片最常发布的小时；实际直播见 LIVE 页": "明るいほど投稿が多く、赤枠は最多の時間帯。赤い時刻は配信開始のお知らせが最多の時間です。実際の配信は配信ページで確認できます",
+  "每月动态数，红色部分是直播相关动态": "月別投稿数。赤色は配信関連の投稿",
+  "每个月发多少": "月別の投稿数",
+  "平均每月 ": "月平均 ",
+  " 条，最多的是 ": " 件、最多の月は ",
+  "柱子下方的红色是直播相关动态（含预约），不是直播场数 · 白色那根是最多的月份 · 点柱子看当月全部动态": "棒の赤い部分は配信関連の投稿（予約を含む）で、配信回数ではありません。白い棒は最多の月。クリックでその月の全投稿を開きます",
+  "TYPES · 类型": "TYPES · 種類",
+  "TAGS · 内容标签": "TAGS · 内容タグ",
+  "部分标签来自大模型，其余按关键词规则": "一部はAIタグ、その他はキーワードルールによる分類",
+  "按关键词规则归类": "キーワードルールによる分類",
+  "自动归类，仅供浏览": "閲覧用の自動分類",
+  "每条动态收到多少回应": "投稿への反応",
+  "，月中位数从 ": "、月ごとの中央値の推移：",
+  " 变成了 ": " → ",
+  "灰点是单条动态（对数刻度），琥珀色是前 20% 的高互动动态，白线是每月中位数 · 点圆点看那条动态": "灰色の点は各投稿（対数目盛り）、琥珀色は反応上位20%、白線は月の中央値。点をクリックすると投稿を開きます",
+  "OMIKUJI · 互动最高（赞 + 3×评论 + 5×转发）": "OMIKUJI · 反応上位（いいね + 3×コメント + 5×シェア）",
+  "她常说什么": "よく使う言葉",
+  "出现最多的词是 ": "最も多い言葉：",
+  "KEYWORDS · 高频词": "KEYWORDS · 頻出語",
+  "中": "中",
+  "还没有关键词；检查翻译结果和分词依赖。": "キーワードがありません。翻訳結果と分かち書きの依存関係を確認してください。",
+  "暂无关键词。": "キーワードはありません。",
+  "EMOTES · 常用表情": "EMOTES · よく使う絵文字",
+  "没有用到 B 站表情。": "Bilibiliの絵文字は使われていません。",
+  "MOOD · 情绪": "MOOD · 感情",
+  "尚未生成情绪标注。": "感情のラベルはまだありません。",
+  "每运行一次 update 记录一次粉丝数，跑两次以上这里会出现曲线。": "updateの実行ごとにフォロワー数を記録します。2回以上記録するとグラフを表示します。",
+  "粉丝数变化": "フォロワー数の推移",
+  " 粉丝": " フォロワー",
+  "和谁有来往": "交流のある相手",
+  "@ 和转发最多的是 ": "メンション・シェアの最多相手：",
+  "CONNECTIONS · @ 与转发来源": "CONNECTIONS · メンションとシェア元",
+  "没有 @ 或转发。": "メンションやシェアはありません。",
+  "FOLLOWERS · 粉丝数": "FOLLOWERS · フォロワー数",
+  "搜索原文 / 译文 / 话题 / @某人 / 表情": "原文 / 中国語訳 / 話題 / @ユーザー / 絵文字を検索",
+  "搜索": "検索",
+  "标签": "タグ",
+  "全部标签": "すべてのタグ",
+  "年份": "年",
+  "全部年份": "すべての年",
+  "排序": "並び順",
+  "最新在前": "新しい順",
+  "最早在前": "古い順",
+  "互动最高": "反応が多い順",
+  "只看待复核": "要確認のみ",
+  "再显示 60 条": "さらに60件表示",
+  "没有符合条件的动态。": "条件に一致する投稿はありません。",
+  "查看动态 ": "投稿を見る ",
+  "（未翻译）": "（未翻訳）",
+  "原文即中文": "原文は中国語",
+  "赞 ": "いいね ",
+  "评 ": "コメント ",
+  "转 ": "シェア ",
+  "图 ": "画像 ",
+  "✗ 失败": "✗ 失敗",
+  "! 有警告": "! 警告あり",
+  "✓ 正常": "✓ 正常",
+  "直播归档": "配信アーカイブ",
+  "抓取": "取得",
+  "图片归档": "画像保存",
+  "规整": "正規化",
+  "翻译": "翻訳",
+  "分析": "分析",
+  "生成页面": "ページ生成",
+  "上一次运行": "前回の実行",
+  "运行于 ": "実行日時 ",
+  "全部正常。": "すべて正常です。",
+  "有警告，详情见下。": "警告があります。詳細は下記をご覧ください。",
+  "有步骤失败，详情见下。": "失敗した処理があります。詳細は下記をご覧ください。",
+  "还没有运行记录。": "実行記録はありません。",
+  "正常": "正常",
+  "有警告": "警告あり",
+  "日文": "日本語",
+  "英文": "英語",
+  "无文字": "本文なし",
+  "最近的运行": "最近の実行",
+  "LANGUAGE · 原文语言": "LANGUAGE · 原文の言語",
+  "TRANSLATOR · 翻译来源": "TRANSLATOR · 翻訳元",
+  "还没有翻译。": "翻訳はまだありません。",
+  "待复核的译文": "要確認の翻訳",
+  "自动检查发现 ": "自動チェックで ",
+  " 条译文可能有问题（未翻译、残留假名或长度异常）。": " 件の翻訳に問題の可能性があります（未翻訳、仮名の残存、長さの異常）。",
+  "自动检查没有发现可疑的译文。": "自動チェックで疑わしい翻訳は見つかりませんでした。",
+  "{0} · 已存 {1} 条 · 图片 {2} 张": "{0} · 保存済み {1} 件 · 画像 {2} 枚",
+  "（{0} 张待重试）": "（{0} 枚は再試行待ち）",
+  " · 最近成功抓取 {0}": " · 最終取得 {0}",
+  " · 最近抓取{0}": " · 直近の取得：{0}",
+  "{0}/{1}天": "{0}/{1}日",
+  "赞 {0} · 评 {1} · 转 {2}": "いいね {0} · コメント {1} · シェア {2}",
+  "{0} 年 {1} 月": "{0}年{1}月",
+  "第 {0} 天": "{0}日目",
+  "直播档案从 {0} 年 {1} 月开始": "配信記録は{0}年{1}月以降",
+  "当晚 {0} 场 · ": "この夜 {0} 回 · ",
+  "♥ {0} · 评 {1} · 转 {2}": "♥ {0} · コメント {1} · シェア {2}",
+  "{0}.{1} · 绘马 {2} 块": "{0}.{1} · 絵馬 {2} 枚",
+  "这个月的动态一共收到 {0} 条评论：评论越多，挂的绘马越多": "この月のコメントは計{0}件。コメントが多いほど絵馬が増えます",
+  "评论最多的一条（{0} 条）：{1} · 点击查看原文": "最多コメントの投稿（{0}件）：{1} · 原文を開く",
+  "{0} 年 · 皆勤御守": "{0}年 · 皆勤御守",
+  "这一年 {0} 天里，有 {1} 天发了「今天也开播」这类开播预告": "この年の{0}日間のうち{1}日に「今日も配信」などの予告がありました",
+  "{0}：{1}{2} · 赞 {3} · 评 {4} · 转 {5}": "{0}：{1}{2} · いいね {3} · コメント {4} · シェア {5}",
+  "{0}.{1} · {2} 条": "{0}.{1} · {2} 件",
+  "播放速度：{0} 倍，点击切换": "再生速度：{0}倍。クリックで切り替え",
+  "长度只读取每条动态的{0}数。": "長さは各投稿の{0}数のみを示します。",
+  "所有年份使用同一把长度尺：采用平方根刻度兼顾普通动态和爆款，长一倍不代表数量翻倍；满长为 {0} {1}（全档第 99 百分位，至少为 1），超过上限会标记封顶并显示实际数值。零值或未记录只有根部标记。": "全期間で同じ長さの目盛りを使用します。平方根目盛りなので、長さが2倍でも数値が2倍とは限りません。最大長は{0} {1}（全記録の99パーセンタイル、最低1）です。超過時は上限表示と実数を併記し、0や未記録は根元だけを表示します。",
+  "{0}年{1}月": "{0}年{1}月",
+  "{0} 条 · 直播相关动态 {1}": "{0} 件 · 配信関連の投稿 {1}",
+  "一束＝一条动态 · 长度＝{0} · 金色前 10% / 燃羽前 3%": "光1本＝投稿1件 · 長さ＝{0} · 金色は上位10% / 燃える羽は上位3%",
+  "归档历史 · {0} 个内容版本 · {1} 次快照": "保存履歴 · {0} 版 · {1} 回のスナップショット",
+  "{0} · 赞 {1} · 评论 {2} · 转发 {3}": "{0} · いいね {1} · コメント {2} · シェア {3}",
+  "{0} · 点一条看原文和译文": "{0} · 投稿を選んで原文を見る",
+  "{0} 条": "{0} 件",
+  "{0} 条动态": "{0} 件の投稿",
+  "周{0} {1} 点（{2}）": "{0}曜 {1}時（{2}）",
+  "一周各小时的发帖数：最多在{0}，{1} 条": "曜日・時刻別の投稿数：最多は{0}、{1}件",
+  "周{0} {1}:00–{2}:59 {3}": "{0}曜 {1}:00–{2}:59 {3}",
+  "周{0} {1} 点": "{0}曜 {1}時",
+  "（{0}）；晚上 8 点到凌晨 2 点之间发的占 ": "（{0}）。20時～翌2時の投稿の割合は ",
+  "{0} 点": "{0}時",
+  "{0} · 直播相关动态 {1}": "{0} · 配信関連の投稿 {1}",
+  "（{0} 条）。": "（{0}件）。",
+  "每条动态的{0}数，对数刻度": "各投稿の{0}数、対数目盛り",
+  "每条动态的{0}数中位数是 ": "各投稿の{0}数の中央値は ",
+  "（{0} 条动态里出现）。": "（{0}件の投稿に出現）。",
+  "{0} 次记录 · {1}{2}": "{0} 回の記録 · {1}{2}",
+  "{0} 条 · 最近 {1}": "{0} 件 · 最新 {1}",
+  " · 显示前 {0}": " · 先頭{0}件を表示",
+  " · 搜索「{0}」": " · 検索「{0}」",
+  " · 标签「{0}」": " · タグ「{0}」",
+  "最近 {0} 次，每格一次；绿色正常，黄色有警告，红色失败。": "直近{0}回、1マスが1回。緑は正常、黄は警告、赤は失敗です。",
+  "动态环": "投稿リング",
+  "动态归档": "投稿一覧",
+  "数据链": "処理履歴",
+  "回到最新": "最新へ",
+  "播放设置": "再生設定",
+  "特效画质": "エフェクト画質",
+  "自动调节": "自動調整",
+  "画质优先": "画質優先",
+  "流畅优先": "動作優先",
+  "兼容模式": "互換モード",
+  "自动调节特效": "エフェクトを自動調整",
+  "统计": "統計",
+  "视图": "表示ページ",
+  "动态环播放控制": "投稿リングの再生操作",
+  "按月份浏览": "月ごとに移動",
+  "上个月": "前の月",
+  "下个月": "次の月",
+  "当前月份": "現在の月",
+  "播放速度：1 倍，点击切换": "再生速度：1倍。クリックで切り替え",
+  "速度 1×": "速度 1×",
+  "时间轴：拖动转到任意月份": "タイムライン：ドラッグして月を選択",
+  "火羽的动态信笺": "火羽の投稿便り",
+  "在「直播」页查看这个月的直播档案": "配信ページでこの月の記録を開く",
+  "打开当前动态信笺": "現在の投稿を開く",
+  "转动轮盘，翻阅日常。": "リングを回して日々の記録をたどります。",
+  "展开信笺 ↗": "便りを開く ↗",
+  "动态转盘：每座鸟居是一个月，每束光是一条动态；长度按所选互动指标统一缩放，内圈的线香烟从动态升起，白羽的多少是当月直播时长，人物身后的提灯随当月动态的赞点亮": "投稿リング：鳥居ひとつが1か月、光1本が1件の投稿です。光の長さは選択した反応指標、白い羽の量は月の配信時間を示します。内側の線香は投稿から立ち上り、人物の背後の提灯はその月の投稿のいいねでともります。",
+  "人物身后的提灯是参拜的人献的：当月动态收到的赞越多，亮起的越多（累计赞，含后来补的）": "人物の背後の提灯は参拝者の奉納：その月の投稿へのいいねが多いほど多くともります（後から付いたいいねも含む累計）",
+  "提灯是参拜的人献给神社的。人物身后挂着几列远近不同的祭典提灯，近处的写着「火羽」和「奉納」：播放头所在那个月的动态收到的赞越多，亮起的提灯越多；按全档赞最多的那个月、平方根刻度换算。一个账号只能点一次赞，所以赞最接近「来了多少人」；但这是累计到最近一次采集的数字，2026 年 10 月以后很多人回去给旧动态点赞，冷清的年份会比当时亮一些。": "提灯は参拝者が神社に奉納するものです。人物の背後に遠近の異なる祭りの提灯が並び、手前の提灯には「火羽」「奉納」と書かれています。再生位置の月の投稿へのいいねが多いほど、多くの提灯がともります。全期間で最もいいねの多い月を基準に平方根で換算します。いいねは1アカウント1回なので「何人来たか」に最も近い数ですが、直近の取得時点の累計です。2026年10月以降、多くの人が過去の投稿にもいいねしたため、静かだった年は当時より明るく見えます。",
+  "拨转动态轮盘": "投稿リングを回す",
+  "如何读图 · 光束与神社元素": "見方 · 光と神社のモチーフ",
+  "点击或拖动时间轴定位，月份两侧的箭头逐月切换。轮盘可拖动，暂停时也能拨；选中轮盘后可用滚轮、方向键、Home / End 或空格操作。": "タイムラインをクリック・ドラッグして移動し、月の左右の矢印で月を切り替えます。一時停止中もリングを動かせます。リングを選択するとホイール・矢印・Home / End・スペースで操作できます。",
+  "光束长度": "光の長さ",
+  "光束长度指标": "光の長さの指標",
+  "综合互动": "総合的な反応",
+  "评论数": "コメント数",
+  "转发数": "シェア数",
+  "光束长度示例": "光の長さの例",
+  "一束光 = 一条动态 · 金色为所选指标前 10% · 读图说明": "光1本＝投稿1件 · 金色は選択指標の上位10% · 見方",
+  "档案详情": "記録の詳細",
+  "Kobuta 小猪：点一下摸摸，拖动或用方向键换个地方": "Kobuta：クリックでなでる、ドラッグや矢印キーで移動",
+  "界面语言": "表示言語",
+  "歌": "歌",
+  "游戏": "ゲーム",
+  "视频投稿": "動画投稿",
+  "歌/音乐": "歌・音楽",
+  "生日/纪念": "誕生日・記念日",
+  "周边/商品": "グッズ・商品",
+  "活动/企划": "イベント・企画",
+  "音乐": "音楽",
+  "生日": "誕生日",
+  "周边": "グッズ",
+  "感谢/里程碑": "感謝・節目",
+  "日常/杂谈": "日常・雑談",
+  "杂谈": "雑談",
+  "联动": "コラボ",
+  "公告": "お知らせ",
+  "周边/活动": "グッズ・イベント",
+  "感谢": "感謝",
+  "里程碑": "節目",
+  "活动": "イベント",
+  "吃饭": "食事",
+  "早安/晚安": "おはよう・おやすみ",
+  "开心": "喜び",
+  "期待": "期待",
+  "平静": "穏やか",
+  "疲惫": "疲れ",
+  "感动": "感動",
+  "难过": "悲しみ",
+  "兴奋": "興奮",
+  "每座鸟居是一个月：鸟居脚下列着那个月的动态，门洞里的点阵按日期和每四小时一格标出发帖时刻（朱红点是开播卡片或预约），匾上的朱印是当月条数；发得越多，那个月和它的鸟居就越宽。播放头所在的鸟居会亮起来。鸟居分三种：那个月动态的综合互动分中位数排在所有月份前 15% 的，笠木两端插着两枚火羽；后 35% 的是不上漆的素木鸟居；其余是朱漆鸟居；没有动态的月份是素木。鸟居内侧的注连绳是她每天的「今天也开播」编成的：发了开播预告的那天，绳子是完整的稻草色，没发就缺一截。御守一般一年一换，所以每年开头挂一枚写着「皆勤」的御守，旁边写着年份和「发预告的天数/这一年的天数」（第一年从首条动态算起，今年算到最新一条），例如 359/366 天就是那一年只有 7 天没发预告。绘马是参拜的人写下心愿、挂在神社里的木牌，这里对应粉丝写下的评论：那个月的动态收到的评论越多，绳下挂的绘马越多（按最多的那个月开平方，最多 15 块），点开就是那个月评论最多的一条。信笺上的日期与原文对应所选光束，短红线标出它的位置。人物下方的「帳」只读直播档案：那个月的场次与时长、当晚开播时刻与连播天数（一晚算到次日 6:00）；点它看「直播」页的同一个月。内圈的线香烟从当前可见的动态升起，互动越高的动态冒烟越多、越亮；平时滑过的白羽有多少，跟着播放头那个月的直播总时长走（只读直播档案，按全档最长的月份、平方根刻度），没有档案的月份只有烟；燃羽或有签的动态经过播放头时，会飞起一束亮羽。": "鳥居ひとつが1か月です。足元に投稿を並べ、門の中の点は日付と4時間ごとの投稿時刻を表します。朱色の点は配信開始のお知らせや予約、額の朱印は月の件数です。投稿が多いほど鳥居の幅が広くなり、再生位置の鳥居が光ります。月の反応スコア中央値が全月の上位15%なら一対の火羽、下位35%なら素木、それ以外は朱塗りです。投稿のない月も素木です。内側の注連縄は毎日の配信予告を表し、予告がない日は隙間を残します。皆勤御守は年ごとに交換し、年と「予告のあった日数／記録期間の日数」を示します。初年は初投稿から、今年は最新投稿までです。359/366なら7日間は予告がなかったことを意味します。絵馬はファンのコメントを表し、月の合計を最多の月に対する平方根で換算して最大15枚まで掛けます。クリックすると最もコメントの多い投稿が開きます。便りの日付と原文は選択した光に対応し、赤い短線がその位置を指します。人物の下の帳は配信アーカイブのみを参照し、月の回数・時間、その夜の開始時刻と連続配信日数を示します。夜の区切りは翌朝6時で、クリックすると同じ月の配信ページを開きます。線香の煙は表示中の投稿から立ち上り、反応が多いほど濃く明るくなります。白い羽の量は月の配信時間を全期間の最長月に対する平方根で換算します。配信記録のない月には煙だけが立ち、燃える羽やおみくじ対象の投稿が通ると明るい羽が舞います。",
+  "这是用虚构的示例动态生成的样式预览，不是任何真人的真实动态。在电脑上运行": "架空の投稿を使った表示サンプルで、実在の人物の投稿ではありません。PCで",
+  "后会换成真实数据。": "を実行すると実データに切り替わります。",
+  "· 开发版": "· 開発版",
+  "人物图片来源": "人物画像の出典",
+  "人物随播放头的日期换成她当时的形象，三张都取自火羽ひのめ的归档动态：初始衣装来自": "人物は再生位置の日付に合わせて当時の姿に替わります。3枚とも火羽ひのめの保存済み投稿からで、初期衣装は",
+  "2022 年 2 月 2 日动态": "2022年2月2日の投稿",
+  "的配图，长发与短发来自她投稿视频": "の画像、ロングとボブは投稿動画",
+  "的封面。换装日期以 2022 年和 2023 年 2 月 14 日的新衣装发表直播为准。背景由本机抠图工具去除。人物身后的提灯随当月动态的赞点亮；信笺随选中动态翻页，短红线指向对应光束。人物是静态配图，不是官方 Live2D 模型或新皮肤。": "のサムネイルです。切り替え日は2022年・2023年2月14日の新衣装発表配信に合わせています。背景はローカルの切り抜きツールで除去しました。人物の背後の提灯はその月の投稿のいいねでともります。便りは選択した投稿に合わせて変わり、赤い短線が光の位置を指します。人物は静止画で、公式のLive2Dモデルや新しい衣装データではありません。",
+  "初始衣装": "初期衣装",
+  "新衣装": "新衣装",
+  "双马尾": "ツインテール",
+  "长发": "ロング",
+  "短发": "ボブ"
+};
+
+// Only authored interface strings use this dictionary; post text never goes through it.
+function tr(parts, ...values) {
+  const key = typeof parts === "string" ? parts : parts.reduce((s, part, i) => s + (i ? `{${i - 1}}` : "") + part, "");
+  const text = state.lang === "ja" && Object.hasOwn(JA, key) ? JA[key] : key;
+  return values.length ? text.replace(/\{(\d+)\}/g, (token, i) => i < values.length ? String(values[i]) : token) : text;
+}
+// Capture static HTML before rendering any archive content, so original posts cannot be translated accidentally.
+const staticUI = [];
+const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+while (walker.nextNode()) {
+  const node = walker.currentNode, text = node.textContent, key = text.trim();
+  if (!node.parentElement.closest("script, style, .language-switch") && Object.hasOwn(JA, key)) staticUI.push(() => { node.textContent = text.replace(key, () => tr(key)); });
+}
+for (const el of $$("[aria-label], [title], [alt], [placeholder]")) for (const attr of ["aria-label", "title", "alt", "placeholder"]) {
+  const text = el.getAttribute(attr); if (Object.hasOwn(JA, text)) staticUI.push(() => el.setAttribute(attr, tr(text)));
+}
+function applyLanguage() {
+  document.documentElement.lang = state.lang === "ja" ? "ja" : "zh-CN";
+  document.documentElement.classList.toggle("ja", state.lang === "ja");
+  for (const apply of staticUI) apply();
+  for (const button of $$("[data-language]")) button.setAttribute("aria-pressed", String(button.dataset.language === state.lang));
+}
+function setLanguage(lang) {
+  if (!["zh", "ja"].includes(lang) || lang === state.lang) return;
+  state.lang = lang; remember(); ST.kw = lang;
+  applyLanguage(); built.stats = built.archive = built.pipeline = false; LEDGER.key = ""; R.tex = null;
+  renderHeader(); renderKey(); renderBeamGuide(); syncPlayback(); syncQuality(); setSpeed(R.speed);
+  const focused = document.activeElement;
+  showView(state.view);
+  if (!drawer.hidden && refreshDrawer) { const top = $("#dr-b").scrollTop; refreshDrawer(); $("#dr-b").scrollTop = top; }
+  if (focused && focused.isConnected) focused.focus({ preventScroll: true });
+}
+for (const button of $$("[data-language]")) button.addEventListener("click", () => setLanguage(button.dataset.language));
+
 // paper grain (washi) for the quiet pages
 try { const c = document.createElement("canvas"); c.width = c.height = 160; const g = c.getContext("2d"), im = g.createImageData(160, 160); for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 255 | 0; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 9; } g.putImageData(im, 0, 0); document.documentElement.style.setProperty("--grain", `url(${c.toDataURL()})`); } catch (e) {}
 
 if (!DATA || !Array.isArray(DATA.posts)) {
   $("#app").replaceChildren(h("div", { class: "nodata" }, h("div", { class: "lbl", text: "NO DATA" }),
-    h("div", null, "这个页面还没有装进数据。在项目文件夹里运行 ", h("code", { text: "python lab.py update" }), "，会生成带数据的版本。")));
+    h("div", null, tr("这个页面还没有装进数据。在项目文件夹里运行 "), h("code", { text: "python lab.py update" }), tr("，会生成带数据的版本。"))));
   return;
 }
 
@@ -606,9 +1080,11 @@ const TYPE_EN = { image: "IMAGE", live: "LIVE", video: "VIDEO", text: "TEXT", fo
 const tkey = p => TYPES[p.type] ? p.type : "other";
 const isLiveNotice = p => p.type === "live" || (p.tags || []).includes("开播") || !!p.reserve;
 const WD = ["一", "二", "三", "四", "五", "六", "日"];
+const weekday = i => state.lang === "ja" ? ["月", "火", "水", "木", "金", "土", "日"][i] : WD[i];
 const KANJI_M = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"];
 const foreign = p => p.lang === "ja" || p.lang === "en";
-const snippet = p => ((p.title_zh || "") + " " + (p.zh || (foreign(p) ? "" : p.text) || p.text || p.title || "")).replace(/\s+/g, " ").trim() || TYPES[tkey(p)];
+const postText = p => state.lang === "ja" ? p.text || p.title || "" : p.zh || p.text || p.title_zh || p.title || "";
+const snippet = p => (state.lang === "ja" ? [p.title, p.text].filter(Boolean).join(" ") : ((p.title_zh || "") + " " + (p.zh || (foreign(p) ? "" : p.text) || p.text || p.title || ""))).replace(/\s+/g, " ").trim() || tr(TYPES[tkey(p)]);
 const METRICS = { score: "互动分", comment: "评论", like: "点赞", forward: "转发" };
 function metricValue(p, key) {
   const valid = n => typeof n === "number" && Number.isFinite(n) && n >= 0;
@@ -634,11 +1110,8 @@ function metricScale(posts, key) {
 function beamFraction(value, cap) { return value == null ? 0 : Math.sqrt(clamp(value / cap, 0, 1)); }
 const RANK = metricRanks(POSTS, "score");
 const fortune = p => { const q = RANK.get(p) ?? 0; return q >= 0.97 ? "大吉" : q >= 0.9 ? "中吉" : q >= 0.8 ? "小吉" : ""; };
-const fortEl = p => { const f = fortune(p); return f ? h("span", { class: "fort" + (f === "小吉" ? " lo" : ""), title: "全历史综合互动分（赞 + 3×评论 + 5×转发）：前 3% 大吉，前 10% 中吉，前 20% 小吉；不是运势预测", text: f }) : null; };
+const fortEl = p => { const f = fortune(p); return f ? h("span", { class: "fort" + (f === "小吉" ? " lo" : ""), title: tr("全历史综合互动分（赞 + 3×评论 + 5×转发）：前 3% 大吉，前 10% 中吉，前 20% 小吉；不是运势预测"), text: f }) : null; };
 
-const state = { tz: 9, view: "ring" };
-try { const s = JSON.parse(localStorage.getItem("hinome-lab") || "{}"); if (s.tz === 8 || s.tz === 9) state.tz = s.tz; } catch (e) {}
-const remember = () => { try { localStorage.setItem("hinome-lab", JSON.stringify({ tz: state.tz })); } catch (e) {} };
 function setTz(tz) {   // month cards, the archive and both pages read the zone: rebuild them all
   if (tz === state.tz) return;
   state.tz = tz; remember();
@@ -650,8 +1123,8 @@ function tp(ts, tz) { const d = new Date((ts + (tz ?? state.tz) * 3600) * 1000);
 const p2 = n => String(n).padStart(2, "0");
 const fdate = (ts, tz) => { const t = tp(ts, tz); return `${t.y}-${p2(t.m)}-${p2(t.d)} ${p2(t.h)}:${p2(t.mi)}`; };
 const fday = ts => { const t = tp(ts); return `${t.y}.${p2(t.m)}.${p2(t.d)}`; };
-const tzName = tz => (tz ?? state.tz) === 9 ? "JST" : "北京";
-function fnum(n) { n = +n || 0; if (n >= 1e8) return (n / 1e8).toFixed(1) + "亿"; if (n >= 1e4) return (n / 1e4).toFixed(n >= 1e5 ? 0 : 1) + "万"; return String(n); }
+const tzName = tz => (tz ?? state.tz) === 9 ? "JST" : tr("北京");
+function fnum(n) { n = +n || 0; if (n >= 1e8) return (n / 1e8).toFixed(1) + tr("亿"); if (n >= 1e4) return (n / 1e4).toFixed(n >= 1e5 ? 0 : 1) + "万"; return String(n); }
 const monthKey = ts => { const t = tp(ts); return `${t.y}-${p2(t.m)}`; };
 function counter(list, fn) { const m = new Map(); for (const x of list) for (const k of [].concat(fn(x) || [])) if (k) m.set(k, (m.get(k) || 0) + 1); return [...m].sort((a, b) => b[1] - a[1]); }
 function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
@@ -688,25 +1161,30 @@ const tipL = (v, l, x) => [h("b", { text: v }), l ? h("div", { text: l }) : null
 // ── header ──────────────────────────────
 function renderHeader() {
   const name = META.name || "";
-  document.title = `HANE · ${name || "日常记录"}${DEV ? " · 开发版" : ""}`;
+  document.title = `HANE · ${name || tr("日常记录")}${DEV ? tr(" · 开发版") : ""}`;
   document.documentElement.classList.toggle("release", !DEV);
   $("#demo").hidden = !META.demo;
   const fetch = META.last_fetch || {};
-  if (DEV && $("#archive-status")) $("#archive-status").textContent = META.demo ? "示例数据 · 仅用于界面检查" :
-    `${META.history_complete ? "已遍历接口可见历史" : "历史归档尚未完成"} · 已存 ${POSTS.length} 条 · 图片 ${META.images_saved || 0} 张` +
-    (META.images_failed ? `（${META.images_failed} 张待重试）` : "") +
-    (META.last_success ? ` · 最近成功抓取 ${fdate(META.last_success)}` : "") +
-    (fetch.status && fetch.status !== "ok" ? ` · 最近抓取${({failed:"失败",partial:"未完成",running:"进行中"}[fetch.status] || fetch.status)}` : "") +
-    (fetch.error ? `：${fetch.error}` : "") + " · 历史快照从首次采集开始积累";
+  if (DEV && $("#archive-status")) $("#archive-status").textContent = META.demo ? tr("示例数据 · 仅用于界面检查") :
+    tr`${META.history_complete ? tr("已遍历接口可见历史") : tr("历史归档尚未完成")} · 已存 ${POSTS.length} 条 · 图片 ${META.images_saved || 0} 张` +
+    (META.images_failed ? tr`（${META.images_failed} 张待重试）` : "") +
+    (META.last_success ? tr` · 最近成功抓取 ${fdate(META.last_success)}` : "") +
+    (fetch.status && fetch.status !== "ok" ? tr` · 最近抓取${({failed:tr("失败"),partial:tr("未完成"),running:tr("进行中")}[fetch.status] || fetch.status)}` : "") +
+    (fetch.error ? `：${fetch.error}` : "") + tr(" · 历史快照从首次采集开始积累");
   $("#name").textContent = name || "—";
   const han = [...name].filter(c => /[㐀-鿿]/.test(c)).slice(0, 2);
   $("#seal").textContent = (han.length ? han : [...(name || "印").toUpperCase()].slice(0, 2)).join("");
   const first = POSTS[0], last = POSTS[POSTS.length - 1];
-  $("#sub").textContent = `BILIBILI UID ${META.uid ?? ""}` + (first ? `  ·  ${fday(first.ts)} → ${fday(last.ts)}` : "");
+  $("#sub").replaceChildren(...[
+    h("span", { class: "archive-range", text: first ? `${fday(first.ts)} → ${fday(last.ts)}` : tr("暂无动态") }),
+    META.last_success ? h("span", { text: tr`数据更新于 ${fdate(META.last_success)} ${tzName()}` }) : null,
+    h("span", { text: `BILIBILI UID ${META.uid ?? ""}` })
+  ].filter(Boolean));
+  const gaps = liveGaps(SESSIONS.map(x => x.start), first ? first.ts : Infinity);
   const need = META.translation_needed ?? POSTS.filter(foreign).length, done = META.translation_done ?? POSTS.filter(p => foreign(p) && (p.zh || p.title_zh)).length;
   const rev = POSTS.filter(p => (p.qa || []).length).length;
-  const cells = [["DYNAMICS", "动态", fnum(POSTS.length)], ["LIVES", "直播记录", SESSIONS.length || LIVE.status === "ok" ? String(SESSIONS.length) : "—", true], ["TRANSLATED", "已译", need ? `${done}/${need}` : "—"], ["BONDS", "缘", String(PARTNERS.length)], ["REVIEW", "待复核", String(rev)]];
-  $("#readout").replaceChildren(...(DEV ? cells : cells.slice(0, 2)).map(([l, z, v, acc]) => h("div", null, h("span", { class: "lbl" }, l, h("span", { class: "zh", text: z })), h("span", { class: "v" + (acc ? " acc" : ""), text: v }))));
+  const cells = [["DYNAMICS", tr("动态"), fnum(POSTS.length)], ["LIVES", tr("直播记录"), SESSIONS.length || LIVE.status === "ok" ? String(SESSIONS.length) : "—", true, gaps.length ? tr`${gapText(gaps)} 无记录` : null], ["TRANSLATED", tr("已译"), need ? `${done}/${need}` : "—"], ["BONDS", tr("缘"), String(PARTNERS.length)], ["REVIEW", tr("待复核"), String(rev)]];
+  $("#readout").replaceChildren(...(DEV ? cells : cells.slice(0, 2)).map(([l, z, v, acc, note]) => h("div", { title: note }, h("span", { class: "lbl" }, l, h("span", { class: "zh", text: z })), h("span", { class: "v" + (acc ? " acc" : ""), text: v }))));
 }
 
 // ── views ───────────────────────────────
@@ -951,41 +1429,53 @@ function ringFit(force) {
   for (const [c, scale] of [[cRing, R.dpr], [cFx, fxScale], [cSmoke, R.lowq ? 0.5 : 0.75]]) { c.width = Math.max(1, Math.round(W * scale)); c.height = Math.max(1, Math.round(H * scale)); }
   R.mono = css("--f-mono"); R.focus = null; R.focusPost = null; R.hover = null; R.uiTime = 0; R.smokeDt = 0;
   for (const k of R.kuji) k.el.remove(); R.kuji = [];
-  ringLayout(); fitShrine(); buildTex(); R.sparks = []; R.smoke = []; R.sheaves = []; clearSmoke(); renderScrub();
+  ringLayout(); fitShrine(); R.lanternBox = null; buildTex(); R.sparks = []; R.smoke = []; R.sheaves = []; clearSmoke(); renderScrub();
   if (!R.raf) renderOnce();
 }
 function setT(ctx) { const dx = ctx.canvas.width / R.W, dy = ctx.canvas.height / R.H; if (R.portrait) ctx.setTransform(0, dy, -dx, 0, ctx.canvas.width, 0); else ctx.setTransform(dx, 0, 0, dy, 0, 0); }
 function toFrame(sx, sy) { return R.portrait ? [sy, R.W - sx] : [sx, sy]; }
 function toScreen(fx, fy) { return R.portrait ? [R.W - fy, fx] : [fx, fy]; }
+// Her three looks, each taken from her own archived posts. The new outfits were shown in streams that started at
+// 22:00 JST on 14 February 2022 and 2023, so the dial switches there. Only the real archive shows her; the demo never does.
+const HAS_PORTRAIT = !META.demo && String(META.uid) === "2094031249";
+const LOOKS = [
+  { from: -Infinity, date: "2021.02.01", outfit: "初始衣装", hair: "双马尾", src: "assets/hinome-look-2021.webp" },
+  { from: Date.UTC(2022, 1, 14, 13) / 1000, date: "2022.02.14", outfit: "新衣装", hair: "长发", src: "assets/hinome-look-2022.webp" },
+  { from: Date.UTC(2023, 1, 14, 13) / 1000, date: "2023.02.14", outfit: "新衣装", hair: "短发", src: "assets/hinome-look-2023.webp" }];
+const lookAt = ts => LOOKS.findLastIndex(look => ts >= look.from);
+const lookText = look => `${look.date} ${tr(look.outfit)} · ${tr(look.hair)}`;
+function showLook(p) {   // the look she wore on the playhead's post
+  const i = p ? lookAt(p.ts) : 0;
+  $$("#portrait-looks img").forEach((img, j) => {
+    img.classList.toggle("on", j === i); img.toggleAttribute("aria-hidden", j !== i); img.alt = "火羽ひのめ · " + lookText(LOOKS[j]);
+  });
+}
 function fitShrine() {
-  const el = $("#hinome-shrine"), stage = el.querySelector(".portrait-stage"), img = el.querySelector("img");
-  const hasPortrait = !META.demo && String(META.uid) === "2094031249";
-  stage.hidden = !hasPortrait; el.hidden = !POSTS.length;
-  const credit = $("#shrine-story"); if (credit) credit.hidden = !hasPortrait;
+  const el = $("#hinome-shrine"), stage = el.querySelector(".portrait-stage"), looks = $("#portrait-looks");
+  stage.hidden = !HAS_PORTRAIT; el.hidden = !POSTS.length;
+  const credit = $("#shrine-story"); if (credit) credit.hidden = !HAS_PORTRAIT;
   R.shrineRight = 0; R.letterTip = null;
   if (el.hidden) return;
-  if (hasPortrait && !img.getAttribute("src")) {   // 840 px WebP first; the original PNG for browsers without WebP
-    img.src = "assets/hinome-portrait-v1.webp";
-    img.onerror = () => { if (/\.webp$/.test(img.src)) img.src = "assets/hinome-portrait-v1.png"; else stage.hidden = true; };
+  if (HAS_PORTRAIT && !looks.children.length) {
+    looks.append(...LOOKS.map(look => h("img", { src: look.src, alt: "", width: 840, height: 691, decoding: "async" })));
+    showLook(R.focusPost);
   }
   // Phones put the portrait beside the letter and the ledger below them, clear of the thread and the numbered links.
   // Desktop: portrait, ledger and letter centre in the part of the dial seen before scrolling, shrinking the portrait if needed.
   const room = clamp(R.visH || R.H, Math.min(R.H, 470), R.H);
-  const portraitWidth = R.portrait ? (hasPortrait ? clamp(R.W * .26, 84, 104) : 0) : Math.min(clamp(R.W * .29, 230, 420), R.H * .58, (R.cx + R.Ri) * .8, (room - 258) / .823);
+  const portraitWidth = R.portrait ? (HAS_PORTRAIT ? clamp(R.W * .26, 84, 104) : 0) : Math.min(clamp(R.W * .29, 230, 420), R.H * .58, (R.cx + R.Ri) * .8, (room - 276) / .823);
   const letterWidth = R.portrait ? Math.min(300, R.W - 24 - (portraitWidth ? portraitWidth + 6 : 32)) : portraitWidth;
   const width = R.portrait ? (portraitWidth ? portraitWidth + 6 : 0) + letterWidth : portraitWidth;
   const left = R.portrait ? (R.W - width) / 2 : Math.max(14, (R.cx + R.Ri - width) * .22);
-  const portraitHeight = hasPortrait && !R.portrait ? portraitWidth * .823 + 8 : 0;
+  el.classList.toggle("portrait-layout", R.portrait);
+  looks.style.width = portraitWidth + "px"; el.style.width = width + "px";
+  const portraitHeight = HAS_PORTRAIT && !R.portrait ? stage.offsetHeight : 0;   // the picture with her name under it
   const letterHeight = R.portrait ? 108 : 148, ledgerHeight = R.portrait ? 50 : 70;   // desktop: 62 px plus the gap above the letter
   const top = R.portrait ? 8 : Math.max(16, (room - portraitHeight - ledgerHeight - letterHeight) / 2);
-  img.style.width = portraitWidth + "px";
-  el.style.width = width + "px"; el.style.left = left + "px"; el.style.top = top + "px";
+  el.style.left = left + "px"; el.style.top = top + "px";
   el.style.setProperty("--ledger-w", clamp(width - 112, 160, 250) + "px");
   if (!R.portrait) R.shrineRight = left + width;
   R.letterTip = R.portrait ? [left + width - 24, top + letterHeight + 5] : [left + width + 5, top + portraitHeight + ledgerHeight + letterHeight / 2];
-  el.classList.toggle("portrait-layout", R.portrait);
-  el.classList.toggle("shrine-lite", R.lowq);
-  el.classList.toggle("shrine-still", !R.playing || R.holds.size > 0 || document.hidden || state.view !== "ring");
 }
 
 function ringLayout() {
@@ -1022,6 +1512,9 @@ function ringLayout() {
   const streams = ledgerIndex().months;   // each month's streaming time in the live archive sets how many white feathers glide inside
   for (const mo of R.months) mo.live = liveSum(streams.get(mo.key) || [], "duration").value || 0;
   R.liveMost = Math.max(0, ...R.months.map(mo => mo.live));
+  // 奉纳提灯: the likes on each month's posts (one account likes once, so this is the nearest count of people) light the lanterns
+  for (const mo of R.months) mo.likes = mo.posts.reduce((n, p) => n + ((p.stats || {}).like || 0), 0);
+  R.likesMost = Math.max(0, ...R.months.map(mo => mo.likes));
   // each month's gate shows how warmly its posts were received: the median 综合互动分, ranked among the months.
   // Top 15% gilded, bottom 35% plain wood, the rest vermilion; a month without posts is plain; too few months to rank stay vermilion.
   const med = R.months.map(mo => { const s = mo.posts.map(p => p.score || 0).sort((a, b) => a - b), n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : null; });
@@ -1238,7 +1731,7 @@ function buildTex() {
     ctx.font = `700 ${yz}px ${mincho}`; ctx.fillStyle = c === R.charms[0] ? "#ec6a4f" : "rgba(238,231,218,.88)";
     ctx.fillText(String(c.y), capX, R.d * (w / 2 + 4 + yz / 2));
     ctx.font = `700 ${nz}px ${mincho}`; ctx.fillStyle = "rgba(240,214,160,.92)";
-    ctx.fillText(`${c.days}/${c.span}天`, capX, R.d * (w / 2 + 4 + yz + 3 + nz / 2), C.h + C.cord + 14);
+    ctx.fillText(tr`${c.days}/${c.span}天`, capX, R.d * (w / 2 + 4 + yz + 3 + nz / 2), C.h + C.cord + 14);
     ctx.restore();
   }
 }
@@ -1266,7 +1759,7 @@ function updateRingFocus() {
   const A = (R.hover && R.hover.anchor) || R.anchors[R.cur], p = A && A.p;
   if (!p || R.focusPost === p) return;
   R.focusPost = p;
-  setNow(p); renderLedger(p);
+  setNow(p); renderLedger(p); if (HAS_PORTRAIT) showLook(p);
 }
 function drawLitGate(ctx) {   // the gate the playhead stands in catches the light: warm glow inside, lacquer glinting
   const A = R.anchors[R.cur]; if (!A) return;
@@ -1348,14 +1841,111 @@ function drawGateFeathers(ctx) {   // 火羽: the warmest months' gates are crow
   }
   ctx.restore();
 }
-function drawRing() {
+function drawRing(dt = 0) {
   const ctx = cRing.getContext("2d"); setT(ctx);
   ctx.clearRect(-4, -4, R.FW + 8, R.FH + 8);
   if (!R.tex) return;
+  drawLanterns(ctx, dt / 1000);   // behind her portrait, under the ring, so the torii band covers whatever reaches it
   ctx.save(); ctx.translate(R.cx, R.cy); ctx.rotate(-R.d * R.b);
   ctx.drawImage(R.tex, -R.texHalf, -R.texHalf, R.texHalf * 2, R.texHalf * 2); ctx.restore();
   if (!R.focus) { R.focus = ctx.createRadialGradient(R.cx + R.Ro, R.cy, 0, R.cx + R.Ro, R.cy, R.band * 0.9); R.focus.addColorStop(0, "rgba(216,65,44,.2)"); R.focus.addColorStop(1, "rgba(216,65,44,0)"); }
   ctx.fillStyle = R.focus; ctx.fillRect(R.cx + R.Ro - R.band, R.cy - R.band, R.band * 2, R.band * 2);
+}
+// ── 奉纳提灯 ────────────────────────────
+// Lanterns at a shrine are given by its visitors, like the torii and the ema. Behind her portrait, rows of festival
+// lanterns recede toward her at two depths, with farther ones out of focus between them: black lacquered caps, ribbed
+// paper, red or white with red bands (紅白), the near ones inked 火羽 or 奉納. The playhead month's likes light a share of
+// them (the square root of its share of the month with the most likes) in a fixed random order: the quiet years stay
+// almost dark, the busy months glow. Likes are cumulative, so likes given later count too. They are drawn on her
+// picture's box in screen space, under the ring, so they follow her on desktop and phone and show where the cutout
+// is clear. Only the real archive has her, so only it has them. No flicker and no sway.
+const lanternShare = (likes, most) => most > 0 ? Math.min(1, Math.sqrt(Math.max(0, likes) / most)) : 0;
+const LANTERN_PAD = [0.14, 0.1];   // the backdrop reaches past the picture's sides and top, fading out there
+// Each row in the picture's units: its nearest lantern (x, y, width), how fast it shrinks into the distance (k), the rope's
+// sag between posts (sag, seg) and the point it recedes to (vx, vy). Two far rows high up, two near ones lower and a
+// pair beside her shoulders; the far end of each row hides behind her.
+const LANTERN_ROWS = [
+  { x: 0.2, y: 0, size: 0.07, n: 6, k: 2.2, sag: 0.05, seg: 1.8, vx: 0.5, vy: 0.36 },
+  { x: 0.82, y: 0.03, size: 0.065, n: 6, k: 2.2, sag: 0.05, seg: 1.6, vx: 0.5, vy: 0.38 },
+  { x: 0.07, y: 0.1, size: 0.125, n: 9, k: 3.2, sag: 0.09, seg: 2.6, vx: 0.5, vy: 0.42 },
+  { x: 0.94, y: 0.18, size: 0.105, n: 8, k: 3, sag: 0.08, seg: 2.2, vx: 0.5, vy: 0.42 },
+  { x: 0.03, y: 0.5, size: 0.1, n: 6, k: 2.6, sag: 0.05, seg: 1.8, vx: 0.4, vy: 0.42 },
+  { x: 0.97, y: 0.46, size: 0.09, n: 6, k: 2.6, sag: 0.05, seg: 1.6, vx: 0.6, vy: 0.42 }];
+function layoutLanterns(w, h) {   // px in her picture's box, far to near
+  const rnd = rng(20221012), lanterns = [];
+  for (const row of LANTERN_ROWS) for (let i = 0; i < row.n; i++) {
+    const d = (i + (i ? (rnd() - 0.5) * 0.35 : 0)) / (row.n - 1), s = 1 / (1 + row.k * d), lw = row.size * w * s * (0.92 + rnd() * 0.16);
+    const ry = (row.vy + (row.y - row.vy) * s) * h + row.sag * h * s * Math.sin(Math.PI * (d * row.seg % 1));   // where its cord meets the rope
+    lanterns.push({ x: (row.vx + (row.x - row.vx) * s) * w, ry, y: ry + lw * (0.12 + rnd() * 0.22), w: lw, s, white: rnd() < 0.3, rank: rnd(), glow: 0 });
+  }
+  for (let i = 0; i < 22; i++)   // farther ones, out of focus, on either side of her
+    lanterns.push({ bokeh: true, x: (0.5 + (i % 2 ? 1 : -1) * (0.2 + rnd() * 0.29)) * w, y: (0.16 + rnd() * 0.6) * h, r: w * (0.012 + rnd() * 0.02), s: 0, rank: rnd(), white: rnd() < 0.3, glow: 0 });
+  return lanterns.sort((a, b) => a.s - b.s);
+}
+function lanternPaper(g, L, lit, mincho) {   // one 提灯, unlit or lit
+  const { x, y, w } = L, cy = y + 0.81 * w, y0 = y + 0.1 * w, y1 = y + 1.52 * w;
+  if (lit) { const halo = g.createRadialGradient(x, cy, 0, x, cy, w * 1.5); halo.addColorStop(0, "rgba(255,170,100,.22)"); halo.addColorStop(1, "rgba(255,140,80,0)"); g.fillStyle = halo; g.fillRect(x - w * 1.5, cy - w * 1.5, w * 3, w * 3); }
+  let paper = L.white ? "#2f2a25" : "#2d1511";
+  if (lit) { paper = g.createRadialGradient(x - w * 0.1, cy - w * 0.12, 0, x, cy, w * 0.66); for (const [at, c] of L.white ? [[0, "#fffaf0"], [0.45, "#ffe5b8"], [0.8, "#f1b07a"], [1, "#b8774a"]] : [[0, "#ffe4ae"], [0.35, "#ffa25a"], [0.75, "#df552b"], [1, "#952a17"]]) paper.addColorStop(at, c); }
+  g.save(); g.beginPath(); g.rect(x - w, y0, w * 2, y1 - y0); g.clip();   // the paper between the caps
+  g.beginPath(); g.ellipse(x, cy, w * 0.5, w * 0.78, 0, 0, TAU); g.fillStyle = paper; g.fill();
+  g.strokeStyle = lit ? "rgba(90,28,14,.7)" : "rgba(220,180,150,.16)"; g.lineWidth = Math.max(0.5, w * 0.03); g.stroke(); g.clip();
+  if (L.white) { g.fillStyle = lit ? "#d6432a" : "#3d1812"; g.fillRect(x - w, y0, w * 2, w * 0.17); g.fillRect(x - w, y1 - w * 0.17, w * 2, w * 0.17); }
+  g.strokeStyle = lit ? "rgba(110,40,20,.3)" : "rgba(255,220,190,.06)"; g.lineWidth = Math.max(0.5, w * 0.025);   // bamboo ribs
+  for (let r = y0 + w * 0.12; r < y1 - w * 0.04; r += w * 0.12) { g.beginPath(); g.moveTo(x - w * 0.6, r + w * 0.03); g.quadraticCurveTo(x, r - w * 0.05, x + w * 0.6, r + w * 0.03); g.stroke(); }
+  if (w >= 20) {   // big enough to read: 火羽 on the red ones, 奉納 on the white
+    const [a, b] = L.white ? "奉納" : "火羽";
+    g.font = `700 ${w * 0.34}px ${mincho}`; g.textAlign = "center"; g.textBaseline = "middle"; g.fillStyle = lit ? "rgba(40,14,8,.85)" : "rgba(0,0,0,.4)";
+    g.fillText(a, x, cy - w * 0.2); g.fillText(b, x, cy + w * 0.2);
+  }
+  g.restore();
+  g.fillStyle = "#130d0b"; g.fillRect(x - w * 0.29, y, w * 0.58, w * 0.11); g.fillRect(x - w * 0.31, y1 - w * 0.01, w * 0.62, w * 0.11);   // 上輪・下輪
+  if (lit) { g.fillStyle = "rgba(255,190,120,.35)"; g.fillRect(x - w * 0.29, y + w * 0.1, w * 0.58, Math.max(0.6, w * 0.015)); }
+}
+function paintLanterns(c, B) {   // the whole backdrop, redrawn only while a light is changing
+  const [px, py] = LANTERN_PAD, { w, h } = B, mx = px * w, my = py * h, sx = c.width / (w + 2 * mx), sy = c.height / (h + my), mincho = css("--f-mincho");
+  const g = c.getContext("2d"); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, c.width, c.height); g.setTransform(sx, 0, 0, sy, mx * sx, my * sy);
+  for (const L of R.lanterns) if (L.bokeh && L.glow > 0.01) {
+    const b = g.createRadialGradient(L.x, L.y, 0, L.x, L.y, L.r);
+    b.addColorStop(0, L.white ? "rgba(255,236,200,.5)" : "rgba(255,170,100,.5)"); b.addColorStop(0.6, L.white ? "rgba(255,220,170,.3)" : "rgba(240,120,70,.3)"); b.addColorStop(1, "rgba(240,120,70,0)");
+    g.globalAlpha = L.glow; g.fillStyle = b; g.beginPath(); g.arc(L.x, L.y, L.r, 0, TAU); g.fill(); g.globalAlpha = 1;
+  }
+  for (const L of R.lanterns) if (!L.bokeh) {
+    g.strokeStyle = "rgba(170,140,110,.4)"; g.lineWidth = Math.max(0.5, L.w * 0.035); g.beginPath(); g.moveTo(L.x, L.ry); g.lineTo(L.x, L.y); g.stroke();   // its cord
+    lanternPaper(g, L, false, mincho);
+    if (L.glow > 0.01) { g.globalAlpha = L.glow; lanternPaper(g, L, true, mincho); g.globalAlpha = 1; }
+  }
+  // fade into the night past the picture's sides and top, and away below her shoulders
+  const across = g.createLinearGradient(-mx, 0, w + mx, 0), down = g.createLinearGradient(0, -my, 0, h), edge = mx * 0.9 / (w + 2 * mx);
+  across.addColorStop(0, "rgba(0,0,0,0)"); across.addColorStop(edge, "#000"); across.addColorStop(1 - edge, "#000"); across.addColorStop(1, "rgba(0,0,0,0)");
+  down.addColorStop(0, "rgba(0,0,0,0)"); down.addColorStop(my * 0.9 / (h + my), "#000"); down.addColorStop((my + 0.5 * h) / (h + my), "#000"); down.addColorStop((my + 0.95 * h) / (h + my), "rgba(0,0,0,0)");
+  g.globalCompositeOperation = "destination-in";
+  for (const fade of [across, down]) { g.fillStyle = fade; g.fillRect(-mx, -my, w + 2 * mx, h + my); }
+  g.globalCompositeOperation = "source-over";
+}
+function drawLanterns(ctx, sec) {
+  if (!HAS_PORTRAIT) return;
+  if (!R.lanternBox) {   // her picture's box on the dial, measured once per layout
+    const viz = $("#viz"), v = viz.getBoundingClientRect(), r = $("#portrait-looks").getBoundingClientRect(), old = R.lanterns || [];
+    if (!(r.width > 0)) return;
+    R.lanternBox = { x: r.left - v.left - viz.clientLeft, y: r.top - v.top - viz.clientTop, w: r.width, h: r.height };
+    R.lanterns = layoutLanterns(r.width, r.height);
+    R.lanterns.forEach((L, i) => { if (old[i]) L.glow = old[i].glow; });   // a relayout keeps the lights it had
+    R.lanternsDirty = true;
+  }
+  const mo = R.anchors[R.cur] && R.anchors[R.cur].mo, share = mo ? lanternShare(mo.likes, R.likesMost) : 0;
+  let dirty = R.lanternsDirty;
+  for (const L of R.lanterns) {
+    const target = L.rank < share ? 1 : 0, glow = sec > 0 && !R.lowq ? L.glow + (target - L.glow) * Math.min(1, sec * 3) : target;   // a slow machine just switches
+    const next = Math.abs(glow - target) < 0.01 ? target : glow;
+    if (next !== L.glow) { L.glow = next; dirty = true; }
+  }
+  const B = R.lanternBox, [px, py] = LANTERN_PAD, sx = ctx.canvas.width / R.W, sy = ctx.canvas.height / R.H, cw = B.w * (1 + 2 * px), ch = B.h * (1 + py);
+  const c = R.lanternCanvas || (R.lanternCanvas = document.createElement("canvas")), W = Math.ceil(cw * sx), H = Math.ceil(ch * sy);
+  if (c.width !== W || c.height !== H) { c.width = W; c.height = H; dirty = true; }
+  if (dirty) { paintLanterns(c, B); R.lanternsDirty = false; }
+  ctx.save(); ctx.setTransform(sx, 0, 0, sy, 0, 0);   // screen space, so they hang upright in either orientation
+  ctx.drawImage(c, B.x - px * B.w, B.y - py * B.h, cw, ch); ctx.restore();
 }
 function pickVis() {
   if (!R.vis.length || !(R.totalWeight > 0)) return null;
@@ -1549,6 +2139,9 @@ function seekTo(b, dur) {
   if (!R.raf) { R.b = wrapA(b); R.seek = null; renderOnce(); return; }
   R.seek = { from: R.b, delta: dWrap(b - R.b), t0: R.t || performance.now(), dur: dur || 900 };
 }
+// Kana labels cut to two characters read as half a word, so these Japanese stamps use kanji.
+const STAMP_JA = { 游戏: "遊戯", 周边: "物販", 联动: "共演", 活动: "催事", 转发: "共有" };
+const letterStamp = p => { const tag = String((p.tags || [])[0] || "日常").split("/")[0]; return isLiveNotice(p) ? tr("开播") : tag === "直播预告" ? tr("预告") : state.lang === "ja" && Object.hasOwn(STAMP_JA, tag) ? STAMP_JA[tag] : tr(tag).slice(0, 2); };
 function setNow(p) {
   if (!p) return;
   const card = $("#now"), changed = card.dataset.postId !== String(p.id);
@@ -1556,10 +2149,10 @@ function setNow(p) {
   card.dataset.postId = String(p.id);
   $("#now-when").textContent = `${fdate(p.ts)} ${tzName()}`;
   const stats = p.stats || {};
-  $("#now-type").textContent = `赞 ${fnum(stats.like)} · 评 ${fnum(stats.comment)} · 转 ${fnum(stats.forward)}`;
-  $("#now-txt").textContent = p.zh || p.text || p.title_zh || p.title || "打开查看这一天的记录。";
-  const tag = String((p.tags || [])[0] || "日常").split("/")[0];
-  $("#letter-stamp").textContent = isLiveNotice(p) ? "开播" : tag === "直播预告" ? "预告" : tag.slice(0, 2);
+  $("#now-type").textContent = tr`赞 ${fnum(stats.like)} · 评 ${fnum(stats.comment)} · 转 ${fnum(stats.forward)}`;
+  $("#now-txt").textContent = postText(p) || tr("打开查看这一天的记录。");
+  $("#letter-stamp").textContent = letterStamp(p);
+  $("#now-txt").lang = state.lang === "zh" && p.zh ? "zh-CN" : p.lang || "und";
   const time = performance.now();
   if (previous && changed && !document.hidden && !R.drag && time - (R.letterTurnAt || 0) > 600) {
     card.dataset.turn = card.dataset.turn === "1" ? "0" : "1";
@@ -1589,12 +2182,12 @@ function renderLedger(p) {
   const rows = L.months.get(month) || [], tonight = L.nights.get(n) || [], streak = L.run.get(n) || 0, first = tonight[0], at = first && tp(first.start);
   const fill = (host, ...parts) => host.replaceChildren(...parts.flat(2).filter(x => x != null && x !== ""));
   el.dataset.month = month;
-  fill($("#ledger-head"), `${t.y} 年 ${t.m} 月`, h("small", null, h("span", { class: "ledger-since", text: "自首条动态" }), `第 ${day.toLocaleString("zh-CN")} 天`));
-  fill($("#ledger-live"), rows.length ? ["本月直播 ", h("b", { text: String(rows.length) }), " 场 · ", h("b", { text: liveValue(rows, "duration") })]
-    : L.from != null && p.ts < L.from ? `直播档案从 ${tp(L.from).y} 年 ${tp(L.from).m} 月开始` : "本月没有直播档案", h("span", { class: "ledger-go", "aria-hidden": "true", text: " ›" }));
-  fill($("#ledger-night"), first ? [tonight.length > 1 ? `当晚 ${tonight.length} 场 · ` : "当晚 ", h("b", { text: `${p2(at.h)}:${p2(at.mi)}` }), tonight.length > 1 ? " 起" : " 开播",
+  fill($("#ledger-head"), tr`${t.y} 年 ${t.m} 月`, h("small", null, h("span", { class: "ledger-since", text: tr("自首条动态") }), tr`第 ${day.toLocaleString("zh-CN")} 天`));
+  fill($("#ledger-live"), rows.length ? [tr("本月直播 "), h("b", { text: String(rows.length) }), tr(" 场 · "), h("b", { text: liveValue(rows, "duration") })]
+    : L.from != null && p.ts < L.from ? tr`直播档案从 ${tp(L.from).y} 年 ${tp(L.from).m} 月开始` : tr("本月没有直播档案"), h("span", { class: "ledger-go", "aria-hidden": "true", text: " ›" }));
+  fill($("#ledger-night"), first ? [tonight.length > 1 ? tr`当晚 ${tonight.length} 场 · ` : tr("当晚 "), h("b", { text: `${p2(at.h)}:${p2(at.mi)}` }), tonight.length > 1 ? tr(" 起") : tr(" 开播"),
     h("span", { class: "ledger-dur", text: " · " + duration(liveSum(tonight, "duration").value) }),
-    streak > 1 ? [" · 连播第 ", h("b", { class: "lit", text: String(streak) }), " 天"] : null] : rows.length ? "当晚没有直播记录" : "");
+    streak > 1 ? [tr(" · 连播第 "), h("b", { class: "lit", text: String(streak) }), tr(" 天")] : null] : rows.length ? tr("当晚没有直播记录") : "");
 }
 $("#ledger").addEventListener("click", () => {   // the same month on the LIVE page
   const k = $("#ledger").dataset.month; if (!k) return;
@@ -1615,7 +2208,7 @@ function drawLetterThread(ctx) {
 function showKuji(A) {
   const p = A.p, f = fortune(p) || "吉", s = p.stats || {};
   const el = h("div", { class: "kuji" }, h("div", { class: "k1" }, h("span", { class: "fx", lang: "ja", text: f }), h("span", { class: "d", text: fdate(p.ts) + " " + tzName() })),
-    h("div", { class: "t", text: snippet(p) }), h("div", { class: "s", text: `♥ ${fnum(s.like)} · 评 ${fnum(s.comment)} · 转 ${fnum(s.forward)}` }));
+    h("div", { class: "t", text: snippet(p) }), h("div", { class: "s", text: tr`♥ ${fnum(s.like)} · 评 ${fnum(s.comment)} · 转 ${fnum(s.forward)}` }));
   for (const k of R.kuji) k.age = Math.max(k.age, 4.4);
   $("#kuji-layer").append(el); R.kuji.push({ el, A, age: 0, width: el.offsetWidth, height: el.offsetHeight });
   if (f === "大吉") document.dispatchEvent(new CustomEvent("hane-daikichi"));   // Kobuta cheers the best fortunes
@@ -1641,7 +2234,7 @@ function loop(now) {
     R.ft = R.ft ? R.ft * 0.96 + raw * 0.04 : raw;
     if ((R.quality === "auto" || R.quality === "compat") && !R.lowq && now - R.t0 > 3500 && R.ft > 28) { R.lowq = true; ringFit(true); syncQuality(); }
   }
-  advance(dt); computeVis(); drawRing();
+  advance(dt); computeVis(); drawRing(dt);
   R.smokeDt += dt; if (R.smokeDt >= 1000 / 30) { smokeStep(R.smokeDt); R.smokeDt = 0; }
   fxFrame(dt);
   R.uiTime += dt; if (R.uiTime >= 50) { updateKuji(R.uiTime); updateScrub(); hoverStillHolds(); R.uiTime = 0; }
@@ -1653,8 +2246,8 @@ function renderOnce() {
   R.t = performance.now(); advance(0); computeVis(); drawRing();
   fxFrame(0); updateScrub();
 }
-function ringStart() { if (!R.playing || R.raf || document.hidden || state.view !== "ring" || R.holds.size) return; $("#hinome-shrine").classList.remove("shrine-still"); R.last = 0; R.nextFrame = 0; R.ft = 0; R.t0 = performance.now(); R.raf = requestAnimationFrame(loop); }
-function ringStop() { if (R.raf) cancelAnimationFrame(R.raf); R.raf = 0; $("#hinome-shrine").classList.add("shrine-still"); }
+function ringStart() { if (!R.playing || R.raf || document.hidden || state.view !== "ring" || R.holds.size) return; R.last = 0; R.nextFrame = 0; R.ft = 0; R.t0 = performance.now(); R.raf = requestAnimationFrame(loop); }
+function ringStop() { if (R.raf) cancelAnimationFrame(R.raf); R.raf = 0; }
 // Holds pause the dial for a while without changing the play/pause choice: an open post, a pointer or the keyboard resting
 // on content that changes with playback, a dial scrolled out of view. When the last hold goes, playback carries on in place.
 function holdRing(why) { R.holds.add(why); if (R.raf && !R.seek) ringStop(); }
@@ -1746,9 +2339,9 @@ function ringHit(e) {
   if (d >= Rr - 5 - E.h * 2.3 && d <= Rr + 3) { const mo = R.months.find(m => b >= m.s && b <= m.e); if (mo && mo.ema) return { ema: mo }; }
   return null;
 }
-const emaTip = mo => tipL(`${mo.y}.${p2(mo.m)} · 绘马 ${mo.ema} 块`, `这个月的动态一共收到 ${mo.comments.toLocaleString("zh-CN")} 条评论：评论越多，挂的绘马越多`,
-  mo.topPost ? `评论最多的一条（${((mo.topPost.stats || {}).comment || 0).toLocaleString("zh-CN")} 条）：${snippet(mo.topPost)} · 点击查看原文` : "");
-const charmTip = c => tipL(`${c.y} 年 · 皆勤御守`, `这一年 ${c.span} 天里，有 ${c.days} 天发了「今天也开播」这类开播预告`, "每年一枚，挂在这一年开头 · 点击转到这一年");
+const emaTip = mo => tipL(tr`${mo.y}.${p2(mo.m)} · 绘马 ${mo.ema} 块`, tr`这个月的动态一共收到 ${mo.comments.toLocaleString("zh-CN")} 条评论：评论越多，挂的绘马越多`,
+  mo.topPost ? tr`评论最多的一条（${((mo.topPost.stats || {}).comment || 0).toLocaleString("zh-CN")} 条）：${snippet(mo.topPost)} · 点击查看原文` : "");
+const charmTip = c => tipL(tr`${c.y} 年 · 皆勤御守`, tr`这一年 ${c.span} 天里，有 ${c.days} 天发了「今天也开播」这类开播预告`, tr("每年一枚，挂在这一年开头 · 点击转到这一年"));
 let charmTipTimer = 0;
 function hoverStillHolds() {
   if (!R.hover || !R.pointer || dialGesture) return;
@@ -1761,8 +2354,8 @@ cFx.addEventListener("pointermove", e => {
   const hit = ringHit(e); R.hover = hit;
   if (!hit) { hideTip(); cFx.style.cursor = "grab"; if (!R.raf) dialRedraw(); return; }
   cFx.style.cursor = "pointer";
-  if (hit.anchor) { const p = hit.anchor.p, s = p.stats || {}, f = fortune(p), v = metricValue(p, R.metric); showTip(e.clientX, e.clientY, [h("b", { text: `${fdate(p.ts)} ${tzName()}${f ? "  综合" + f : ""}` }), h("div", { text: `${METRICS[R.metric]}：${v == null ? "未记录" : v.toLocaleString("zh-CN")}${v > R.scale.cap ? "（长度封顶）" : ""} · 赞 ${s.like ?? "—"} · 评 ${s.comment ?? "—"} · 转 ${s.forward ?? "—"}` }), h("div", { class: "tx", text: snippet(p) })]); }
-  else if (hit.month) { const mo = hit.month; showTip(e.clientX, e.clientY, tipL(`${mo.y}.${p2(mo.m)} · ${mo.posts.length} 条`, "点击转到这个月，并列出全部动态", mo.posts.slice().sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3).map(p => "· " + snippet(p)).join("\n"))); }
+  if (hit.anchor) { const p = hit.anchor.p, s = p.stats || {}, f = fortune(p), v = metricValue(p, R.metric); showTip(e.clientX, e.clientY, [h("b", { text: `${fdate(p.ts)} ${tzName()}${f ? tr("  综合") + f : ""}` }), h("div", { text: tr`${tr(METRICS[R.metric])}：${v == null ? tr("未记录") : v.toLocaleString("zh-CN")}${v > R.scale.cap ? tr("（长度封顶）") : ""} · 赞 ${s.like ?? "—"} · 评 ${s.comment ?? "—"} · 转 ${s.forward ?? "—"}` }), h("div", { class: "tx", text: snippet(p) })]); }
+  else if (hit.month) { const mo = hit.month; showTip(e.clientX, e.clientY, tipL(tr`${mo.y}.${p2(mo.m)} · ${mo.posts.length} 条`, tr("点击转到这个月，并列出全部动态"), mo.posts.slice().sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 3).map(p => "· " + snippet(p)).join("\n"))); }
   else if (hit.charm) showTip(e.clientX, e.clientY, charmTip(hit.charm));
   else if (hit.ema) showTip(e.clientX, e.clientY, emaTip(hit.ema));
   if (!R.raf) dialRedraw();
@@ -1780,11 +2373,11 @@ cFx.addEventListener("click", e => {
   }
 });
 function syncPlayback() {
-  const btn = $("#btn-play"); btn.textContent = R.playing ? "暂停" : "播放";
+  const btn = $("#btn-play"); btn.textContent = R.playing ? tr("暂停") : tr("播放");
   btn.setAttribute("aria-pressed", String(R.playing));
 }
 function syncQuality() {
-  $("#render-status").textContent = R.lowq ? "流畅特效" : "完整特效";
+  $("#render-status").textContent = R.lowq ? tr("流畅特效") : tr("完整特效");
   $("#render-status").dataset.renderer = G.mode;
 }
 $("#render-quality").addEventListener("change", e => {
@@ -1799,19 +2392,19 @@ $("#btn-play").addEventListener("click", () => {
 });
 function setSpeed(n) {
   const btn = $("#btn-speed"); R.speed = n;
-  btn.textContent = "速度 " + n + "×";
-  btn.setAttribute("aria-label", `播放速度：${n} 倍，点击切换`);
+  btn.textContent = tr("速度 ") + n + "×";
+  btn.setAttribute("aria-label", tr`播放速度：${n} 倍，点击切换`);
   btn.setAttribute("aria-pressed", String(n > 1));
 }
 $("#btn-speed").addEventListener("click", () => setSpeed(R.speed === 1 ? 2 : R.speed === 2 ? 4 : 1));
 $("#btn-latest").addEventListener("click", () => { if (R.anchors.length) seekTo(R.anchors[R.anchors.length - 1].b, 1400); });
 function renderBeamGuide() {
-  const metric = METRICS[R.metric], cap = R.scale.cap;
+  const metric = tr(METRICS[R.metric]), cap = R.scale.cap;
   $("#beam-scale").replaceChildren(...R.scale.samples.map(v => h("span", null,
     h("i", { style: `width:${beamFraction(v, cap) * 100}%`, "aria-hidden": "true" }), `${v.toLocaleString("zh-CN")} ${metric}`)));
-  $("#beam-explain").textContent = (R.metric === "score" ? "综合互动分 = 点赞 + 3×评论 + 5×转发，这是本站的加权方式。" : `长度只读取每条动态的${metric}数。`) +
-    `所有年份使用同一把长度尺：采用平方根刻度兼顾普通动态和爆款，长一倍不代表数量翻倍；满长为 ${cap.toLocaleString("zh-CN")} ${metric}（全档第 99 百分位，至少为 1），超过上限会标记封顶并显示实际数值。零值或未记录只有根部标记。` +
-    "金色光束为所选指标前 10%，燃烧羽毛为前 3%；大吉/中吉/小吉始终按综合互动分的前 3%/10%/20% 标注，同分同档。这些是最近采集的累计数，不能当成发布当天的数据。";
+  $("#beam-explain").textContent = (R.metric === "score" ? tr("综合互动分 = 点赞 + 3×评论 + 5×转发，这是本站的加权方式。") : tr`长度只读取每条动态的${metric}数。`) +
+    tr`所有年份使用同一把长度尺：采用平方根刻度兼顾普通动态和爆款，长一倍不代表数量翻倍；满长为 ${cap.toLocaleString("zh-CN")} ${metric}（全档第 99 百分位，至少为 1），超过上限会标记封顶并显示实际数值。零值或未记录只有根部标记。` +
+    tr("金色光束为所选指标前 10%，燃烧羽毛为前 3%；大吉/中吉/小吉始终按综合互动分的前 3%/10%/20% 标注，同分同档。这些是最近采集的累计数，不能当成发布当天的数据。");
 }
 $("#beam-metric").addEventListener("change", e => {
   R.metric = e.target.value; R.scale = metricScale(POSTS, R.metric); ringFit(true); renderBeamGuide(); renderKey();
@@ -1831,7 +2424,16 @@ const keyboardFocus = el => { try { return el.matches(":focus-visible"); } catch
   el.addEventListener("focusin", e => { if (!restoringFocus && keyboardFocus(e.target)) holdRing("focus" + i); });
   el.addEventListener("focusout", e => { if (!el.contains(e.relatedTarget)) releaseRing("focus" + i); });
 });
-$(".beam-guide details").addEventListener("toggle", () => ringFit());
+const playbackSettings = $("#playback-settings");
+playbackSettings.addEventListener("keydown", e => {
+  if (e.key === "Escape" && playbackSettings.open) {
+    e.preventDefault(); e.stopPropagation(); playbackSettings.open = false;
+    playbackSettings.querySelector("summary").focus();
+  }
+});
+document.addEventListener("pointerdown", e => {
+  if (!playbackSettings.contains(e.target)) playbackSettings.open = false;
+});
 
 // ── timeline scrubber ────────────────────
 const scrubX = b => clamp(wrapA(b) / R.bmax, 0, 1);
@@ -1846,11 +2448,18 @@ function renderScrub() {
     const x = X(mo.s), w = Math.max(1, X(mo.e) - X(mo.s) - 1), n = mo.posts.length, lv = mo.posts.filter(isLiveNotice).length;
     const hh = Math.round((base - 4) * Math.sqrt(n / maxN)), hl = n ? Math.round(hh * lv / n) : 0;
     if (n) { svg.append(S("rect", { x, y: base - hh, width: w, height: hh - hl, fill: "#5e564c" })); if (hl) svg.append(S("rect", { x, y: base - hl, width: w, height: hl, fill: "#b8301c" })); }
-    if (mo.m === 1 || mo === R.months[0]) { const tx = S("text", { x: x + 1, y: H - 2, fill: "#867c70", "font-size": 9.5, "font-family": css("--f-mono") }); tx.textContent = String(mo.y); svg.append(tx); }
+    if (mo.m === 1 || mo === R.months[0]) { const tx = S("text", { x: x + 1, y: H - 2, fill: "#9a8f82", "font-size": 10.5, "font-family": css("--f-mono") }); tx.textContent = String(mo.y); svg.append(tx); }
+  }
+  for (const look of HAS_PORTRAIT ? LOOKS.slice(1) : []) {   // where her new outfits start, explained in the month tooltip
+    const A = R.anchors.find(A => A.p.ts >= look.from); if (!A) continue;
+    const x = Math.round(X(A.b)) + 0.5;
+    svg.append(S("line", { x1: x, x2: x, y1: 3, y2: base, stroke: "#e1bb8c", "stroke-opacity": .7 }), S("circle", { cx: x, cy: 3, r: 2, fill: "#e1bb8c" }));
   }
   const last = R.months[R.months.length - 1], lx = X(last.e), tx = S("text", { x: Math.min(W - 2, lx + 4), y: H - 2, fill: "#ec6a4f", "font-size": 10, "font-family": css("--f-mincho"), "text-anchor": lx > W - 30 ? "end" : "start" }); tx.textContent = "今"; svg.append(tx);
 }
 function updateScrub() {
+  const month = R.months.find(m => R.b < m.e) || R.months[R.months.length - 1];
+  $("#dial-month").textContent = month ? tr`${month.y}年${p2(month.m)}月` : "—";
   const W = R.scrubWidth, x = scrubX(R.b) * W, w = R.thv * 2 / R.bmax * W, l = x - w / 2;
   $("#scrub-win").style.left = Math.max(0, l) + "px"; $("#scrub-win").style.width = Math.max(2, Math.min(W, l + w) - Math.max(0, l)) + "px";
   $("#scrub-cur").style.left = x + "px";
@@ -1865,7 +2474,8 @@ function updateScrub() {
   el.addEventListener("pointermove", e => {
     if (R.drag) { setFrom(e); return; }
     const r = el.getBoundingClientRect(), b = (e.clientX - r.left) / r.width * R.bmax, mo = R.months.find(m => b >= m.s && b <= m.e);
-    if (mo) showTip(e.clientX, e.clientY, tipL(`${mo.y}.${p2(mo.m)}`, `${mo.posts.length} 条 · 直播相关动态 ${mo.posts.filter(isLiveNotice).length}`)); else hideTip();
+    const look = mo && HAS_PORTRAIT && LOOKS.find(l => l.from > -Infinity && monthKey(l.from) === `${mo.y}-${p2(mo.m)}`);
+    if (mo) showTip(e.clientX, e.clientY, tipL(`${mo.y}.${p2(mo.m)}`, tr`${mo.posts.length} 条 · 直播相关动态 ${mo.posts.filter(isLiveNotice).length}`, look ? lookText(look) : "")); else hideTip();
   });
   const end = () => { R.drag = false; };
   el.addEventListener("pointerup", end); el.addEventListener("pointercancel", end); el.addEventListener("lostpointercapture", end); el.addEventListener("pointerleave", hideTip);
@@ -1873,23 +2483,25 @@ function updateScrub() {
 })();
 function renderKey() {   // the dial's legend: in its corner on wide screens, under the dial on phones
   const rows = () => [
-    h("div", null, h("b", { lang: "ja", text: "弧" }), "每座鸟居是一个月，越宽发得越多 · 匾上朱印是当月条数 · 紙垂标出新的一年"),
-    h("div", null, h("b", { lang: "ja", text: "居" }), "鸟居是信众供奉的：动态最受欢迎的月份（月中位互动前 15%）门顶插一对火羽 · 最安静的（后 35%）是素木鸟居"),
-    h("div", null, h("b", { lang: "ja", text: "縄" }), "注连绳每天编一段：那天发了「今天也开播」就编上，没发就缺一截"),
-    h("div", null, h("b", { lang: "ja", text: "守" }), "御守一年一换：每年一枚皆勤御守，写着年份和「发预告的天数/这一年的天数」"),
-    h("div", null, h("b", { lang: "ja", text: "絵" }), "绘马是参拜的人写下的话：那个月的动态评论越多，绳下挂的绘马越多 · 点开看评论最多的一条"),
-    h("div", null, h("b", { lang: "ja", text: "光" }), `一束＝一条动态 · 长度＝${METRICS[R.metric]} · 金色前 10% / 燃羽前 3%`),
-    h("div", null, h("b", { lang: "ja", text: "帳" }), "人物下方是那个月和当晚的直播档案：场次、时长、开播与连播天数"),
-    h("div", null, h("b", { lang: "ja", text: "烟" }), "线香是参拜的供奉：烟从当前可见的动态升起，互动越高越浓"),
-    h("div", null, h("b", { lang: "ja", text: "羽" }), "白羽多少＝当月直播时长 · 燃羽或有签的动态经过时飞起亮羽")];
+    h("div", null, h("b", { lang: "ja", text: "弧" }), tr("每座鸟居是一个月，越宽发得越多 · 匾上朱印是当月条数 · 紙垂标出新的一年")),
+    h("div", null, h("b", { lang: "ja", text: "居" }), tr("鸟居是信众供奉的：动态最受欢迎的月份（月中位互动前 15%）门顶插一对火羽 · 最安静的（后 35%）是素木鸟居")),
+    h("div", null, h("b", { lang: "ja", text: "縄" }), tr("注连绳每天编一段：那天发了「今天也开播」就编上，没发就缺一截")),
+    h("div", null, h("b", { lang: "ja", text: "守" }), tr("御守一年一换：每年一枚皆勤御守，写着年份和「发预告的天数/这一年的天数」")),
+    h("div", null, h("b", { lang: "ja", text: "絵" }), tr("绘马是参拜的人写下的话：那个月的动态评论越多，绳下挂的绘马越多 · 点开看评论最多的一条")),
+    h("div", null, h("b", { lang: "ja", text: "光" }), tr`一束＝一条动态 · 长度＝${tr(METRICS[R.metric])} · 金色前 10% / 燃羽前 3%`),
+    h("div", null, h("b", { lang: "ja", text: "帳" }), tr("人物下方是那个月和当晚的直播档案：场次、时长、开播与连播天数")),
+    h("div", null, h("b", { lang: "ja", text: tr("烟") }), tr("线香是参拜的供奉：烟从当前可见的动态升起，互动越高越浓")),
+    h("div", null, h("b", { lang: "ja", text: "羽" }), tr("白羽多少＝当月直播时长 · 燃羽或有签的动态经过时飞起亮羽")),
+    HAS_PORTRAIT && h("div", null, h("b", { lang: "ja", text: "灯" }), tr("人物身后的提灯是参拜的人献的：当月动态收到的赞越多，亮起的越多（累计赞，含后来补的）"))].filter(Boolean);
   $("#vkey").replaceChildren(...rows()); $("#key-list").replaceChildren(...rows());
+  $("#lantern-note").hidden = !HAS_PORTRAIT;   // the lanterns hang behind her, so they come and go with her
 }
 
 // ═══════════════════════════════════════════════════════════════════
 //  DRAWER
 // ═══════════════════════════════════════════════════════════════════
 const drawer = $("#drawer");
-let drawerReturn = null;
+let drawerReturn = null, refreshDrawer = null;
 function showDrawer() {
   if (drawer.hidden) { drawerReturn = document.activeElement; drawer.hidden = false; }
   drawer.focus({ preventScroll: true });   // the panel itself: one Tab reaches its buttons, Esc closes and returns focus
@@ -1907,65 +2519,67 @@ function closeDrawer() {
 }
 addEventListener("keydown", e => { if (e.key === "Escape") closeDrawer(); });
 function drHead(main, sub, back, extra) {
-  rebuild($("#dr-h"), ...[back ? h("button", { class: "ib", type: "button", onclick: back }, "← 返回") : null, extra || null,
+  rebuild($("#dr-h"), ...[back ? h("button", { class: "ib", type: "button", onclick: back }, tr("← 返回")) : null, extra || null,
     h("div", { class: "when" }, main, sub ? h("small", { text: sub }) : null),
-    h("button", { class: "ib x", type: "button", onclick: closeDrawer, "aria-label": "关闭" }, "关闭 ✕")].filter(Boolean));
+    h("button", { class: "ib x", type: "button", onclick: closeDrawer, "aria-label": tr("关闭") }, tr("关闭 ✕"))].filter(Boolean));
 }
-function blk(label, txt, lang, cls) { return h("div", { class: "blk " + (cls || "") }, h("span", { class: "lbl", text: label }), h("p", { lang: lang || null, text: txt || "（无文字）" })); }
+function blk(label, txt, lang, cls) { return h("div", { class: "blk " + (cls || "") }, h("span", { class: "lbl", text: label }), h("p", { lang: lang || null, text: txt || tr("（无文字）") })); }
 function thumbs(list) {
   const w = h("div", { class: "thumbs" });
   for (const u of list) {
     if (META.demo) { w.append(h("span", { class: "flag", text: "IMG" })); continue; }
     const src = (DATA.local_images || {})[u] || u;
-    const img = h("img", { src, alt: "动态配图", loading: "lazy", referrerpolicy: "no-referrer" });
+    const img = h("img", { src, alt: tr("动态配图"), loading: "lazy", referrerpolicy: "no-referrer" });
     img.addEventListener("error", () => img.replaceWith(h("span", { class: "flag", text: "IMG" })));
     w.append(h("a", { href: src, target: "_blank", rel: "noopener" }, img));
   }
   return w;
 }
 function openPost(p, back) {
+  refreshDrawer = () => openPost(p, back);
   const s = p.stats || {}, other = state.tz === 9 ? 8 : 9;
-  drHead(`${fdate(p.ts)} ${tzName()}`, `${fdate(p.ts, other)} ${tzName(other)} · ${TYPES[tkey(p)]}${p.action ? " · " + p.action : ""}`, back, fortEl(p));
+  drHead(`${fdate(p.ts)} ${tzName()}`, `${fdate(p.ts, other)} ${tzName(other)} · ${tr(TYPES[tkey(p)])}${p.action ? " · " + p.action : ""}`, back, fortEl(p));
   const b = [];
-  const flags = [p.pinned && "置顶", p.locked && "充电专属", p.gone && "已删除或不可见"].filter(Boolean);
-  if (flags.length) b.push(h("div", null, ...flags.map(f => h("span", { class: "flag" + (f.startsWith("已删除") ? " warn" : ""), text: f }))));
-  if (p.title) { b.push(blk("标题 · 原文", p.title, p.lang === "ja" ? "ja" : null, "src")); if (p.title_zh) b.push(blk("标题 · 中文", p.title_zh)); }
-  b.push(blk("原文 · " + ({ ja: "日本語", zh: "中文", en: "EN" }[p.lang] || "—"), p.text, p.lang === "ja" ? "ja" : null, "src"));
-  if (foreign(p) || p.zh) b.push(blk("译文 · 中文" + (DEV && p.tr ? " · " + (p.tr === "reviewed" ? "AI 对照原文校订" : p.tr) : ""), p.zh || "（还没翻译）"));
-  if (p.summary || p.mood) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: "大模型解读" }), p.summary ? h("div", { text: p.summary }) : null, p.mood ? h("div", { class: "m", text: "情绪：" + p.mood }) : null));
-  if (p.video) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: "视频" }), h("div", { class: "t", text: p.title_zh || p.video.title }), h("div", { class: "m", text: [p.video.duration, p.video.play ? "播放 " + fnum(p.video.play) : "", p.video.danmaku ? "弹幕 " + fnum(p.video.danmaku) : ""].filter(Boolean).join(" · ") }), p.video.url ? h("a", { class: "out", href: p.video.url, target: "_blank", rel: "noopener", text: (p.video.bvid || "打开视频") + " ↗" }) : null));
-  if (p.live) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: "直播" }), h("div", { class: "t", text: p.title_zh || p.live.title }), h("div", { class: "m", text: [p.live.area, p.live.watched].filter(Boolean).join(" · ") })));
-  if (p.reserve) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: "直播预约" }), h("div", { text: p.reserve.title }), p.reserve.desc ? h("div", { class: "m", text: p.reserve.desc }) : null));
-  if (p.orig) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: "转发自 @" + (p.orig.author || "?") }), h("p", { lang: "ja", style: "margin:0;white-space:pre-wrap;color:var(--paper-2)", text: p.orig.text || p.orig.title || "（原动态无文字或已删除）" }), p.orig_zh ? h("p", { style: "margin:0;white-space:pre-wrap", text: p.orig_zh }) : null));
+  const flags = [p.pinned && tr("置顶"), p.locked && tr("充电专属"), p.gone && tr("已删除或不可见")].filter(Boolean);
+  if (flags.length) b.push(h("div", null, ...flags.map(f => h("span", { class: "flag" + (f === tr("已删除或不可见") ? " warn" : ""), text: f }))));
+  if (p.title) { b.push(blk(tr("标题 · 原文"), p.title, p.lang === "ja" ? "ja" : null, "src")); if (state.lang === "zh" && p.title_zh) b.push(blk(tr("标题 · 中文"), p.title_zh)); }
+  b.push(blk(tr("原文 · ") + ({ ja: "日本語", zh: tr("中文"), en: "EN" }[p.lang] || "—"), p.text, p.lang === "ja" ? "ja" : null, "src"));
+  if (state.lang === "zh" && (foreign(p) || p.zh)) b.push(blk(tr("译文 · 中文") + (DEV && p.tr ? " · " + (p.tr === "reviewed" ? tr("AI 对照原文校订") : p.tr) : ""), p.zh || tr("（还没翻译）")));
+  if (state.lang === "zh" && (p.summary || p.mood)) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: tr("大模型解读") }), p.summary ? h("div", { text: p.summary }) : null, p.mood ? h("div", { class: "m", text: tr("情绪：") + p.mood }) : null));
+  if (p.video) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: tr("视频") }), h("div", { class: "t", text: (state.lang === "ja" ? p.title || p.video.title : p.title_zh || p.video.title) }), h("div", { class: "m", text: [p.video.duration, p.video.play ? tr("播放 ") + fnum(p.video.play) : "", p.video.danmaku ? tr("弹幕 ") + fnum(p.video.danmaku) : ""].filter(Boolean).join(" · ") }), p.video.url ? h("a", { class: "out", href: p.video.url, target: "_blank", rel: "noopener", text: (p.video.bvid || tr("打开视频")) + " ↗" }) : null));
+  if (p.live) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: tr("直播") }), h("div", { class: "t", text: (state.lang === "ja" ? p.title || p.live.title : p.title_zh || p.live.title) }), h("div", { class: "m", text: [p.live.area, p.live.watched].filter(Boolean).join(" · ") })));
+  if (p.reserve) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: tr("直播预约") }), h("div", { text: p.reserve.title }), p.reserve.desc ? h("div", { class: "m", text: p.reserve.desc }) : null));
+  if (p.orig) b.push(h("div", { class: "att" }, h("span", { class: "lbl", text: tr("转发自 @") + (p.orig.author || "?") }), h("p", { lang: "ja", style: "margin:0;white-space:pre-wrap;color:var(--paper-2)", text: p.orig.text || p.orig.title || tr("（原动态无文字或已删除）") }), state.lang === "zh" && p.orig_zh ? h("p", { style: "margin:0;white-space:pre-wrap", text: p.orig_zh }) : null));
   if ((p.images || []).length) b.push(thumbs(p.images));
   if (p.cover && !(p.images || []).includes(p.cover)) b.push(thumbs([p.cover]));
   if (p.orig) b.push(thumbs([...(p.orig.images || []), ...(p.orig.cover ? [p.orig.cover] : [])]));
   const hist = (DATA.post_history || {})[p.id];
   if (DEV && hist) {
-    const detail = h("details", {class:"att"}, h("summary", {text:`归档历史 · ${hist.revisions.length} 个内容版本 · ${hist.observations.length} 次快照` }));
+    const detail = h("details", {class:"att"}, h("summary", {text:tr`归档历史 · ${hist.revisions.length} 个内容版本 · ${hist.observations.length} 次快照` }));
     detail.addEventListener("toggle", () => {
       if (!detail.open || detail.dataset.loaded) return;
       detail.dataset.loaded = "1";
       for (const rev of hist.revisions) {
-        detail.append(blk("观察到的版本 · " + fdate(rev.ts), [rev.title, rev.text].filter(Boolean).join("\n")), thumbs([...(rev.images || []), ...(rev.cover ? [rev.cover] : [])]));
-        if (rev.orig) detail.append(blk("当时转发的原文", [rev.orig.title, rev.orig.text].filter(Boolean).join("\n")), thumbs([...(rev.orig.images || []), ...(rev.orig.cover ? [rev.orig.cover] : [])]));
+        detail.append(blk(tr("观察到的版本 · ") + fdate(rev.ts), [rev.title, rev.text].filter(Boolean).join("\n")), thumbs([...(rev.images || []), ...(rev.cover ? [rev.cover] : [])]));
+        if (rev.orig) detail.append(blk(tr("当时转发的原文"), [rev.orig.title, rev.orig.text].filter(Boolean).join("\n")), thumbs([...(rev.orig.images || []), ...(rev.orig.cover ? [rev.orig.cover] : [])]));
       }
-      for (const obs of hist.observations) { const s = obs.stats || {}; detail.append(h("p", {class:"note", text:`${fdate(obs.ts)} · 赞 ${s.like ?? "—"} · 评论 ${s.comment ?? "—"} · 转发 ${s.forward ?? "—"}`})); }
+      for (const obs of hist.observations) { const s = obs.stats || {}; detail.append(h("p", {class:"note", text:tr`${fdate(obs.ts)} · 赞 ${s.like ?? "—"} · 评论 ${s.comment ?? "—"} · 转发 ${s.forward ?? "—"}`})); }
     });
     b.push(detail);
   }
-  b.push(h("div", { class: "kv" }, ...[["赞", s.like], ["评论", s.comment], ["转发", s.forward], ["互动分", p.score]].map(([l, v]) => h("div", null, h("span", { class: "lbl", text: l }), h("span", { class: "v", text: fnum(v) })))));
-  b.push(h("div", { class: "tags" }, ...(p.tags || []).map(t => h("span", { class: "tag", text: t })), DEV ? h("span", { class: "flag", text: p.tags_src === "llm" ? "标签来自大模型" : "标签来自规则" }) : null, ...(DEV ? p.qa || [] : []).map(q => h("span", { class: "flag warn", text: "待复核：" + q }))));
+  b.push(h("div", { class: "kv" }, ...[[tr("赞"), s.like], [tr("评论"), s.comment], [tr("转发"), s.forward], [tr("互动分"), p.score]].map(([l, v]) => h("div", null, h("span", { class: "lbl", text: l }), h("span", { class: "v", text: fnum(v) })))));
+  b.push(h("div", { class: "tags" }, ...(p.tags || []).map(t => h("span", { class: "tag", text: tr(t) })), DEV ? h("span", { class: "flag", text: p.tags_src === "llm" ? tr("标签来自大模型") : tr("标签来自规则") }) : null, ...(DEV ? p.qa || [] : []).map(q => h("span", { class: "flag warn", text: tr("待复核：") + q }))));
   if ((p.hashtags || []).length || (p.mentions || []).length) b.push(h("div", { class: "tags" }, ...(p.hashtags || []).map(x => h("span", { class: "tag", text: "#" + x })), ...(p.mentions || []).map(m => h("span", { class: "tag", text: "@" + m.name }))));
-  b.push(h("div", null, h("a", { class: "out", href: p.url, target: "_blank", rel: "noopener", text: "在 B 站打开这条动态 ↗" })));
+  b.push(h("div", null, h("a", { class: "out", href: p.url, target: "_blank", rel: "noopener", text: tr("在 B 站打开这条动态 ↗") })));
   rebuild($("#dr-b"), ...b); $("#dr-b").scrollTop = 0; showDrawer();
 }
 function openMonth(mo) {
-  drHead(`${mo.y}.${p2(mo.m)} · ${mo.posts.length} 条`, `${KANJI_M[mo.m - 1]} · 点一条看原文和译文`);
+  refreshDrawer = () => openMonth(mo);
+  drHead(tr`${mo.y}.${p2(mo.m)} · ${mo.posts.length} 条`, tr`${KANJI_M[mo.m - 1]} · 点一条看原文和译文`);
   const list = mo.posts.slice().sort((a, b) => a.ts - b.ts);
   rebuild($("#dr-b"), h("div", { class: "list" }, ...list.map(p => h("button", { class: "li", type: "button", onclick: () => openPost(p, () => openMonth(mo)) },
     h("span", { class: "el" }, isLiveNotice(p) ? h("span", { class: "dot-live" }) : null, h("span", { class: "num", style: "color:var(--paper-3);margin-right:10px", text: (() => { const t = tp(p.ts); return `${p2(t.d)} ${p2(t.h)}:${p2(t.mi)}`; })() }), fortEl(p), snippet(p)),
-    h("span", { class: "r", text: `${TYPES[tkey(p)]} · ♥${fnum((p.stats || {}).like)}` })))));
+    h("span", { class: "r", text: `${tr(TYPES[tkey(p)])} · ♥${fnum((p.stats || {}).like)}` })))));
   $("#dr-b").scrollTop = 0; showDrawer();
 }
 
@@ -1976,7 +2590,7 @@ const LV = { year: "", month: "", metric: "duration" };
 const LIVE_METRICS = { duration: "直播时长", revenue_cents: "记录营收", danmaku: "弹幕数" };
 const exact = n => n == null ? "—" : n.toLocaleString("zh-CN", { maximumFractionDigits: 2 });
 const money = cents => cents == null ? "—" : "¥" + (cents / 100).toLocaleString("zh-CN", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const duration = seconds => seconds == null ? "—" : Math.floor(seconds / 3600) + "时" + Math.floor(seconds % 3600 / 60) + "分";
+const duration = seconds => seconds == null ? "—" : Math.floor(seconds / 3600) + tr("时") + Math.floor(seconds % 3600 / 60) + "分";
 function liveSum(list, key) {
   const values = list.map(x => x[key]).filter(x => typeof x === "number" && Number.isFinite(x) && x >= 0);
   return { value: values.length ? values.reduce((a, b) => a + b, 0) : null, missing: list.length - values.length };
@@ -1984,7 +2598,7 @@ function liveSum(list, key) {
 function liveValue(list, key, compact = false) {
   const sum = liveSum(list, key);
   let value = sum.value == null ? "—" : key === "duration" ? exact(Math.round(sum.value / 360) / 10) + " h" : key === "revenue_cents" ? money(sum.value) : exact(sum.value);
-  if (compact && key === "revenue_cents" && sum.value >= 1000000) value = exact(Math.round(sum.value / 10000) / 100) + " 万元";
+  if (compact && key === "revenue_cents" && sum.value >= 1000000) value = exact(Math.round(sum.value / 10000) / 100) + tr(" 万元");
   return value + (sum.missing ? " *" : "");
 }
 function liveDayParts(list, month, tz) {
@@ -2006,17 +2620,30 @@ function liveDayParts(list, month, tz) {
   return days;
 }
 // The year buttons cover the posts' years too, so a month opened from the dial's ledger is never swapped for another;
-// a year without archived streams is listed under 缺少记录 like any gap.
+// a year without archived streams shows up in the gaps below like any other month without records.
 function liveYears(earliest, latest) {
   const ys = [tp(earliest).y, tp(latest).y]; if (POSTS.length) ys.push(tp(POSTS[0].ts).y, tp(POSTS[POSTS.length - 1].ts).y);
   const y0 = Math.min(...ys), y1 = Math.max(...ys);
   return Array.from({ length: y1 - y0 + 1 }, (_, i) => String(y0 + i));
 }
+// Runs of months from the first post to the latest stream without a single archived stream, as [first, last] month keys.
+// Totals leave these months out, so they are named next to every total instead of letting a total pass for a career figure.
+function liveGaps(starts, from) {
+  if (!starts.length) return [];
+  const have = new Set(starts.map(ts => monthKey(ts))), end = monthKey(Math.max(...starts)), runs = [];
+  let { y, m } = tp(Math.min(from, ...starts)), run = null;
+  for (let key = `${y}-${p2(m)}`; key <= end; key = `${y}-${p2(m)}`) {
+    if (have.has(key)) run = null; else if (run) run[1] = key; else runs.push(run = [key, key]);
+    if (++m > 12) { m = 1; y++; }
+  }
+  return runs;
+}
+const gapText = runs => runs.map(([a, b]) => a === b ? a : a + tr(" 至 ") + b).join("、");
 function renderLive() {
   const source = h("a", { href: LIVE.source, target: "_blank", rel: "noopener", text: "nailv.live / Danmakus" });
   if (!SESSIONS.length) {
-    rebuild($("#live"), sec("灯", "LIVE ARCHIVE", "直播记录", "还没有可展示的直播归档，不能据此判断她没有直播。", [
-      h("p", { text: DEV ? "在本机运行 python lab.py live --no-open 同步公开记录；以后 update 会一起更新。来源异常时保留旧归档。" : "暂时没有收录直播记录。" }), source]));
+    rebuild($("#live"), sec(tr("灯"), "LIVE ARCHIVE", tr("直播记录"), tr("还没有可展示的直播归档，不能据此判断她没有直播。"), [
+      h("p", { text: DEV ? tr("在本机运行 python lab.py live --no-open 同步公开记录；以后 update 会一起更新。来源异常时保留旧归档。") : tr("暂时没有收录直播记录。") }), source]));
     return;
   }
   const latest = Math.max(...SESSIONS.map(x => x.start)), earliest = Math.min(...SESSIONS.map(x => x.start));
@@ -2026,35 +2653,36 @@ function renderLive() {
   if (!LV.month.startsWith(LV.year + "-")) LV.month = LV.year === String(tp(latest).y) ? monthKey(latest) : LV.year + "-01";
   const yearList = SESSIONS.filter(x => String(tp(x.start).y) === LV.year);
   const list = SESSIONS.filter(x => monthKey(x.start) === LV.month);
-  const missingYears = years.filter(y => !SESSIONS.some(x => String(tp(x.start).y) === y));
+  const gaps = liveGaps(SESSIONS.map(x => x.start), POSTS.length ? POSTS[0].ts : Infinity);
   const partial = SESSIONS.filter(x => x.complete === false).length, absent = SESSIONS.filter(x => x.source_missing).length;
-  const scope = h("div", { class: "scope" }, h("span", { class: "lbl", text: "LIVE · 直播档案" }),
+  const scope = h("div", { class: "scope" }, h("span", { class: "lbl", text: tr("LIVE · 直播档案") }),
     h("div", { class: "r" }, ...segBtns(years.map(y => [y, y]), LV.year, y => { LV.year = y; LV.month = ""; renderLive(); })),
-    h("div", { class: "r" }, ...segBtns([[9, "日本时间"], [8, "北京时间"]], state.tz, tz => { setTz(tz); renderLive(); })));
+    h("div", { class: "r" }, ...segBtns([[9, tr("日本时间")], [8, tr("北京时间")]], state.tz, tz => { setTz(tz); renderLive(); })));
   const status = h("details", { class: "live-source" },
-    h("summary", { text: "归档 " + SESSIONS.length + " 场 · " + partial + " 场记录不完整" + (missingYears.length ? " · " + missingYears.join("、") + " 年缺少记录" : "") + " · 查看口径与来源" }),
-    h("p", null, "来源：", source, " · UID " + META.uid + " · 房间 " + (LIVE.room_id || "—") + (DEV ? "。最近成功同步：" + (LIVE.last_success ? fdate(LIVE.last_success) + " " + tzName() : "未知") : "") + "。"),
-    h("p", { text: "全部已归档场次：时长 " + liveValue(SESSIONS, "duration") + " · 记录营收 " + liveValue(SESSIONS, "revenue_cents") + "。这不是完整生涯统计，也未独立核验来源的起止时间或金额。" }),
-    h("p", { text: "记录范围 " + fdate(earliest) + " 至 " + fdate(latest) + "。缺少记录不代表没有开播；完整标记只描述已收录的单场，不能证明整个历史完整。" + (absent ? " 有 " + absent + " 场本次来源未再返回，本站保留旧档。" : "") }),
-    h("p", { text: "营收为来源记录金额（元），不是主播到手收入。观看人次、互动人数、付费人数均沿用来源口径；跨场不能当成独立人数相加。最高高能人数不等于同时在线人数，旧记录中的 0 按未提供显示。其他零值仅表示来源返回零，旧记录也可能未采集该项；单场标为完整仍可能有缺失字段。" }),
-    h("p", { text: "按开播日期归属月份；跨午夜的时间带分到相应日期。* 表示指标存在缺值，仅累加已有值。" + (DEV ? "页面从静态归档读取，快照从本项目首次采集开始积累。" : "") }));
+    h("summary", { text: tr("归档 ") + SESSIONS.length + tr(" 场 · ") + partial + tr(" 场记录不完整") + (gaps.length ? " · " + tr`${gapText(gaps)} 无记录` : "") + tr(" · 查看口径与来源") }),
+    h("p", null, tr("来源："), source, " · UID " + META.uid + tr(" · 房间 ") + (LIVE.room_id || "—") + (DEV ? tr("。最近成功同步：") + (LIVE.last_success ? fdate(LIVE.last_success) + " " + tzName() : tr("未知")) : "") + "。"),
+    h("p", { text: tr("全部已归档场次：时长 ") + liveValue(SESSIONS, "duration") + tr(" · 记录营收 ") + liveValue(SESSIONS, "revenue_cents") +
+      (gaps.length ? tr`。${gapText(gaps)} 没有收录任何场次，不在以上总数里` : "") + tr("。这不是完整生涯统计，也未独立核验来源的起止时间或金额。") }),
+    h("p", { text: tr("记录范围 ") + fdate(earliest) + tr(" 至 ") + fdate(latest) + tr("。缺少记录不代表没有开播；完整标记只描述已收录的单场，不能证明整个历史完整。") + (absent ? tr(" 有 ") + absent + tr(" 场本次来源未再返回，本站保留旧档。") : "") }),
+    h("p", { text: tr("营收为来源记录金额（元），不是主播到手收入。观看人次、互动人数、付费人数均沿用来源口径；跨场不能当成独立人数相加。最高高能人数不等于同时在线人数，旧记录中的 0 按未提供显示。其他零值仅表示来源返回零，旧记录也可能未采集该项；单场标为完整仍可能有缺失字段。") }),
+    h("p", { text: tr("按开播日期归属月份；跨午夜的时间带分到相应日期。* 表示指标存在缺值，仅累加已有值。") + (DEV ? tr("页面从静态归档读取，快照从本项目首次采集开始积累。") : "") }));
   const out = [scope, status];
-  if (DEV && LIVE.status !== "ok") out.push(h("p", { role: "status", class: "acc", text: "最近一次直播同步未成功；当前展示最后保存的记录，可能尚未更新。" }));
+  if (DEV && LIVE.status !== "ok") out.push(h("p", { role: "status", class: "acc", text: tr("最近一次直播同步未成功；当前展示最后保存的记录，可能尚未更新。") }));
   out.push(h("div", { class: "live-kpis" }, ...[
-    ["本月收录场次", list.length ? String(list.length) : "—", LV.month + " · 按开播日期"],
-    ["本月直播时长", liveValue(list, "duration"), "起止时间差 · 已知场次"],
-    ["本月记录营收", liveValue(list, "revenue_cents"), "来源统计 · 元"],
-    ["本月弹幕数", liveValue(list, "danmaku"), "来源统计 · 条"]
+    [tr("本月收录场次"), list.length ? String(list.length) : "—", LV.month + tr(" · 按开播日期")],
+    [tr("本月直播时长"), liveValue(list, "duration"), tr("起止时间差 · 已知场次")],
+    [tr("本月记录营收"), liveValue(list, "revenue_cents"), tr("来源统计 · 元")],
+    [tr("本月弹幕数"), liveValue(list, "danmaku"), tr("来源统计 · 条")]
   ].map(([label, value, note]) => h("div", null, h("span", { text: label }), h("strong", { text: value }), h("small", { text: note })))));
   const months = Array.from({ length: 12 }, (_, i) => ({ key: LV.year + "-" + p2(i + 1), rows: yearList.filter(x => tp(x.start).m === i + 1) }));
   const max = Math.max(1, ...months.map(m => liveSum(m.rows, LV.metric).value || 0));
   const monthGrid = h("div", { class: "live-months" }, ...months.map(m => h("button", {
-    type: "button", class: "live-month", "aria-pressed": String(LV.month === m.key), "aria-label": m.key + "，" + (m.rows.length ? m.rows.length + " 场，" + liveValue(m.rows, LV.metric) : "无记录"),
+    type: "button", class: "live-month", "aria-pressed": String(LV.month === m.key), "aria-label": m.key + "，" + (m.rows.length ? m.rows.length + tr(" 场，") + liveValue(m.rows, LV.metric) : tr("无记录")),
     onclick: () => { LV.month = m.key; renderLive(); }
-  }, h("span", { text: m.key.slice(5) + " 月" }), h("strong", { text: m.rows.length ? liveValue(m.rows, LV.metric, true) : m.key > asOfMonth ? "尚未到来" : "无记录" }),
-    h("small", { text: m.rows.length ? m.rows.length + " 场" : m.key > asOfMonth ? "截至同步日" : "不能推断停播" }),
+  }, h("span", { text: m.key.slice(5) + tr(" 月") }), h("strong", { text: m.rows.length ? liveValue(m.rows, LV.metric, true) : m.key > asOfMonth ? tr("尚未到来") : tr("无记录") }),
+    h("small", { text: m.rows.length ? m.rows.length + tr(" 场") : m.key > asOfMonth ? tr("截至同步日") : tr("不能推断停播") }),
     h("span", { class: "live-meter", "aria-hidden": "true" }, h("i", { style: "width:" + ((liveSum(m.rows, LV.metric).value || 0) / max * 100) + "%" })))));
-  out.push(sec("迹", "MONTHLY", LV.year + " · 每个月的直播", "点击月份查看时段和场次。横条使用同一年、同一指标的线性刻度；切换指标后重新定标。", monthGrid,
+  out.push(sec(tr("迹"), "MONTHLY", LV.year + tr(" · 每个月的直播"), tr("点击月份查看时段和场次。横条使用同一年、同一指标的线性刻度；切换指标后重新定标。"), monthGrid,
     segBtns(Object.entries(LIVE_METRICS), LV.metric, metric => { LV.metric = metric; renderLive(); })));
   const days = liveDayParts(SESSIONS, LV.month, state.tz), timeline = h("div", { class: "live-timeline" },
     h("div", { class: "live-ticks" }, h("span", { text: tzName() }), h("div", null, ...["00", "06", "12", "18", "24"].map(x => h("span", { text: x })))));
@@ -2065,48 +2693,49 @@ function renderLive() {
       const end = part.b ?? part.a, lane = lanes.findIndex(x => x <= part.a), row = lane < 0 ? lanes.length : lane;
       lanes[row] = end + 0.3;
       const session = part.session, width = (end - part.a) / 24 * 100;
-      const title = session.title + " · " + fdate(session.start) + " → " + (session.end == null ? "结束时间未提供" : fdate(session.end)) + " · " + duration(session.duration);
+      const title = session.title + " · " + fdate(session.start) + " → " + (session.end == null ? tr("结束时间未提供") : fdate(session.end)) + " · " + duration(session.duration);
       const button = h("button", { type: "button", class: "live-band" + (session.complete === false ? " partial" : ""),
         style: "left:" + (part.a / 24 * 100) + "%;width:" + Math.max(width, 0.01) + "%;min-width:0;top:" + (row * 30 + 3) + "px",
         title, "aria-label": title, onclick: () => openLive(session) }, h("i", { style: "width:100%;min-width:2px" }));
       track.append(button);
     }
     track.style.minHeight = Math.max(36, lanes.length * 30 + 6) + "px";
-    if (!parts.length) track.append(h("em", { text: LV.month > asOfMonth || (LV.month === asOfMonth && i + 1 > asOf.d) ? "尚未到来" : "无记录" }));
-    timeline.append(h("div", { class: "live-day" }, h("span", { text: p2(i + 1) + " 日" }), track));
+    if (!parts.length) track.append(h("em", { text: LV.month > asOfMonth || (LV.month === asOfMonth && i + 1 > asOf.d) ? tr("尚未到来") : tr("无记录") }));
+    timeline.append(h("div", { class: "live-day" }, h("span", { text: p2(i + 1) + tr(" 日") }), track));
   });
-  out.push(sec("时", "ON AIR", LV.month + " · 灯亮起的时刻", "一条金色时间带是一场直播，位置表示开播时刻，长度只表示持续时间。斜纹表示来源标为不完整。未知结束时间只画起点；短场次也可从下方列表打开。", timeline));
+  out.push(sec(tr("时"), "ON AIR", LV.month + tr(" · 灯亮起的时刻"), tr("一条金色时间带是一场直播，位置表示开播时刻，长度只表示持续时间。斜纹表示来源标为不完整。未知结束时间只画起点；短场次也可从下方列表打开。"), timeline));
   const rows = list.map(session => h("button", { type: "button", class: "live-row", onclick: () => openLive(session) },
     h("time", { text: fdate(session.start) + " " + tzName() }), h("span", { class: "live-title", text: session.title }),
-    h("span", null, duration(session.duration), h("small", { text: session.complete === false ? "记录不完整" : session.complete ? "来源标为完整" : "完整性未知" })),
-    h("span", { class: "money" }, money(session.revenue_cents), h("small", { text: "记录营收 · 元" }))));
-  out.push(sec("场", "SESSIONS", "逐场查看 · " + LV.month, "点开查看起止、营收、弹幕、观看与互动数据，以及时间相近的动态。", rows.length ? h("div", { class: "live-list" }, rows) : h("p", { text: "这个月没有开播记录。相邻月份跨入本月的时间带仍会显示；空白不能证明停播。" })));
+    h("span", null, duration(session.duration), h("small", { text: session.complete === false ? tr("记录不完整") : session.complete ? tr("来源标为完整") : tr("完整性未知") })),
+    h("span", { class: "money" }, money(session.revenue_cents), h("small", { text: tr("记录营收 · 元") }))));
+  out.push(sec(tr("场"), "SESSIONS", tr("逐场查看 · ") + LV.month, tr("点开查看起止、营收、弹幕、观看与互动数据，以及时间相近的动态。"), rows.length ? h("div", { class: "live-list" }, rows) : h("p", { text: tr("这个月没有开播记录。相邻月份跨入本月的时间带仍会显示；空白不能证明停播。") })));
   rebuild($("#live"), ...out);
 }
 function openLive(session) {
-  drHead("直播档案 · " + fdate(session.start) + " " + tzName(), session.title);
+  refreshDrawer = () => openLive(session);
+  drHead(tr("直播档案 · ") + fdate(session.start) + " " + tzName(), session.title);
   const nearby = POSTS.filter(p => Math.abs(p.ts - session.start) <= 6 * 3600).sort((a, b) => Math.abs(a.ts - session.start) - Math.abs(b.ts - session.start)).slice(0, 3);
-  const metrics = [["记录营收（元）", money(session.revenue_cents)], ["弹幕数", exact(session.danmaku)], ["观看人次（源站口径）", exact(session.watch)], ["点赞数", exact(session.likes)], ["互动人数", exact(session.interactors)], ["付费人数", exact(session.payers)], ["最高高能人数", exact(session.peak)], ["直播时长", duration(session.duration)]];
+  const metrics = [[tr("记录营收（元）"), money(session.revenue_cents)], [tr("弹幕数"), exact(session.danmaku)], [tr("观看人次（源站口径）"), exact(session.watch)], [tr("点赞数"), exact(session.likes)], [tr("互动人数"), exact(session.interactors)], [tr("付费人数"), exact(session.payers)], [tr("最高高能人数"), exact(session.peak)], [tr("直播时长"), duration(session.duration)]];
   rebuild($("#dr-b"),
-    blk("LIVE · " + (session.complete === false ? "记录不完整" : session.complete ? "来源标为完整" : "完整性未知"), session.title),
-    blk("起止时间 · " + tzName(), fdate(session.start) + " → " + (session.end == null ? "未提供有效结束时间" : fdate(session.end))),
+    blk("LIVE · " + (session.complete === false ? tr("记录不完整") : session.complete ? tr("来源标为完整") : tr("完整性未知")), session.title),
+    blk(tr("起止时间 · ") + tzName(), fdate(session.start) + " → " + (session.end == null ? tr("未提供有效结束时间") : fdate(session.end))),
     h("div", { class: "live-detail" }, metrics.map(([label, value]) => h("div", null, h("span", { text: label }), h("strong", { text: value })))),
-    h("p", { class: "note", text: "营收不是主播到手收入；最高高能人数不是同时在线人数。— 表示未提供或无法确认；0 仅表示来源返回零，旧记录也可能未采集该项，不能保证真实为零。" }),
-    h("p", null, h("a", { class: "live-link", href: session.url, target: "_blank", rel: "noopener", text: "查看 nailv 原始场次 ↗" })),
-    ...(DEV ? [blk("归档记录", "首次收录 " + fdate(session.first_seen) + " · 最近确认 " + fdate(session.last_seen) + (session.source_missing ? " · 本次来源未再返回，旧档已保留。" : ""))] : []),
-    blk("附近的动态 · 开播前后 6 小时", "只按发布时间邻近列出，尚不能确认这些动态描述的就是本场直播。"),
+    h("p", { class: "note", text: tr("营收不是主播到手收入；最高高能人数不是同时在线人数。— 表示未提供或无法确认；0 仅表示来源返回零，旧记录也可能未采集该项，不能保证真实为零。") }),
+    h("p", null, h("a", { class: "live-link", href: session.url, target: "_blank", rel: "noopener", text: tr("查看 nailv 原始场次 ↗") })),
+    ...(DEV ? [blk(tr("归档记录"), tr("首次收录 ") + fdate(session.first_seen) + tr(" · 最近确认 ") + fdate(session.last_seen) + (session.source_missing ? tr(" · 本次来源未再返回，旧档已保留。") : ""))] : []),
+    blk(tr("附近的动态 · 开播前后 6 小时"), tr("只按发布时间邻近列出，尚不能确认这些动态描述的就是本场直播。")),
     ...nearby.map(p => h("button", { class: "li", type: "button", onclick: () => openPost(p, () => openLive(session)) }, fdate(p.ts) + " · " + snippet(p))),
-    ...(!nearby.length ? [h("p", { text: "没有找到这个时间范围内的动态。" })] : []));
+    ...(!nearby.length ? [h("p", { text: tr("没有找到这个时间范围内的动态。") })] : []));
   $("#dr-b").scrollTop = 0; showDrawer();
 }
 
-const ST = { year: "all", metric: "like", kw: "zh" };
+const ST = { year: "all", metric: "like", kw: state.lang };
 function sec(kj, code, title, lead, body, ctl) {
   return h("section", { class: "sec" }, h("div", { class: "kj", lang: "ja", "aria-hidden": "true", text: kj }),
     h("div", { class: "sec-h" }, h("span", { class: "lbl", text: code }), h("h2", { text: title }), ctl ? h("div", { class: "r" }, ctl) : null),
     lead ? h("p", { class: "lead" }, ...[].concat(lead)) : null, ...[].concat(body));
 }
-function segBtns(opts, cur, fn) { return opts.map(([v, l]) => h("button", { class: "ib", type: "button", "aria-pressed": String(v === cur), onclick: () => fn(v) }, l)); }
+function segBtns(opts, cur, fn) { return opts.map(([v, l]) => h("button", { class: "ib", type: "button", "aria-pressed": String(v === cur), onclick: () => fn(v) }, tr(l))); }
 function barList(rows, opt) {
   opt = opt || {}; const max = Math.max(1, ...rows.map(r => r.n));
   return h("div", { class: "bars" }, ...rows.map(r => {
@@ -2114,41 +2743,41 @@ function barList(rows, opt) {
       h("span", { class: "nm", title: r.name }, r.icon && !META.demo ? h("img", { src: r.icon, alt: "", referrerpolicy: "no-referrer", onerror: e => e.target.remove() }) : null, r.name),
       h("span", { class: "tr" }, h("span", { class: "fill", style: `width:${(r.n / max * 100).toFixed(1)}%` })),
       h("span", { class: "ct", text: r.label || String(r.n) }));
-    bindTip(el, () => tipL(r.label || `${r.n} 条`, r.name, r.tip)); return el;
+    bindTip(el, () => tipL(r.label || tr`${r.n} 条`, r.name, r.tip)); return el;
   }));
 }
-const axisText = (x, y, t, anchor, fill) => { const e = S("text", { x, y, "text-anchor": anchor || "start", fill: fill || "#867c70", "font-size": 10, "font-family": css("--f-mono") }); e.textContent = t; return e; };
+const axisText = (x, y, t, anchor, fill) => { const e = S("text", { x, y, "text-anchor": anchor || "start", fill: fill || "#9a8f82", "font-size": 11, "font-family": css("--f-mono") }); e.textContent = t; return e; };
 function renderStats() {
   const L = ST.year === "all" ? POSTS : POSTS.filter(p => String(tp(p.ts).y) === ST.year);
   const years = [...new Set(POSTS.map(p => String(tp(p.ts).y)))];
-  const out = [h("div", { class: "scope" }, h("span", { class: "lbl", text: "SCOPE · 范围" }), h("span", { class: "note", text: `${L.length} 条动态` }), h("div", { class: "r" }, ...segBtns([["all", "全部"], ...years.map(y => [y, y])], ST.year, v => { ST.year = v; renderStats(); })))];
-  if (!L.length) { rebuild($("#stats"), ...out, h("div", { class: "empty", text: "这个范围里没有动态。" })); return; }
+  const out = [h("div", { class: "scope" }, h("span", { class: "lbl", text: tr("SCOPE · 范围") }), h("span", { class: "note", text: tr`${L.length} 条动态` }), h("div", { class: "r" }, ...segBtns([["all", tr("全部")], ...years.map(y => [y, y])], ST.year, v => { ST.year = v; renderStats(); })))];
+  if (!L.length) { rebuild($("#stats"), ...out, h("div", { class: "empty", text: tr("这个范围里没有动态。") })); return; }
 
   // 刻 · rhythm
   const grid = Array.from({ length: 7 }, () => new Array(24).fill(0)); for (const p of L) { const t = tp(p.ts); grid[t.wd][t.h]++; }
   const mx = Math.max(1, ...grid.flat()); let pk = [0, 0, 0]; grid.forEach((r, i) => r.forEach((n, j) => { if (n > pk[0]) pk = [n, i, j]; }));
   const lv = counter(L.filter(p => p.type === "live"), p => String(tp(p.ts).h)), sh = lv.length ? +lv[0][0] : null;
-  const busiest = `周${WD[pk[1]]} ${p2(pk[2])} 点（${tzName()}）`;
-  const hm = h("div", { class: "heat", role: "img", tabindex: "0", "aria-label": `一周各小时的发帖数：最多在${busiest}，${pk[0]} 条` });
-  hm.append(h("span")); for (let c = 0; c < 24; c++) hm.append(h("span", { class: "cl" + (c === sh ? " acc" : ""), text: c % 3 === 0 || c === sh ? String(c) : "" })); hm.append(h("span", { class: "rt", text: "合计" }));
+  const busiest = tr`周${weekday(pk[1])} ${p2(pk[2])} 点（${tzName()}）`;
+  const hm = h("div", { class: "heat", role: "img", tabindex: "0", "aria-label": tr`一周各小时的发帖数：最多在${busiest}，${pk[0]} 条` });
+  hm.append(h("span")); for (let c = 0; c < 24; c++) hm.append(h("span", { class: "cl" + (c === sh ? " acc" : ""), text: c % 3 === 0 || c === sh ? String(c) : "" })); hm.append(h("span", { class: "rt", text: tr("合计") }));
   for (let r = 0; r < 7; r++) {
-    hm.append(h("span", { class: "rl", text: "周" + WD[r] }));
-    for (let c = 0; c < 24; c++) { const n = grid[r][c], cell = h("span", { class: "c" + (r === pk[1] && c === pk[2] ? " pk" : ""), style: n ? `background:rgba(238,231,218,${(0.1 + 0.85 * Math.sqrt(n / mx)).toFixed(3)})` : "" }); bindTip(cell, () => tipL(`${n} 条`, `周${WD[r]} ${p2(c)}:00–${p2(c)}:59 ${tzName()}`)); hm.append(cell); }
+    hm.append(h("span", { class: "rl", text: tr("周") + weekday(r) }));
+    for (let c = 0; c < 24; c++) { const n = grid[r][c], cell = h("span", { class: "c" + (r === pk[1] && c === pk[2] ? " pk" : ""), style: n ? `background:rgba(238,231,218,${(0.1 + 0.85 * Math.sqrt(n / mx)).toFixed(3)})` : "" }); bindTip(cell, () => tipL(tr`${n} 条`, tr`周${weekday(r)} ${p2(c)}:00–${p2(c)}:59 ${tzName()}`)); hm.append(cell); }
     hm.append(h("span", { class: "rt", text: String(grid[r].reduce((a, b) => a + b, 0)) }));
   }
   const hrs = new Array(24).fill(0); for (const p of L) hrs[tp(p.ts).h]++;
   const late = Math.round((hrs.slice(20).reduce((a, b) => a + b, 0) + hrs.slice(0, 2).reduce((a, b) => a + b, 0)) / L.length * 100);
-  out.push(sec("刻", "RHYTHM", "什么时候发动态",
-    ["最常出现在 ", h("b", { text: `周${WD[pk[1]]} ${p2(pk[2])} 点` }), `（${tzName()}）；晚上 8 点到凌晨 2 点之间发的占 `, h("b", { text: late + "%" }), "。", ...(sh != null ? ["开播通知最常在 ", h("b", { class: "acc", text: `${p2(sh)} 点` }), "。"] : [])],
-    [hm, h("div", { class: "note", text: "越亮发得越多 · 红框是最常发动态的时段 · 红色刻度是开播卡片最常发布的小时；实际直播见 LIVE 页" })],
-    segBtns([[9, "日本时间"], [8, "北京时间"]], state.tz, v => { setTz(v); renderStats(); built.stats = true; })));
+  out.push(sec("刻", "RHYTHM", tr("什么时候发动态"),
+    [tr("最常出现在 "), h("b", { text: tr`周${weekday(pk[1])} ${p2(pk[2])} 点` }), tr`（${tzName()}）；晚上 8 点到凌晨 2 点之间发的占 `, h("b", { text: late + "%" }), "。", ...(sh != null ? [tr("开播通知最常在 "), h("b", { class: "acc", text: tr`${p2(sh)} 点` }), "。"] : [])],
+    [hm, h("div", { class: "note", text: tr("越亮发得越多 · 红框是最常发动态的时段 · 红色刻度是开播卡片最常发布的小时；实际直播见 LIVE 页") })],
+    segBtns([[9, tr("日本时间")], [8, tr("北京时间")]], state.tz, v => { setTz(v); renderStats(); built.stats = true; })));
 
   // 暦 · output
   const ms = (() => { const a = tp(L[0].ts), b = tp(L[L.length - 1].ts), o = []; let y = a.y, m = a.m; while (y < b.y || (y === b.y && m <= b.m)) { o.push(`${y}-${p2(m)}`); if (++m > 12) { m = 1; y++; } } return o; })();
   const cnt = new Map(ms.map(m => [m, []])); for (const p of L) cnt.get(monthKey(p.ts))?.push(p);
   const vals = ms.map(m => cnt.get(m).length), vmax = Math.max(1, ...vals), bi = vals.indexOf(vmax);
   const W = innerWidth < 760 ? 380 : 1000, H2 = 190, pl = 30, pt = 8, iw = W - pl - 4, ih = H2 - 22 - pt, bw = iw / ms.length;
-  const svg = S("svg", { viewBox: `0 0 ${W} ${H2}`, role: "img", "aria-label": "每月动态数，红色部分是直播相关动态" });
+  const svg = S("svg", { viewBox: `0 0 ${W} ${H2}`, role: "img", "aria-label": tr("每月动态数，红色部分是直播相关动态") });
   const tick = Math.max(1, Math.ceil(vmax / 4)); for (let v = 0; v <= vmax; v += tick) { const y = pt + ih - v / vmax * ih; svg.append(S("line", { x1: pl, x2: W - 4, y1: y, y2: y, stroke: "#2a241f" })); svg.append(axisText(pl - 6, y + 3, String(v), "end")); }
   ms.forEach((m, i) => {
     const list = cnt.get(m), n = list.length, nl = list.filter(isLiveNotice).length, x = pl + i * bw + Math.min(1, bw * 0.15), w = Math.max(1, bw - Math.min(2, bw * 0.3)), y = pt + ih - n / vmax * ih, yl = pt + ih - nl / vmax * ih;
@@ -2156,25 +2785,25 @@ function renderStats() {
     g.append(S("rect", { x, y, width: w, height: Math.max(0, yl - y), fill: i === bi ? "#eee7da" : "#6d655a" }));
     if (nl) g.append(S("rect", { x, y: yl, width: w, height: Math.max(0, pt + ih - yl), fill: "#c4361f" }));
     g.append(S("rect", { x: pl + i * bw, y: pt, width: bw, height: ih, fill: "transparent" }));
-    bindTip(g, () => tipL(`${n} 条`, `${m} · 直播相关动态 ${nl}`, counter(list, tkey).map(([k, c]) => `${TYPES[k]} ${c}`).join(" · ")));
+    bindTip(g, () => tipL(tr`${n} 条`, tr`${m} · 直播相关动态 ${nl}`, counter(list, tkey).map(([k, c]) => `${tr(TYPES[k])} ${c}`).join(" · ")));
     g.addEventListener("click", () => openMonth({ key: m, y: +m.slice(0, 4), m: +m.slice(5), posts: list })); g.style.cursor = "pointer"; svg.append(g);
     if (m.endsWith("-01") || i === 0) svg.append(axisText(pl + i * bw, H2 - 6, m.slice(0, 4)));
   });
-  const types = counter(L, tkey).map(([k, n]) => ({ name: TYPES[k], n, label: `${n} · ${Math.round(n / L.length * 100)}%`, acc: k === "live" }));
-  out.push(sec("暦", "OUTPUT", "每个月发多少",
-    ["平均每月 ", h("b", { text: (L.length / ms.length).toFixed(1) }), " 条，最多的是 ", h("b", { text: ms[bi] }), `（${vmax} 条）。`],
-    [svg, h("div", { class: "note", text: "柱子下方的红色是直播相关动态（含预约），不是直播场数 · 白色那根是最多的月份 · 点柱子看当月全部动态" }),
-      h("div", { class: "cols" }, h("div", { class: "box" }, h("span", { class: "lbl", text: "TYPES · 类型" }), barList(types)),
-        h("div", { class: "box" }, h("span", { class: "lbl", text: "TAGS · 内容标签" }), barList(counter(L, p => p.tags).map(([n, c]) => ({ name: n, n: c })), { click: r => { showView("archive"); setArchiveTag(r.name); } }), h("div", { class: "note", text: DEV ? (L.some(p => p.tags_src === "llm") ? "部分标签来自大模型，其余按关键词规则" : "按关键词规则归类") : "自动归类，仅供浏览" })))]));
+  const types = counter(L, tkey).map(([k, n]) => ({ name: tr(TYPES[k]), n, label: `${n} · ${Math.round(n / L.length * 100)}%`, acc: k === "live" }));
+  out.push(sec("暦", "OUTPUT", tr("每个月发多少"),
+    [tr("平均每月 "), h("b", { text: (L.length / ms.length).toFixed(1) }), tr(" 条，最多的是 "), h("b", { text: ms[bi] }), tr`（${vmax} 条）。`],
+    [svg, h("div", { class: "note", text: tr("柱子下方的红色是直播相关动态（含预约），不是直播场数 · 白色那根是最多的月份 · 点柱子看当月全部动态") }),
+      h("div", { class: "cols" }, h("div", { class: "box" }, h("span", { class: "lbl", text: tr("TYPES · 类型") }), barList(types)),
+        h("div", { class: "box" }, h("span", { class: "lbl", text: tr("TAGS · 内容标签") }), barList(counter(L, p => p.tags).map(([n, c]) => ({ name: tr(n), tag: n, n: c })), { click: r => { showView("archive"); setArchiveTag(r.tag); } }), h("div", { class: "note", text: DEV ? (L.some(p => p.tags_src === "llm") ? tr("部分标签来自大模型，其余按关键词规则") : tr("按关键词规则归类")) : tr("自动归类，仅供浏览") })))]));
 
   // 響 · engagement
-  const key = ST.metric, lab = { like: "赞", comment: "评论", forward: "转发" }[key];
+  const key = ST.metric, lab = { like: tr("赞"), comment: tr("评论"), forward: tr("转发") }[key];
   const pts = L.map(p => ({ p, v: +((p.stats || {})[key] || 0) }));
   const H3 = 220, pl3 = 40, pt3 = 8, iw3 = W - pl3 - 6, ih3 = H3 - 20 - pt3;
   const t0 = L[0].ts, t1 = L[L.length - 1].ts, vM = Math.max(10, ...pts.map(d => d.v)), vmn = Math.min(...pts.map(d => d.v));
   const ly = v => Math.log10(1 + v), top = ly(vM), bot = vmn > 0 ? Math.floor(Math.log10(vmn + 1)) : 0;
   const xx = ts => pl3 + (ts - t0) / Math.max(1, t1 - t0) * iw3, yy = v => pt3 + ih3 - (Math.max(ly(v), bot) - bot) / Math.max(0.5, top - bot) * ih3;
-  const sv3 = S("svg", { viewBox: `0 0 ${W} ${H3}`, role: "img", "aria-label": `每条动态的${lab}数，对数刻度` });
+  const sv3 = S("svg", { viewBox: `0 0 ${W} ${H3}`, role: "img", "aria-label": tr`每条动态的${lab}数，对数刻度` });
   for (const v of [0, 10, 100, 1000, 1e4, 1e5, 1e6].filter(v => v <= vM * 1.2 && ly(v) >= bot - 0.01)) { sv3.append(S("line", { x1: pl3, x2: W - 6, y1: yy(v), y2: yy(v), stroke: "#2a241f" })); sv3.append(axisText(pl3 - 6, yy(v) + 3, fnum(v), "end")); }
   for (const d of pts) { const f = fortune(d.p); sv3.append(S("circle", { cx: xx(d.p.ts), cy: yy(d.v), r: f ? 3.2 : 2.3, fill: f ? "#f2a34e" : "#8a8174", "fill-opacity": f ? 0.9 : 0.5 })); }
   const byM = new Map(); for (const d of pts) { const k = monthKey(d.p.ts); if (!byM.has(k)) { const t = tp(d.p.ts); byM.set(k, { ts: clamp(Date.UTC(t.y, t.m - 1, 15) / 1000, t0, t1), vs: [] }); } byM.get(k).vs.push(d.v); }
@@ -2187,46 +2816,46 @@ function renderStats() {
   sv3.addEventListener("click", () => sv3._b && openPost(sv3._b));
   const sorted = pts.map(d => d.v).sort((a, b) => a - b), mid = sorted[Math.floor(sorted.length / 2)];
   const topPosts = L.slice().sort((a, b) => (b.score || 0) - (a.score || 0)).slice(0, 7);
-  out.push(sec("響", "ENGAGEMENT", "每条动态收到多少回应",
-    [`每条动态的${lab}数中位数是 `, h("b", { text: fnum(mid) }), "，月中位数从 ", h("b", { text: fnum(med[0] ? med[0].v : 0) }), " 变成了 ", h("b", { class: "acc", text: fnum(med.length ? med[med.length - 1].v : 0) }), "。"],
-    [sv3, h("div", { class: "note", text: "灰点是单条动态（对数刻度），琥珀色是前 20% 的高互动动态，白线是每月中位数 · 点圆点看那条动态" }),
-      h("div", { class: "box" }, h("span", { class: "lbl", text: "OMIKUJI · 互动最高（赞 + 3×评论 + 5×转发）" }), h("div", { class: "list" }, ...topPosts.map(p => h("button", { class: "li", type: "button", onclick: () => openPost(p) }, h("span", { class: "el" }, fortEl(p), snippet(p)), h("span", { class: "r", text: `${fnum(p.score)} · ${fday(p.ts)}` })))))],
-    segBtns([["like", "赞"], ["comment", "评论"], ["forward", "转发"]], key, v => { ST.metric = v; renderStats(); })));
+  out.push(sec("響", "ENGAGEMENT", tr("每条动态收到多少回应"),
+    [tr`每条动态的${lab}数中位数是 `, h("b", { text: fnum(mid) }), tr("，月中位数从 "), h("b", { text: fnum(med[0] ? med[0].v : 0) }), tr(" 变成了 "), h("b", { class: "acc", text: fnum(med.length ? med[med.length - 1].v : 0) }), "。"],
+    [sv3, h("div", { class: "note", text: tr("灰点是单条动态（对数刻度），琥珀色是前 20% 的高互动动态，白线是每月中位数 · 点圆点看那条动态") }),
+      h("div", { class: "box" }, h("span", { class: "lbl", text: tr("OMIKUJI · 互动最高（赞 + 3×评论 + 5×转发）") }), h("div", { class: "list" }, ...topPosts.map(p => h("button", { class: "li", type: "button", onclick: () => openPost(p) }, h("span", { class: "el" }, fortEl(p), snippet(p)), h("span", { class: "r", text: `${fnum(p.score)} · ${fday(p.ts)}` })))))],
+    segBtns([["like", tr("赞")], ["comment", tr("评论")], ["forward", tr("转发")]], key, v => { ST.metric = v; renderStats(); })));
 
   // 言の葉 · words
   const kwKey = ST.kw === "zh" ? "kw_zh" : "kw_ja";
   const kws = counter(L, p => p[kwKey]).slice(0, 14).map(([n, c]) => ({ name: n, n: c }));
   const emo = counter(L, p => p.emotes).slice(0, 12).map(([n, c]) => ({ name: n, n: c, icon: ICONS[n] }));
   const md = counter(L, p => p.mood).map(([n, c]) => ({ name: n, n: c }));
-  out.push(sec("言の葉", "WORDS", "她常说什么", kws.length ? ["出现最多的词是 ", h("b", { text: kws[0].name }), `（${kws[0].n} 条动态里出现）。`] : null,
+  out.push(sec("言の葉", "WORDS", tr("她常说什么"), kws.length ? [tr("出现最多的词是 "), h("b", { text: kws[0].name }), tr`（${kws[0].n} 条动态里出现）。`] : null,
     h("div", { class: "cols" },
-      h("div", { class: "box" }, h("div", { class: "scope" }, h("span", { class: "lbl", text: "KEYWORDS · 高频词" }), h("div", { class: "r" }, ...segBtns([["zh", "中"], ["ja", "日"]], ST.kw, v => { ST.kw = v; renderStats(); }))),
-        kws.length ? barList(kws, { click: r => { showView("archive"); setArchiveQuery(r.name); } }) : h("div", { class: "empty", text: DEV ? "还没有关键词；检查翻译结果和分词依赖。" : "暂无关键词。" })),
-      h("div", { class: "box" }, h("span", { class: "lbl", text: "EMOTES · 常用表情" }), emo.length ? barList(emo, { click: r => { showView("archive"); setArchiveQuery(r.name); } }) : h("div", { class: "empty", text: "没有用到 B 站表情。" })),
-      (DEV || md.length) ? h("div", { class: "box" }, h("span", { class: "lbl", text: "MOOD · 情绪" }), md.length ? barList(md) : h("div", { class: "empty", text: "尚未生成情绪标注。" })) : null)));
+      h("div", { class: "box" }, h("div", { class: "scope" }, h("span", { class: "lbl", text: tr("KEYWORDS · 高频词") }), h("div", { class: "r" }, ...segBtns([["zh", tr("中")], ["ja", "日"]], ST.kw, v => { ST.kw = v; renderStats(); }))),
+        kws.length ? barList(kws, { click: r => { showView("archive"); setArchiveQuery(r.name); } }) : h("div", { class: "empty", text: DEV ? tr("还没有关键词；检查翻译结果和分词依赖。") : tr("暂无关键词。") })),
+      h("div", { class: "box" }, h("span", { class: "lbl", text: tr("EMOTES · 常用表情") }), emo.length ? barList(emo, { click: r => { showView("archive"); setArchiveQuery(r.name); } }) : h("div", { class: "empty", text: tr("没有用到 B 站表情。") })),
+      (DEV || md.length) ? h("div", { class: "box" }, h("span", { class: "lbl", text: tr("MOOD · 情绪") }), md.length ? barList(md) : h("div", { class: "empty", text: tr("尚未生成情绪标注。") })) : null)));
 
   // 縁 · bonds
   const pl5 = PARTNERS.filter(x => x.posts.some(p => L.includes(p))).slice(0, 12);
   const hist = (DATA.history || []).filter(x => x.followers != null);
-  let fol = h("div", { class: "empty", text: "每运行一次 update 记录一次粉丝数，跑两次以上这里会出现曲线。" });
+  let fol = h("div", { class: "empty", text: tr("每运行一次 update 记录一次粉丝数，跑两次以上这里会出现曲线。") });
   if (hist.length > 1) {
     const W5 = 520, H5 = 190, l5 = 46, i5w = W5 - l5 - 52, i5h = H5 - 28, f0 = hist[0].ts, f1 = hist[hist.length - 1].ts, lo = Math.min(...hist.map(x => x.followers)), hi = Math.max(...hist.map(x => x.followers)), pad = Math.max(1, (hi - lo) * 0.1);
     const X = t => l5 + (t - f0) / Math.max(1, f1 - f0) * i5w, Y = v => 8 + i5h - (v - (lo - pad)) / (hi - lo + 2 * pad) * i5h;
-    const sv = S("svg", { viewBox: `0 0 ${W5} ${H5}`, role: "img", "aria-label": "粉丝数变化" });
+    const sv = S("svg", { viewBox: `0 0 ${W5} ${H5}`, role: "img", "aria-label": tr("粉丝数变化") });
     for (const v of [lo, (lo + hi) / 2, hi]) { sv.append(S("line", { x1: l5, x2: l5 + i5w, y1: Y(v), y2: Y(v), stroke: "#2a241f" })); sv.append(axisText(l5 - 6, Y(v) + 3, fnum(Math.round(v)), "end")); }
     const d = hist.map((x, i) => `${i ? "L" : "M"}${X(x.ts).toFixed(1)},${Y(x.followers).toFixed(1)}`).join("");
     sv.append(S("path", { d: d + `L${X(f1)},${8 + i5h}L${X(f0)},${8 + i5h}Z`, fill: "#eee7da", "fill-opacity": .06 })); sv.append(S("path", { d, fill: "none", stroke: "#eee7da", "stroke-width": 1.6 }));
     const lx = hist[hist.length - 1]; sv.append(S("circle", { cx: X(lx.ts), cy: Y(lx.followers), r: 3.4, fill: "#d8412c" })); sv.append(axisText(X(lx.ts) + 8, Y(lx.followers) + 4, fnum(lx.followers), "start", "#eee7da"));
     [f0, f1].forEach((t, i) => sv.append(axisText(X(t), H5 - 4, fday(t), i ? "end" : "start")));
-    const cr = S("line", { y1: 8, y2: 8 + i5h, stroke: "#867c70", visibility: "hidden" }); sv.append(cr);
-    sv.addEventListener("pointermove", e => { const r = sv.getBoundingClientRect(), sx = (e.clientX - r.left) / r.width * W5; let b = hist[0]; for (const x of hist) if (Math.abs(X(x.ts) - sx) < Math.abs(X(b.ts) - sx)) b = x; cr.setAttribute("x1", X(b.ts)); cr.setAttribute("x2", X(b.ts)); cr.setAttribute("visibility", "visible"); showTip(e.clientX, e.clientY, tipL(fnum(b.followers) + " 粉丝", fdate(b.ts))); });
+    const cr = S("line", { y1: 8, y2: 8 + i5h, stroke: "#9a8f82", visibility: "hidden" }); sv.append(cr);
+    sv.addEventListener("pointermove", e => { const r = sv.getBoundingClientRect(), sx = (e.clientX - r.left) / r.width * W5; let b = hist[0]; for (const x of hist) if (Math.abs(X(x.ts) - sx) < Math.abs(X(b.ts) - sx)) b = x; cr.setAttribute("x1", X(b.ts)); cr.setAttribute("x2", X(b.ts)); cr.setAttribute("visibility", "visible"); showTip(e.clientX, e.clientY, tipL(fnum(b.followers) + tr(" 粉丝"), fdate(b.ts))); });
     sv.addEventListener("pointerleave", () => { cr.setAttribute("visibility", "hidden"); hideTip(); });
-    fol = h("div", { class: "box" }, sv, h("div", { class: "note", text: `${hist.length} 次记录 · ${lx.followers - hist[0].followers >= 0 ? "+" : ""}${fnum(lx.followers - hist[0].followers)}` }));
+    fol = h("div", { class: "box" }, sv, h("div", { class: "note", text: tr`${hist.length} 次记录 · ${lx.followers - hist[0].followers >= 0 ? "+" : ""}${fnum(lx.followers - hist[0].followers)}` }));
   }
-  out.push(sec("縁", "BONDS", "和谁有来往", pl5.length ? ["@ 和转发最多的是 ", h("b", { text: pl5[0].name }), `（${pl5[0].n} 条）。`] : null,
+  out.push(sec("縁", "BONDS", tr("和谁有来往"), pl5.length ? [tr("@ 和转发最多的是 "), h("b", { text: pl5[0].name }), tr`（${pl5[0].n} 条）。`] : null,
     h("div", { class: "cols" },
-      h("div", { class: "box" }, h("span", { class: "lbl", text: "CONNECTIONS · @ 与转发来源" }), pl5.length ? h("div", { class: "list" }, ...pl5.map(o => h("button", { class: "li", type: "button", onclick: () => { showView("archive"); setArchiveQuery(o.name); } }, h("span", { class: "el", style: "color:var(--paper)", text: o.name }), h("span", { class: "r", text: `${o.n} 条 · 最近 ${fday(o.last)}` })))) : h("div", { class: "empty", text: "没有 @ 或转发。" })),
-      h("div", { class: "box" }, h("span", { class: "lbl", text: "FOLLOWERS · 粉丝数" }), fol))));
+      h("div", { class: "box" }, h("span", { class: "lbl", text: tr("CONNECTIONS · @ 与转发来源") }), pl5.length ? h("div", { class: "list" }, ...pl5.map(o => h("button", { class: "li", type: "button", onclick: () => { showView("archive"); setArchiveQuery(o.name); } }, h("span", { class: "el", style: "color:var(--paper)", text: o.name }), h("span", { class: "r", text: tr`${o.n} 条 · 最近 ${fday(o.last)}` })))) : h("div", { class: "empty", text: tr("没有 @ 或转发。") })),
+      h("div", { class: "box" }, h("span", { class: "lbl", text: tr("FOLLOWERS · 粉丝数") }), fol))));
   rebuild($("#stats"), ...out);
 }
 
@@ -2246,25 +2875,26 @@ function renderArchive() {
   const cnt = {}; for (const p of POSTS) cnt[tkey(p)] = (cnt[tkey(p)] || 0) + 1;
   const tagC = counter(POSTS, p => p.tags), years = [...new Set(POSTS.map(p => tp(p.ts).y))].sort((a, b) => b - a);
   let qt;
-  const q = h("input", { class: "inp", id: "ar-q", type: "search", placeholder: "搜索原文 / 译文 / 话题 / @某人 / 表情", "aria-label": "搜索", value: AR.q });
-  q.addEventListener("input", () => { clearTimeout(qt); qt = setTimeout(() => { AR.q = q.value.trim(); AR.limit = 60; renderList(); }, 160); });
-  const chips = h("div", { style: "display:flex;gap:6px;flex-wrap:wrap" }, ...Object.keys(TYPES).filter(k => cnt[k]).map(k => { const b = h("button", { class: "chip", type: "button", "aria-pressed": String(AR.types.has(k)), dataset: { k } }, TYPES[k], h("span", { text: String(cnt[k]) })); b.addEventListener("click", () => { AR.types.has(k) ? AR.types.delete(k) : AR.types.add(k); if (!AR.types.size) Object.keys(TYPES).forEach(x => AR.types.add(x)); syncAR(); renderList(); }); return b; }));
-  const tagSel = h("select", { class: "inp", id: "ar-tag", "aria-label": "标签" }, h("option", { value: "", text: "全部标签" }), ...tagC.map(([t, n]) => h("option", { value: t, text: `${t} (${n})` })));
+  const q = h("input", { class: "inp", id: "ar-q", type: "search", placeholder: tr("搜索原文 / 译文 / 话题 / @某人 / 表情"), "aria-label": tr("搜索"), value: AR.q });
+  q.addEventListener("input", () => { AR.q = q.value.trim(); AR.limit = 60; clearTimeout(qt); qt = setTimeout(renderList, 160); });
+  const chips = h("div", { style: "display:flex;gap:6px;flex-wrap:wrap" }, ...Object.keys(TYPES).filter(k => cnt[k]).map(k => { const b = h("button", { class: "chip", type: "button", "aria-pressed": String(AR.types.has(k)), dataset: { k } }, tr(TYPES[k]), h("span", { text: String(cnt[k]) })); b.addEventListener("click", () => { AR.types.has(k) ? AR.types.delete(k) : AR.types.add(k); if (!AR.types.size) Object.keys(TYPES).forEach(x => AR.types.add(x)); syncAR(); renderList(); }); return b; }));
+  const tagSel = h("select", { class: "inp", id: "ar-tag", "aria-label": tr("标签") }, h("option", { value: "", text: tr("全部标签") }), ...tagC.map(([t, n]) => h("option", { value: t, text: `${tr(t)} (${n})` })));
   tagSel.addEventListener("change", () => { AR.tag = tagSel.value; AR.limit = 60; renderList(); });
-  const ySel = h("select", { class: "inp", id: "ar-year", "aria-label": "年份" }, h("option", { value: "all", text: "全部年份" }), ...years.map(y => h("option", { value: String(y), text: String(y) })));
+  const ySel = h("select", { class: "inp", id: "ar-year", "aria-label": tr("年份") }, h("option", { value: "all", text: tr("全部年份") }), ...years.map(y => h("option", { value: String(y), text: String(y) })));
   ySel.addEventListener("change", () => { AR.year = ySel.value; AR.limit = 60; renderList(); });
   const rv = h("input", { type: "checkbox", id: "ar-rev" }); rv.addEventListener("change", () => { AR.review = rv.checked; renderList(); });
-  const sort = h("select", { class: "inp", id: "ar-sort", "aria-label": "排序" }, h("option", { value: "new", text: "最新在前" }), h("option", { value: "old", text: "最早在前" }), h("option", { value: "hot", text: "互动最高" }));
+  const sort = h("select", { class: "inp", id: "ar-sort", "aria-label": tr("排序") }, h("option", { value: "new", text: tr("最新在前") }), h("option", { value: "old", text: tr("最早在前") }), h("option", { value: "hot", text: tr("互动最高") }));
   sort.addEventListener("change", () => { AR.sort = sort.value; renderList(); });
   $("#archive").replaceChildren(
-    h("div", { class: "filters" }, h("div", { class: "grow" }, q), chips, tagSel, ySel, sort, DEV ? h("label", { class: "check" }, rv, "只看待复核") : null),
+    h("div", { class: "filters" }, h("div", { class: "grow" }, q), chips, tagSel, ySel, sort, DEV ? h("label", { class: "check" }, rv, tr("只看待复核")) : null),
     h("div", { class: "note", id: "ar-count" }),
     h("div", { id: "ar-list", style: "border-top:1px solid var(--line)" }),
-    h("div", { class: "more" }, h("button", { class: "btn", id: "ar-more", type: "button", hidden: true, onclick: () => { AR.limit += 60; renderList(); } }, "再显示 60 条")));
+    h("div", { class: "more" }, h("button", { class: "btn", id: "ar-more", type: "button", hidden: true, onclick: () => { AR.limit += 60; renderList(); } }, tr("再显示 60 条"))));
   syncAR(); renderList();
 }
 function syncAR() {
   for (const b of $$("#archive .chip")) b.setAttribute("aria-pressed", String(AR.types.has(b.dataset.k)));
+  $("#ar-year").value = AR.year; $("#ar-sort").value = AR.sort; const review = $("#ar-rev"); if (review) review.checked = AR.review;
   const t = $("#ar-tag"); if (t) t.value = AR.tag; const q = $("#ar-q"); if (q && q.value !== AR.q) q.value = AR.q;
 }
 function setArchiveQuery(s) { AR.q = s; AR.limit = 60; if (built.archive) { syncAR(); renderList(); } }
@@ -2273,20 +2903,20 @@ function renderList() {
   const L = POSTS.filter(arPass);
   if (AR.sort === "hot") L.sort((a, b) => (b.score || 0) - (a.score || 0)); else if (AR.sort === "new") L.sort((a, b) => b.ts - a.ts);
   const shown = L.slice(0, AR.limit);
-  $("#ar-count").textContent = `${L.length} 条` + (L.length > shown.length ? ` · 显示前 ${shown.length}` : "") + (AR.q ? ` · 搜索「${AR.q}」` : "") + (AR.tag ? ` · 标签「${AR.tag}」` : "");
-  $("#ar-list").replaceChildren(...(shown.length ? shown.map(row) : [h("div", { class: "empty", style: "margin-top:12px", text: "没有符合条件的动态。" })]));
+  $("#ar-count").textContent = tr`${L.length} 条` + (L.length > shown.length ? tr` · 显示前 ${shown.length}` : "") + (AR.q ? tr` · 搜索「${AR.q}」` : "") + (AR.tag ? tr` · 标签「${tr(AR.tag)}」` : "");
+  $("#ar-list").replaceChildren(...(shown.length ? shown.map(row) : [h("div", { class: "empty", style: "margin-top:12px", text: tr("没有符合条件的动态。") })]));
   $("#ar-more").hidden = L.length <= shown.length;
 }
 function row(p) {
   const s = p.stats || {};
-  const el = h("div", { class: "post", tabindex: "0", role: "button", "aria-label": "查看动态 " + fdate(p.ts) },
-    h("div", null, h("div", { class: "when", text: fdate(p.ts) }), h("div", { class: "ty" }, isLiveNotice(p) ? h("span", { class: "dot-live" }) : null, `${TYPE_EN[tkey(p)]} · ${TYPES[tkey(p)]}`),
-      fortEl(p), p.pinned ? h("span", { class: "flag", text: "置顶" }) : null, p.gone ? h("span", { class: "flag warn", text: "已删除" }) : null, DEV && (p.qa || []).length ? h("span", { class: "flag warn", text: "待复核" }) : null),
-    h("div", { class: "src" }, p.title ? h("div", { class: "pt", lang: p.lang === "ja" ? "ja" : null, text: p.title }) : null, h("p", { lang: p.lang === "ja" ? "ja" : null, text: p.text || (p.orig ? "" : "（无文字）") }),
+  const el = h("div", { class: "post", tabindex: "0", role: "button", "aria-label": tr("查看动态 ") + fdate(p.ts) },
+    h("div", null, h("div", { class: "when", text: fdate(p.ts) }), h("div", { class: "ty" }, isLiveNotice(p) ? h("span", { class: "dot-live" }) : null, `${TYPE_EN[tkey(p)]} · ${tr(TYPES[tkey(p)])}`),
+      fortEl(p), p.pinned ? h("span", { class: "flag", text: tr("置顶") }) : null, p.gone ? h("span", { class: "flag warn", text: tr("已删除") }) : null, DEV && (p.qa || []).length ? h("span", { class: "flag warn", text: tr("待复核") }) : null),
+    h("div", { class: "src" }, p.title ? h("div", { class: "pt", lang: p.lang === "ja" ? "ja" : null, text: p.title }) : null, h("p", { lang: p.lang === "ja" ? "ja" : null, text: p.text || (p.orig ? "" : tr("（无文字）")) }),
       p.orig ? h("p", { style: "margin-top:6px;color:var(--paper-3)", text: `↪ @${p.orig.author || "?"}：${p.orig.text || p.orig.title || ""}` }) : null),
-    h("div", null, p.title_zh ? h("div", { class: "pt", text: p.title_zh }) : null, h("p", { style: p.zh ? "" : "color:var(--paper-3)", text: p.zh || (foreign(p) ? "（未翻译）" : (p.text ? "原文即中文" : "")) }),
-      p.orig_zh ? h("p", { style: "margin-top:6px;color:var(--paper-3)", text: "↪ " + p.orig_zh }) : null),
-    h("div", { class: "side" }, h("div", null, h("span", { text: "赞 " }), fnum(s.like)), h("div", null, h("span", { text: "评 " }), fnum(s.comment)), h("div", null, h("span", { text: "转 " }), fnum(s.forward)), (p.images || []).length ? h("div", null, h("span", { text: "图 " }), String(p.images.length)) : null));
+    state.lang === "zh" ? h("div", null, p.title_zh ? h("div", { class: "pt", text: p.title_zh }) : null, h("p", { style: p.zh ? "" : "color:var(--paper-3)", text: p.zh || (foreign(p) ? tr("（未翻译）") : (p.text ? tr("原文即中文") : "")) }),
+      p.orig_zh ? h("p", { style: "margin-top:6px;color:var(--paper-3)", text: "↪ " + p.orig_zh }) : null) : null,
+    h("div", { class: "side" }, h("div", null, h("span", { text: tr("赞 ") }), fnum(s.like)), h("div", null, h("span", { text: tr("评 ") }), fnum(s.comment)), h("div", null, h("span", { text: tr("转 ") }), fnum(s.forward)), (p.images || []).length ? h("div", null, h("span", { text: tr("图 ") }), String(p.images.length)) : null));
   el.addEventListener("click", e => { if (!e.target.closest("a")) openPost(p); });
   el.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openPost(p); } });
   return el;
@@ -2296,25 +2926,25 @@ function row(p) {
 //  PIPELINE
 // ═══════════════════════════════════════════════════════════════════
 const statusC = s => s === "fail" ? "--bad" : s === "warn" ? "--warn" : "--ok";
-const statusEl = s => h("span", { class: "st", style: `color:var(${statusC(s)})` }, h("i", { style: `background:var(${statusC(s)})` }), s === "fail" ? "✗ 失败" : s === "warn" ? "! 有警告" : "✓ 正常");
+const statusEl = s => h("span", { class: "st", style: `color:var(${statusC(s)})` }, h("i", { style: `background:var(${statusC(s)})` }), s === "fail" ? tr("✗ 失败") : s === "warn" ? tr("! 有警告") : tr("✓ 正常"));
 function worst(st) { const o = { ok: 0, warn: 1, fail: 2 }; let w = "ok"; for (const s of st || []) if ((o[s.status] || 0) > o[w]) w = s.status; return w; }
 function renderPipeline() {
   const runs = DATA.runs || [], last = runs[runs.length - 1];
-  const names = { live: ["LIVE", "直播归档"], fetch: ["FETCH", "抓取"], media: ["MEDIA", "图片归档"], normalize: ["NORMALIZE", "规整"], translate: ["TRANSLATE", "翻译"], analyze: ["ANALYZE", "分析"], build: ["BUILD", "生成页面"] };
+  const names = { live: ["LIVE", tr("直播归档")], fetch: ["FETCH", tr("抓取")], media: ["MEDIA", tr("图片归档")], normalize: ["NORMALIZE", tr("规整")], translate: ["TRANSLATE", tr("翻译")], analyze: ["ANALYZE", tr("分析")], build: ["BUILD", tr("生成页面")] };
   const KN = ["一", "二", "三", "四", "五", "六"];
   const out = [];
-  out.push(sec("記", "CHAIN", "上一次运行", last ? ["运行于 ", h("b", { text: fdate(last.ts) + " " + tzName() }), "，", worst(last.stages) === "ok" ? "全部正常。" : worst(last.stages) === "warn" ? "有警告，详情见下。" : "有步骤失败，详情见下。"] : "还没有运行记录。",
+  out.push(sec("記", "CHAIN", tr("上一次运行"), last ? [tr("运行于 "), h("b", { text: fdate(last.ts) + " " + tzName() }), "，", worst(last.stages) === "ok" ? tr("全部正常。") : worst(last.stages) === "warn" ? tr("有警告，详情见下。") : tr("有步骤失败，详情见下。")] : tr("还没有运行记录。"),
     last ? h("div", { class: "chain" }, ...(last.stages || []).map((s, i) => h("div", { class: "stg" },
       h("span", { class: "ix", lang: "ja", text: KN[i] || String(i + 1) }), h("span", { class: "nm", text: (names[s.name] || [s.name])[0] }), h("span", { class: "zh", text: (names[s.name] || ["", ""])[1] }),
       statusEl(s.status), s.count != null ? h("span", { class: "ct", text: String(s.count) }) : null, h("span", { class: "dt", text: s.detail || "" }), s.secs != null ? h("span", { class: "note", text: `${s.secs}s` }) : null))) : null));
-  const strip = h("div", { class: "runs" }, ...runs.slice(-30).map(r => { const w = worst(r.stages), i = h("i", { tabindex: "0", style: `background:var(${statusC(w)});opacity:${w === "ok" ? .5 : 1}` }); bindTip(i, () => tipL(w === "ok" ? "正常" : w === "warn" ? "有警告" : "失败", fdate(r.ts) + " " + tzName(), (r.stages || []).map(s => `${s.name}: ${s.detail || s.status}`).join("\n"))); return i; }));
-  const ln = { ja: "日文", zh: "中文", en: "英文", none: "无文字" };
+  const strip = h("div", { class: "runs" }, ...runs.slice(-30).map(r => { const w = worst(r.stages), i = h("i", { tabindex: "0", style: `background:var(${statusC(w)});opacity:${w === "ok" ? .5 : 1}` }); bindTip(i, () => tipL(w === "ok" ? tr("正常") : w === "warn" ? tr("有警告") : tr("失败"), fdate(r.ts) + " " + tzName(), (r.stages || []).map(s => `${s.name}: ${s.detail || s.status}`).join("\n"))); return i; }));
+  const ln = { ja: tr("日文"), zh: tr("中文"), en: tr("英文"), none: tr("无文字") };
   const langs = counter(POSTS, p => p.lang || "none").map(([k, n]) => ({ name: ln[k] || k, n }));
   const trs = counter(POSTS.filter(p => p.tr), p => p.tr).map(([k, n]) => ({ name: k, n }));
-  out.push(sec("跡", "HISTORY", "最近的运行", `最近 ${Math.min(30, runs.length)} 次，每格一次；绿色正常，黄色有警告，红色失败。`,
-    [strip, h("div", { class: "cols" }, h("div", { class: "box" }, h("span", { class: "lbl", text: "LANGUAGE · 原文语言" }), barList(langs)), h("div", { class: "box" }, h("span", { class: "lbl", text: "TRANSLATOR · 翻译来源" }), trs.length ? barList(trs) : h("div", { class: "empty", text: "还没有翻译。" })))]));
+  out.push(sec("跡", "HISTORY", tr("最近的运行"), tr`最近 ${Math.min(30, runs.length)} 次，每格一次；绿色正常，黄色有警告，红色失败。`,
+    [strip, h("div", { class: "cols" }, h("div", { class: "box" }, h("span", { class: "lbl", text: tr("LANGUAGE · 原文语言") }), barList(langs)), h("div", { class: "box" }, h("span", { class: "lbl", text: tr("TRANSLATOR · 翻译来源") }), trs.length ? barList(trs) : h("div", { class: "empty", text: tr("还没有翻译。") })))]));
   const rq = POSTS.filter(p => (p.qa || []).length).sort((a, b) => b.ts - a.ts);
-  out.push(sec("校", "REVIEW", "待复核的译文", rq.length ? ["自动检查发现 ", h("b", { class: "acc", text: String(rq.length) }), " 条译文可能有问题（未翻译、残留假名或长度异常）。"] : "自动检查没有发现可疑的译文。",
+  out.push(sec("校", "REVIEW", tr("待复核的译文"), rq.length ? [tr("自动检查发现 "), h("b", { class: "acc", text: String(rq.length) }), tr(" 条译文可能有问题（未翻译、残留假名或长度异常）。")] : tr("自动检查没有发现可疑的译文。"),
     rq.length ? h("div", { class: "list" }, ...rq.slice(0, 40).map(p => h("button", { class: "li", type: "button", onclick: () => openPost(p) }, h("span", { class: "el", text: (p.text || p.title || "").replace(/\s+/g, " ") }), h("span", { class: "r", text: p.qa.join("、") })))) : null));
   $("#pipeline").replaceChildren(...out);
 }
@@ -2639,7 +3269,7 @@ if (FILM) {
 }
 
 // ── boot ───────────────────────────────
-renderHeader(); renderKey(); renderBeamGuide(); syncPlayback(); syncQuality();
+applyLanguage(); renderHeader(); renderKey(); renderBeamGuide(); syncPlayback(); syncQuality();
 if (POSTS.length) setNow(POSTS[0]);
 let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (state.view === "ring") { ringFit(); renderScrub(); } if (built.stats && state.view === "stats") renderStats(); }, 140); });
 showView(FILM ? "ring" : (location.hash || "").slice(1) || "ring");

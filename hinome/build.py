@@ -73,7 +73,8 @@ def build_site(posts: list, icons: dict, cfg: dict, stages: list, demo: bool = F
     }
     if edition == "release":
         payload.pop("runs")
-        for key in ("last_fetch", "last_success", "checkpoint_pages", "images_failed"):
+        # Fetch errors and checkpoints stay private; the time of the last good fetch is shown in the page header.
+        for key in ("last_fetch", "checkpoint_pages", "images_failed"):
             payload["meta"].pop(key, None)
     # Inside <script>, "</script" ends the block and "<!--<script" changes how the parser finds the end; escape every "<".
     js = json.dumps(payload, ensure_ascii=False, separators=(",", ":")).replace("<", "\\u003c")

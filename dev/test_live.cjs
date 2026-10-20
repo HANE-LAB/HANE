@@ -3,7 +3,7 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const source = fs.readFileSync(require('node:path').join(__dirname, '../hinome/template.html'), 'utf8');
-const ctx = vm.createContext({exact: n => n == null ? '—' : String(n), money: n => n == null ? '—' : '¥' + n / 100});
+const ctx = vm.createContext({tr: s => s, exact: n => n == null ? '—' : String(n), money: n => n == null ? '—' : '¥' + n / 100});
 for (const name of ['liveSum', 'liveValue', 'liveDayParts']) {
   const match = source.match(new RegExp('function ' + name + '\\([^]*?\\n}'));
   assert.ok(match, name); vm.runInContext(match[0], ctx);
