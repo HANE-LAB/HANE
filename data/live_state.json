@@ -3,13 +3,13 @@
  "uid": 2094031249,
  "source": "https://stats.nailv.live/streamer/2094031249",
  "api": "https://api.ukamnads.icu/api/v2/channel",
- "last_attempt": 1792474134,
- "last_success": 1792474134,
+ "last_attempt": 1792854947,
+ "last_success": 1792854947,
  "last_result": {
   "status": "ok",
-  "ts": 1792474134
+  "ts": 1792854947
  },
- "source_count": 1081,
+ "source_count": 1085,
  "channel": {
   "uId": 2094031249,
   "uName": "火羽ひのめ",
@@ -22,17 +22,17 @@
    "Vtuber",
    "虚拟主播"
   ],
-  "lastLiveDate": 1792429483273,
-  "lastLiveDanmakuCount": 35055,
-  "totalDanmakuCount": 3784108,
-  "totalIncome": 2892157.1,
-  "totalLiveCount": 1081,
-  "totalLiveSecond": 12518241,
+  "lastLiveDate": 1792775017662,
+  "lastLiveDanmakuCount": 32627,
+  "totalDanmakuCount": 3895037,
+  "totalIncome": 2988809.5,
+  "totalLiveCount": 1085,
+  "totalLiveSecond": 12530874,
   "addDate": "2026-01-22T23:48:59.296663",
   "commentCount": 0,
-  "fansCount": 251745,
+  "fansCount": 258688,
   "followCount": 16,
-  "lastUpdateStatAt": 1792351450650,
-  "lastLiveIncome": 27269.1
+  "lastUpdateStatAt": 1792711457683,
+  "lastLiveIncome": 27634.2
  }
 }
