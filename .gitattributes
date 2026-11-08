@@ -1,0 +1,2 @@
+# 统一用 LF 换行：Git for Windows 默认 core.autocrlf=true，没有这一行时检出会把文件改成 CRLF
+* text=auto eol=lf

@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HANE · 千本鸟居三部曲</title>
+<meta name="description" content="火羽ひのめ的非官方档案三部曲：灯下、海上、云中的千本鸟居。">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d0b0a">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Noto+Serif+SC:wght@500;700&family=Shippori+Mincho:wght@500;700;800&display=swap">
+<link rel="preload" as="image" href="video/lantern.webp">
+<style>
+:root {
+  --ink: #0d0b0a; --ink-2: #141110; --ink-3: #1c1816;
+  --paper: #eee7da; --paper-2: #b1a796; --paper-3: #9a8f82;
+  --hiiro: #d8412c; --hiiro-2: #ec6a4f; --ember: #f2a34e;
+  --f-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  --f-serif: "Noto Serif SC", "Songti SC", SimSun, serif;
+  --f-mincho: "Shippori Mincho", "Noto Serif SC", "Yu Mincho", serif;
+  --pad: clamp(20px, 5vw, 72px);
+  /* GSAP 的 power1.inOut、power2.inOut */
+  --io: cubic-bezier(.455, .03, .515, .955);
+  --io2: cubic-bezier(.645, .045, .355, 1);
+}
+* { box-sizing: border-box; }
+html { background: var(--ink); }
+body { margin: 0; overflow-x: hidden; color: var(--paper); font: 500 16px/1.75 var(--f-serif); -webkit-font-smoothing: antialiased; }
+/* 标题翻入前，字绕着身后 150px 的轴转了 60 度，会甩出屏幕右边；裁掉，不然手机会把整页缩小。用 clip 而不是 hidden：hidden 会让 main 变成滚动容器，下面的钉住就失效 */
+main { overflow-x: clip; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
+.skip { position: fixed; left: 12px; top: -80px; z-index: 30; padding: 8px 14px; background: var(--paper); color: var(--ink); }
+.skip:focus { top: 12px; }
+
+/* 导航照 Nova：往下滚时收起，往上滚时以深色浮条出现 */
+.top { position: fixed; top: 12px; left: 12px; right: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; height: 56px; padding: 0 clamp(14px, 3vw, 36px); border: 1px solid transparent; border-radius: 10px; pointer-events: none; transition: transform .2s, opacity .2s, background .7s, border-color .7s; }
+.top.float { background: rgb(8 6 5 / .82); border-color: rgb(238 231 218 / .1); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); pointer-events: auto; }
+.top.away { transform: translateY(-100px); opacity: 0; }
+.top a { pointer-events: auto; text-decoration: none; }
+.brand { font: 800 19px/1 var(--f-mincho); letter-spacing: .3em; text-shadow: 0 1px 10px rgb(0 0 0 / .5); }
+.top nav { display: flex; gap: clamp(16px, 2.6vw, 34px); font-size: 15px; letter-spacing: .24em; text-shadow: 0 1px 10px rgb(0 0 0 / .6); }
+.top nav a { color: var(--paper-2); transition: color .3s; }
+.top nav a:hover { color: var(--paper); }
+
+/* 首屏：照 Nova 的首屏。三部作品自己的镜头轮流播放，滚动时画面裁成斜切多边形，露出后面的大字 */
+.hero { position: relative; height: 100vh; height: 100dvh; overflow: hidden; }
+.behind { position: absolute; right: var(--pad); bottom: 2vh; z-index: 0; margin: 0; font: 800 clamp(64px, 12vw, 210px)/.9 var(--f-mincho); letter-spacing: .04em; color: var(--hiiro); }
+.frame { position: relative; z-index: 1; height: 100%; overflow: hidden; background: #050404; }
+.v { position: absolute; left: 50%; top: 50%; width: 100%; height: 100%; translate: -50% -50%; object-fit: cover; object-position: var(--pos, 50% 50%); }
+.v.idle { visibility: hidden; }
+.v.grow { z-index: 2; width: 16rem; height: 16rem; border-radius: .6rem; }
+.v.grow.full { width: 100%; height: 100%; border-radius: 0; transition: width 1s var(--io), height 1s var(--io), border-radius 1s var(--io); }
+.shade { position: absolute; inset: 0; z-index: 3; pointer-events: none;
+  background: linear-gradient(270deg, rgb(8 6 5 / .8), rgb(8 6 5 / .32) 36%, transparent 60%), linear-gradient(rgb(8 6 5 / .5), transparent 20%, transparent 72%, rgb(8 6 5 / .55)); }
+.peek { position: absolute; z-index: 5; left: 50%; top: 50%; width: 16rem; height: 16rem; translate: -50% -50%; padding: 0; border: 0; border-radius: .6rem; overflow: hidden; background: none; cursor: pointer; }
+.peek > span { display: block; width: 100%; height: 100%; scale: .5; opacity: 0; transition: scale .5s ease-in, opacity .5s ease-in; }
+.peek:hover > span, .peek:focus-visible > span { scale: 1; opacity: 1; }
+.peek img { display: block; width: 100%; height: 100%; object-fit: cover; scale: 1.5; }
+.peek.pop img { animation: pop 1.5s var(--io) both; }
+@keyframes pop { from { scale: 0; } }
+.peek em { position: absolute; left: 12px; bottom: 12px; font: 500 11px/1 var(--f-mono); font-style: normal; letter-spacing: .24em; text-shadow: 0 1px 8px #000; }
+
+.copy { position: absolute; z-index: 4; top: 0; bottom: 0; right: var(--pad); width: min(32rem, 44vw); display: flex; flex-direction: column; justify-content: center; align-items: flex-end; padding-top: 40px; text-align: right; }
+.eyebrow { margin: 0 0 16px; font: 500 11px/1 var(--f-mono); letter-spacing: .38em; color: var(--paper-2); }
+.logo { margin: 0 -.06em 0 0; font: 800 clamp(76px, 10vw, 170px)/.84 var(--f-mincho); letter-spacing: .06em; text-shadow: 0 6px 40px rgb(0 0 0 / .45); }
+.logo b { font-weight: inherit; color: var(--hiiro-2); }
+.tag { display: flex; align-items: center; gap: 16px; margin: 18px -.5em 0 0; font: 700 clamp(15px, 1.3vw, 19px)/1 var(--f-mincho); letter-spacing: .5em; }
+.tag::before { content: ""; width: 56px; height: 1px; background: linear-gradient(90deg, transparent, var(--paper-2)); }
+.chips { display: flex; gap: clamp(16px, 2vw, 28px); margin: 40px 0 20px; }
+.chip { position: relative; padding: 0 0 12px; border: 0; background: none; color: var(--paper-3); font: 700 15px/1 var(--f-mincho); letter-spacing: .2em; cursor: pointer; transition: color .3s; }
+.chip b { margin-right: .45em; color: var(--hiiro-2); }
+.chip i { position: absolute; left: 0; right: 0; bottom: 0; height: 1px; overflow: hidden; background: rgb(238 231 218 / .2); }
+.chip i::after { content: ""; position: absolute; inset: 0; background: var(--paper); transform: scaleX(0); transform-origin: left; }
+.chip:hover, .chip.on { color: var(--paper); }
+.chip.on i::after { transform: scaleX(1); }
+.tick .chip.on i::after { animation: fill 9s linear both; }
+@keyframes fill { from { transform: scaleX(0); } }
+.world { transition: opacity .24s, translate .24s; }
+.world.swap { opacity: 0; translate: 0 6px; }
+.w-en { margin: 0 0 8px; font: 500 11px/1 var(--f-mono); letter-spacing: .3em; color: var(--paper-2); }
+.w-title { margin: 0; font: 700 clamp(24px, 2.2vw, 32px)/1.2 var(--f-mincho); letter-spacing: .16em; }
+.w-desc { max-width: 22em; margin: 10px 0 22px auto; font-size: 15px; line-height: 1.85; color: var(--paper); text-shadow: 0 1px 10px rgb(0 0 0 / .8); }
+.w-links { display: flex; align-items: center; justify-content: flex-end; gap: 22px; margin: 0; font: 500 13px/1 var(--f-mono); letter-spacing: .16em; }
+.w-go { display: inline-flex; align-items: center; gap: 12px; padding: 14px 24px; border-radius: 999px; background: var(--paper); color: var(--ink); text-decoration: none; transition: background .3s, color .3s; }
+.w-go:hover { background: var(--hiiro); color: var(--paper); }
+.w-bv { color: var(--paper-2); text-underline-offset: 5px; }
+.w-bv:hover { color: var(--paper); }
+.hold { position: absolute; z-index: 4; left: var(--pad); bottom: 26px; padding: 0; border: 0; background: none; font: 500 11px/1 var(--f-mono); letter-spacing: .3em; color: var(--paper-2); cursor: pointer; }
+.hold:hover { color: var(--paper); }
+
+/* 介绍：标题逐词翻入，下面的图从卡片放大到全屏 */
+.about { position: relative; padding-top: clamp(120px, 18vh, 200px); background: var(--ink); }
+.about-head { display: flex; flex-direction: column; align-items: center; gap: 24px; margin-bottom: 48px; padding: 0 20px; text-align: center; }
+.kicker { margin: 0; font: 500 11px/1 var(--f-mono); letter-spacing: .4em; color: var(--paper-2); }
+.atitle { display: flex; flex-direction: column; gap: .14em; margin: 0; font: 800 clamp(44px, 7vw, 108px)/1 var(--f-mincho); letter-spacing: .04em; }
+.aline { display: flex; flex-wrap: wrap; justify-content: center; gap: 0 .32em; perspective: 900px; }
+.aw { display: inline-block; opacity: 0; transform: translate3d(10px, 51px, -60px) rotateY(60deg) rotateX(-40deg); transform-origin: 50% 50% -150px;
+  transition: opacity .5s var(--io2), transform .5s var(--io2); transition-delay: calc(var(--i, 0) * 20ms); will-change: opacity, transform; }
+.atitle.in .aw { opacity: 1; transform: none; }
+.aw b { font-weight: inherit; color: var(--hiiro-2); }
+.clip { position: relative; height: calc(100vh + 800px); }
+.clip-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.mask { position: absolute; left: 50%; top: 0; z-index: 2; width: 30vw; height: 60vh; translate: -50% 0; border-radius: 24px; overflow: hidden; }
+.mask img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.about-sub { position: absolute; left: 50%; top: calc(60vh + 34px); width: min(34rem, 88vw); margin: 0; translate: -50% 0; text-align: center; font-size: 16px; line-height: 1.95; color: var(--paper-2); }
+
+/* 三部作品：像游戏选关，桌面上悬停的那一部展开并播放 */
+.parts { position: relative; display: flex; gap: 2px; height: 100vh; height: 100svh; min-height: 600px; background: var(--ink); }
+.en, .label, .links { font-family: var(--f-mono); letter-spacing: .14em; }
+.label { position: absolute; z-index: 5; left: clamp(20px, 3vw, 44px); top: 78px; margin: 0; font-size: 12px; color: var(--paper-2); pointer-events: none; }
+.part { position: relative; flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(20px, 3vw, 44px); transition: flex .8s cubic-bezier(.2, .7, .2, 1); }
+.part video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); scale: 1.03; filter: brightness(.55) saturate(.9); transition: scale 1.4s cubic-bezier(.2, .7, .2, 1), filter .8s; }
+.part::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(transparent 40%, rgb(13 11 10 / .94)); }
+.part > :is(.head, .desc, .links) { position: relative; z-index: 2; }
+.part h2 { position: absolute; z-index: 2; top: clamp(100px, 14vh, 140px); right: clamp(18px, 2.4vw, 36px); margin: 0; writing-mode: vertical-rl; font: 700 clamp(30px, 3.2vw, 54px)/1.15 var(--f-mincho); letter-spacing: .14em; text-shadow: 0 2px 18px rgb(0 0 0 / .7); }
+.cover { position: absolute; inset: 0; z-index: 3; }
+.cover:focus-visible { outline-offset: -8px; }
+.head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+.seal { display: grid; place-items: center; flex: none; width: 44px; height: 44px; border-radius: 3px; background: var(--hiiro); font: 700 24px/1 var(--f-mincho); box-shadow: 0 8px 24px rgb(216 65 44 / .35); }
+.en { margin: 0; font-size: 12px; color: var(--paper-2); }
+.desc { max-width: 25em; margin: 0 0 18px; font-size: 15px; text-shadow: 0 1px 8px rgb(0 0 0 / .8); }
+.links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin: 0; font-size: 13px; }
+.go { padding: 8px 18px; border: 1px solid var(--hiiro-2); background: rgb(216 65 44 / .18); letter-spacing: .3em; transition: background .3s; }
+.links a { position: relative; z-index: 4; color: var(--paper-2); text-underline-offset: 4px; }
+.links a:hover { color: var(--paper); }
+@media (hover: hover) and (min-width: 761px) {
+  .part:hover, .part:focus-within { flex: 1.75; }
+  .part:hover video, .part:focus-within video { scale: 1.1; filter: brightness(.85) saturate(1.05); }
+  .parts:hover .part:not(:hover) video { filter: brightness(.32) saturate(.7); }
+  .part:hover .go, .part:focus-within .go { background: var(--hiiro); }
+}
+
+footer { padding: 36px var(--pad) 52px; border-top: 1px solid var(--ink-3); font: 500 13px/2 var(--f-serif); letter-spacing: .04em; color: var(--paper-3); }
+footer p { margin: 0; }
+footer a { color: var(--paper-2); }
+
+@media (hover: none) { .peek { display: none; } }
+@media (max-width: 760px) {
+  .shade { background: linear-gradient(rgb(8 6 5 / .45), transparent 18%, transparent 34%, rgb(8 6 5 / .78) 56%, rgb(8 6 5 / .93) 80%); }
+  .copy { top: auto; left: 20px; right: 20px; bottom: 58px; width: auto; align-items: flex-start; padding: 0; text-align: left; }
+  .logo { margin: 0; font-size: 22vw; }
+  .tag { margin: 14px 0 0; }
+  .tag::before { display: none; }
+  .chips { margin: 26px 0 16px; }
+  .w-desc { margin: 8px 0 18px; font-size: 14px; }
+  .w-links { justify-content: flex-start; }
+  .hold { bottom: 22px; left: 20px; }
+  .top nav { gap: 14px; font-size: 14px; letter-spacing: .12em; }
+  .atitle { font-size: 9.6vw; }
+  .aline { gap: 0 .18em; }
+  .behind { font-size: 24vw; right: 20px; }
+  .parts { flex-direction: column; height: auto; min-height: 0; }
+  .part { min-height: 74svh; }
+  .part h2 { top: 112px; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#parts">跳到三部作品</a>
+<header class="top">
+  <a class="brand" href="#hero">HANE</a>
+  <nav aria-label="三部作品">
+    <a href="https://hane-lab.github.io/HANE-LANTERN/">灯下</a>
+    <a href="https://hane-lab.github.io/HANE-VOYAGE/">海上</a>
+    <a href="https://hane-lab.github.io/HANE-FLIGHT/">云中</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero" id="hero" aria-label="HANE 千本鸟居三部曲">
+  <p class="behind" aria-hidden="true">千本鸟居</p>
+  <div class="frame">
+    <video class="v" muted loop playsinline aria-hidden="true" poster="video/lantern.webp" style="--pos: 6% 50%"></video>
+    <video class="v idle" muted loop playsinline aria-hidden="true"></video>
+    <div class="shade" aria-hidden="true"></div>
+    <button class="peek" type="button" aria-label="下一部：海上千本鸟居"><span><img src="video/voyage.webp" alt=""><em>NEXT · 海上</em></span></button>
+
+    <div class="copy">
+      <p class="eyebrow"><span lang="ja">火羽ひのめ</span> · 非官方档案三部曲</p>
+      <h1 class="logo">H<b>A</b>NE</h1>
+      <p class="tag">千本鸟居三部曲</p>
+      <div class="chips" role="group" aria-label="选择一部">
+        <button class="chip on" type="button" aria-pressed="true"><b>壱</b>灯下<i></i></button>
+        <button class="chip" type="button" aria-pressed="false"><b>弐</b>海上<i></i></button>
+        <button class="chip" type="button" aria-pressed="false"><b>参</b>云中<i></i></button>
+      </div>
+      <div class="world" aria-live="polite">
+        <p class="w-en">HANE LANTERN · 第一部</p>
+        <h2 class="w-title">灯下千本鸟居</h2>
+        <p class="w-desc">她发的每一条动态，一个月一座鸟居，围成一座会转的神社。</p>
+        <p class="w-links"><a class="w-go" href="https://hane-lab.github.io/HANE-LANTERN/"><span>进入灯下</span> →</a><a class="w-bv" href="https://www.bilibili.com/video/BV18VJe6cEgo/">看视频</a></p>
+      </div>
+    </div>
+    <button class="hold" type="button" aria-pressed="false">暂停画面</button>
+  </div>
+</section>
+
+<section class="about" aria-label="介绍">
+  <div class="about-head">
+    <p class="kicker">千本鸟居三部曲</p>
+    <h2 class="atitle" aria-label="灯下、海上、云中，三处千本鸟居">
+      <span class="aline" aria-hidden="true"><span class="aw">灯下</span><span class="aw">·</span><span class="aw">海上</span><span class="aw">·</span><span class="aw">云中</span></span>
+      <span class="aline" aria-hidden="true"><span class="aw">三处</span><span class="aw">千本<b>鸟</b>居</span></span>
+    </h2>
+  </div>
+  <div class="clip">
+    <div class="clip-pin">
+      <div class="mask"><img src="img/fireworks.webp" alt="海上千本鸟居的夜空里，烟花画出她和小猪" loading="lazy" decoding="async"></div>
+      <p class="about-sub">她在 B 站发的每一条动态、大航海名单上的每一个人、她播过的每一个夜晚，各自排成了一条千本鸟居。</p>
+    </div>
+  </div>
+</section>
+
+<section class="parts" id="parts" aria-label="三部作品">
+  <p class="label">三部作品 · 选一座鸟居进入</p>
+  <article class="part" style="--pos: 6% 50%">
+    <video muted loop playsinline preload="none" poster="img/lantern.webp" src="video/lantern.mp4" aria-hidden="true"></video>
+    <a class="cover" href="https://hane-lab.github.io/HANE-LANTERN/" aria-label="进入第一部：灯下千本鸟居"></a>
+    <h2>灯下千本鸟居</h2>
+    <div class="head"><span class="seal" aria-hidden="true">壱</span><p class="en">HANE LANTERN · 第一部</p></div>
+    <p class="desc">她在 B 站发的每一条动态，一个月一座鸟居，围成一座会转的神社。动态、直播、统计和全文归档都在这里。</p>
+    <p class="links"><span class="go" aria-hidden="true">进入 →</span><a href="https://www.bilibili.com/video/BV18VJe6cEgo/">视频</a><a href="https://github.com/HANE-LAB/HANE-LANTERN">源码</a></p>
+  </article>
+  <article class="part" style="--pos: 50% 50%">
+    <video muted loop playsinline preload="none" poster="img/voyage.webp" src="video/voyage.mp4" aria-hidden="true"></video>
+    <a class="cover" href="https://hane-lab.github.io/HANE-VOYAGE/" aria-label="进入第二部：海上千本鸟居"></a>
+    <h2>海上千本鸟居</h2>
+    <div class="head"><span class="seal" aria-hidden="true">弐</span><p class="en">HANE VOYAGE · 第二部</p></div>
+    <p class="desc">大航海名单上的每一个人是一艘船，跟着她的船从 2021 年航行到今天。陪伴满一年的名字，刻在海中的鸟居上。</p>
+    <p class="links"><span class="go" aria-hidden="true">进入 →</span><a href="https://www.bilibili.com/video/BV1PuWE6pEMk/">视频</a><a href="https://github.com/HANE-LAB/HANE-VOYAGE">源码</a></p>
+  </article>
+  <article class="part" style="--pos: 45% 50%">
+    <video muted loop playsinline preload="none" poster="img/flight.webp" src="video/flight.mp4" aria-hidden="true"></video>
+    <a class="cover" href="https://hane-lab.github.io/HANE-FLIGHT/" aria-label="进入第三部：云中千本鸟居"></a>
+    <h2>云中千本鸟居</h2>
+    <div class="head"><span class="seal" aria-hidden="true">参</span><p class="en">HANE FLIGHT · 第三部</p></div>
+    <p class="desc">她播过的每一夜是云中的一座鸟居，门柱上写着那一夜弹幕里的话。舰长化作小鸟，跟着她飞到今天。</p>
+    <p class="links"><span class="go" aria-hidden="true">进入 →</span><a href="https://www.bilibili.com/video/BV1gQ4i6tEQx/">视频</a><a href="https://github.com/HANE-LAB/HANE-FLIGHT">源码</a></p>
+  </article>
+</section>
+</main>
+
+<footer>
+  <p><span lang="ja">火羽ひのめ</span>的非官方粉丝作品。数据来自 B 站公开信息，人物形象的版权归原作者。画面取自三部作品自己的渲染。</p>
+  <p><a href="https://space.bilibili.com/2094031249">她的 B 站主页</a> · <a href="https://github.com/HANE-LAB">HANE-LAB</a> · 动效移植自 <a href="https://github.com/sanidhyy/game-website">Nova</a>（MIT）</p>
+</footer>
+
+<!-- 改了 hub.js 就把 v 加一：GitHub Pages 让浏览器缓存静态文件 10 分钟 -->
+<script src="hub.js?v=3" defer></script>
+</body>
+</html>
