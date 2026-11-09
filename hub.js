@@ -12,7 +12,7 @@ const out = t => 1 - (1 - t) * (1 - t);                                // GSAP p
 
 const WORLDS = [
   { short: '灯下', title: '灯下千本鸟居', en: 'HANE LANTERN · 第一部', desc: '她发的每一条动态，一个月一座鸟居，围成一座会转的神社。',
-    href: 'https://hane-lab.github.io/HANE-LANTERN/', bv: 'https://www.bilibili.com/video/BV18VJe6cEgo/', video: 'video/lantern.mp4', poster: 'video/lantern.webp', pos: '6% 50%' },
+    href: 'https://hane-lab.github.io/HANE-LANTERN/', bv: 'https://www.bilibili.com/video/BV1icWb6BEQD/', video: 'video/lantern.mp4', poster: 'video/lantern.webp', pos: '6% 50%' },
   { short: '海上', title: '海上千本鸟居', en: 'HANE VOYAGE · 第二部', desc: '大航海名单上的每一个人是一艘船，跟着她从 2021 年航行到今天。',
     href: 'https://hane-lab.github.io/HANE-VOYAGE/', bv: 'https://www.bilibili.com/video/BV1PuWE6pEMk/', video: 'video/voyage.mp4', poster: 'video/voyage.webp', pos: '50% 50%' },
   { short: '云中', title: '云中千本鸟居', en: 'HANE FLIGHT · 第三部', desc: '她播过的每一夜是云中的一座鸟居，舰长化作小鸟跟着她飞到今天。',
