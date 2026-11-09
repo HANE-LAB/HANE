@@ -1,0 +1,34 @@
+name: 发布 HANE 入口页
+
+# HANE-LAB/HANE 的 Pages 来源是「GitHub Actions」：页面不用构建，推到 main 就把仓库原样发布。
+# 私有开发仓库的预览站用 Deploy from a branch，不走这里。
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository == 'HANE-LAB/HANE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v5
