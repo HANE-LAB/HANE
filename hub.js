@@ -125,6 +125,17 @@ const titleCheck = () => titles.forEach(t => t.classList.toggle('in', t.getBound
 // ---------- 图片从卡片放大到全屏：钉住 800px 的滚动（原作 scrub 0.5，这里用 0.17 秒的平滑追上） ----------
 const clip = $('.clip'), mask = $('.mask', clip), sub = $('.about-sub', clip);
 let cp = 0, cpTarget = 0;
+
+// 卡片里的图：灯下、海上、云中各一张，每 4 秒交叉淡化到下一张；这一段看不见、页面在后台或按了暂停时不换
+const shots = $$('img', mask);
+let shot = 0, clipOn = false;
+new IntersectionObserver(([e]) => { clipOn = e.isIntersecting; }).observe(clip);
+setInterval(() => {
+  if (paused || !clipOn || document.hidden) return;
+  shots[shot].classList.remove('on');
+  shot = (shot + 1) % shots.length;
+  shots[shot].classList.add('on');
+}, 4000);
 function applyClip(p) {
   const e = out(p), w0 = innerWidth > 768 ? innerWidth * 0.3 : Math.min(384, innerWidth * 0.86);
   mask.style.width = `${w0 + (innerWidth - w0) * e}px`;

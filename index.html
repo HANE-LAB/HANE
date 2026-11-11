@@ -105,7 +105,8 @@ button { font: inherit; color: inherit; }
 .clip { position: relative; height: calc(100vh + 800px); }
 .clip-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 .mask { position: absolute; left: 50%; top: 0; z-index: 2; width: 30vw; height: 60vh; translate: -50% 0; border-radius: 24px; overflow: hidden; }
-.mask img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.mask img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 1.4s ease; }
+.mask img.on { opacity: 1; }   /* 灯下、海上、云中三张轮流淡入（hub.js） */
 .about-sub { position: absolute; left: 50%; top: calc(60vh + 34px); width: min(34rem, 88vw); margin: 0; translate: -50% 0; text-align: center; font-size: 16px; line-height: 1.95; color: var(--paper-2); }
 
 /* 三部作品：像游戏选关，桌面上悬停的那一部展开并播放 */
@@ -115,7 +116,9 @@ button { font: inherit; color: inherit; }
 .part { position: relative; flex: 1; min-width: 0; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(20px, 3vw, 44px); transition: flex .8s cubic-bezier(.2, .7, .2, 1); }
 .part video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos); scale: 1.03; filter: brightness(.55) saturate(.9); transition: scale 1.4s cubic-bezier(.2, .7, .2, 1), filter .8s; }
 .part::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(transparent 40%, rgb(13 11 10 / .94)); }
-.part > :is(.head, .desc, .links) { position: relative; z-index: 2; }
+.part > :is(.head, .desc) { position: relative; z-index: 2; }
+/* 链接那一行不能自成一层：那样「视频」「源码」的 z-index 只在行内比较，会被整卡的「进入」链接（.cover）盖住。
+   现在「进入」按钮在整卡链接下面（点它就是进入），「视频」「源码」在整卡链接上面 */
 .part h2 { position: absolute; z-index: 2; top: clamp(100px, 14vh, 140px); right: clamp(18px, 2.4vw, 36px); margin: 0; writing-mode: vertical-rl; font: 700 clamp(30px, 3.2vw, 54px)/1.15 var(--f-mincho); letter-spacing: .14em; text-shadow: 0 2px 18px rgb(0 0 0 / .7); }
 .cover { position: absolute; inset: 0; z-index: 3; }
 .cover:focus-visible { outline-offset: -8px; }
@@ -124,7 +127,7 @@ button { font: inherit; color: inherit; }
 .en { margin: 0; font-size: 12px; color: var(--paper-2); }
 .desc { max-width: 25em; margin: 0 0 18px; font-size: 15px; text-shadow: 0 1px 8px rgb(0 0 0 / .8); }
 .links { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin: 0; font-size: 13px; }
-.go { padding: 8px 18px; border: 1px solid var(--hiiro-2); background: rgb(216 65 44 / .18); letter-spacing: .3em; transition: background .3s; }
+.go { position: relative; z-index: 2; padding: 8px 18px; border: 1px solid var(--hiiro-2); background: rgb(216 65 44 / .18); letter-spacing: .3em; transition: background .3s; }
 .links a { position: relative; z-index: 4; color: var(--paper-2); text-underline-offset: 4px; }
 .links a:hover { color: var(--paper); }
 @media (hover: hover) and (min-width: 761px) {
@@ -209,7 +212,11 @@ footer a { color: var(--paper-2); }
   </div>
   <div class="clip">
     <div class="clip-pin">
-      <div class="mask"><img src="img/fireworks.webp" alt="海上千本鸟居的夜空里，烟花画出她和小猪" loading="lazy" decoding="async"></div>
+      <div class="mask">
+        <img class="on" src="img/ring.webp" alt="灯下千本鸟居：她的头像和灯笼旁，2026 年 10 月的鸟居亮起一道长光" loading="lazy" decoding="async" style="object-position: 4% 50%">
+        <img src="img/fireworks.webp" alt="海上千本鸟居的夜空里，烟花画出她和小猪" loading="lazy" decoding="async">
+        <img src="img/rain.webp" alt="云中千本鸟居：雨夜里挂着「十月」牌的鸟居，红色的小鸟从下面飞过" loading="lazy" decoding="async" style="object-position: 70% 50%">
+      </div>
       <p class="about-sub">她在 B 站发的每一条动态、大航海名单上的每一个人、她播过的每一个夜晚，各自排成了一条千本鸟居。</p>
     </div>
   </div>
@@ -250,6 +257,6 @@ footer a { color: var(--paper-2); }
 </footer>
 
 <!-- 改了 hub.js 就把 v 加一：GitHub Pages 让浏览器缓存静态文件 10 分钟 -->
-<script src="hub.js?v=4" defer></script>
+<script src="hub.js?v=5" defer></script>
 </body>
 </html>
